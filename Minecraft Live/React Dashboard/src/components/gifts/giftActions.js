@@ -1,23 +1,27 @@
 import { WebcastEvent } from 'tiktok-live-connector';
-import { tiktok } from './connection.js';
-import { giftList } from './giftList.js';
+import { tiktok } from '../../services/tiktok/connection.js';
+import { giftList } from './GiftManager.js';
+
+import {
+    botState,
+    broadcastToDashboard
+} from '../../services/core/server.js';
+
+
 import {
     spawnMobForTeam,
     ensureTeamsExist
-} from '../teams/teams.js';
+} from '../../data/teams/teams.js';
 import {
     onMinecraftMessage,
     sendCommand
-} from '../minecraft/lcon.js';
-
+} from '../../services/minecraft/lcon.js';
 
 // ==========================================
 // SPAWN ONE GIFT
 // ==========================================
 
-export function triggerGift(
-    giftId,
-    donorName = 'Unknown'
+export function triggerGift(  giftId,   donorName = 'Unknown'
 ) {
 
     const gift = giftList[Number(giftId)];
@@ -39,7 +43,18 @@ export function triggerGift(
     console.log(`Gift: ${gift.name}`);
     console.log(`User: ${donorName}`);
     console.log(`Team: ${gift.team}`);
-    console.log(`Mobs: ${gift.mobs}`);
+    const totalMobs =
+        (gift.zombie ?? 0) +
+        (gift.skeleton ?? 0) +
+        (gift.creeper ?? 0) +
+        (gift.enderman ?? 0) +
+        (gift.mutantCreepers ?? 0) +
+        (gift.mutantZombies ?? 0) +
+        (gift.mutantEndermen ?? 0) +
+        (gift.mutantSkeletons ?? 0) +
+        (gift.mutantOthers ?? 0);
+
+    console.log(`Mobs: ${totalMobs}`);
     console.log(
         `Mutant Creepers: ${gift.mutantCreepers}`
     );
@@ -56,7 +71,32 @@ export function triggerGift(
         `Mutant Others: ${gift.mutantOthers}`
     );
     console.log(`Coins: ${gift.coins}`);
-    console.log('==============================');
+    console.log('==============================')
+
+        // ==========================================
+        // MINECRAFT CHAT MESSAGE
+        // ==========================================
+
+sendCommand(
+    `say ${donorName} sent ${gift.name} | Team: ${gift.team} | Mobs: ${totalMobs} | Coins: ${gift.coins ?? 0}`
+);
+
+
+    // ==========================================
+    // UPDATE GIFT STATS
+    // ==========================================
+
+        botState.stats.totalGifts++;
+
+        broadcastToDashboard({
+            type: 'gift',
+            user: donorName,
+            giftName: gift.name,
+            giftId: giftId,
+            team: gift.team,
+            coins: gift.coins ?? 0,
+            mobs: totalMobs
+        });
 
 
     // ==========================================
@@ -260,34 +300,31 @@ export function setupGiftListener() {
     // gift 5655
     // ==========================================
 
-    onMinecraftMessage(message => {
+onMinecraftMessage(message => {
 
-        const match =
-            message.match(/gift\s+(\d+)/i);
+    const text = String(message || '').trim();
 
+    // Only react to actual Minecraft chat messages.
+    // LCon responses such as 200:"empty" are ignored.
+    const match = text.match(/(?:<[^>]+>\s*)?gift\s+(\d+)/i);
 
-        if (!match) {
+    if (!match) {
+        return;
+    }
 
-            return;
-        }
+    const giftId = Number(match[1]);
 
+    console.log('');
+    console.log('==============================');
+    console.log('MINECRAFT TEST GIFT');
+    console.log(`Gift ID: ${giftId}`);
+    console.log('==============================');
 
-        const giftId =
-            Number(match[1]);
-
-
-        console.log('');
-        console.log('==============================');
-        console.log('MINECRAFT TEST GIFT');
-        console.log(`Gift ID: ${giftId}`);
-        console.log('==============================');
-
-
-        triggerGift(
-            giftId,
-            'Minecraft Test'
-        );
-    });
+    triggerGift(
+        giftId,
+        'Minecraft Test'
+    );
+});
 
 
     // ==========================================
@@ -333,7 +370,6 @@ export function setupGiftListener() {
                 return;
             }
 
-
             // ==========================================
             // GIFT INFORMATION
             // ==========================================
@@ -346,29 +382,48 @@ export function setupGiftListener() {
                 `Team: ${gift.team}`
             );
 
-            console.log(
-                `Mobs: ${gift.mobs}`
-            );
+        const zombieCount = gift.zombie ?? 0;
+        const skeletonCount = gift.skeleton ?? 0;
+        const creeperCount = gift.creeper ?? 0;
+        const endermanCount = gift.enderman ?? 0;
 
-            console.log(
-                `Coins: ${gift.coins}`
-            );
+        const mutantCreeperCount = gift.mutantCreepers ?? 0;
+        const mutantZombieCount = gift.mutantZombies ?? 0;
+        const mutantEndermanCount = gift.mutantEndermen ?? 0;
+        const mutantSkeletonCount = gift.mutantSkeletons ?? 0;
+        const mutantOtherCount = gift.mutantOthers ?? 0;
 
+        const totalMobs =
+            zombieCount +
+            skeletonCount +
+            creeperCount +
+            endermanCount +
+            mutantCreeperCount +
+            mutantZombieCount +
+            mutantEndermanCount +
+            mutantSkeletonCount +
+            mutantOtherCount;
 
-            console.log(
-                `Mutants: ` +
-                `Creeper ${gift.mutantCreepers}, ` +
-                `Zombie ${gift.mutantZombies}, ` +
-                `Enderman ${gift.mutantEndermen}, ` +
-                `Skeleton ${gift.mutantSkeletons}, ` +
-                `Other ${gift.mutantOthers}`
-            );
+        console.log(`Mobs: ${totalMobs}`);
 
+        console.log(`  Zombies: ${zombieCount}`);
+        console.log(`  Skeletons: ${skeletonCount}`);
+        console.log(`  Creepers: ${creeperCount}`);
+        console.log(`  Endermen: ${endermanCount}`);
 
-            console.log(
-                '=============================='
-            );
+        console.log(`  Mutant Creepers: ${mutantCreeperCount}`);
+        console.log(`  Mutant Zombies: ${mutantZombieCount}`);
+        console.log(`  Mutant Endermen: ${mutantEndermanCount}`);
+        console.log(`  Mutant Skeletons: ${mutantSkeletonCount}`);
+        console.log(`  Other Mutants: ${mutantOtherCount}`);
 
+        console.log(
+            `Coins: ${gift.coins}`
+        );
+
+        console.log(
+            '=============================='
+        );
 
             // ==========================================
             // TRIGGER GIFT

@@ -1,9 +1,20 @@
 import { WebcastEvent } from 'tiktok-live-connector';
-import { tiktok } from './connection.js';
+
+import { tiktok } from '../../services/tiktok/connection.js';
+
+import {
+    sendMinecraftChat
+} from '../../services/minecraft/lcon.js';
+
+import {
+    botState,
+    broadcastToDashboard
+} from '../../services/core/server.js';
+
 import {
     spawnMobForTeam,
     ensureTeamsExist
-} from '../teams/teams.js';
+} from '../../data/teams/teams.js';
 
 
 // ==========================================
@@ -211,6 +222,47 @@ export function setupSocialListener() {
     // CREATE TEAMS
     // ==========================================
 
+
+
+        // ==========================================
+    // TIKTOK CHAT
+    // ==========================================
+
+    tiktok.on(WebcastEvent.CHAT, data => {
+
+        const username =
+            data.user?.uniqueId ||
+            data.user?.displayId ||
+            'Unknown';
+
+        const message =
+            data.content ||
+            data.comment ||
+            data.text ||
+            data.message ||
+            '';
+
+        if (!message.trim()) {
+            return;
+        }
+
+        console.log('');
+        console.log('==============================');
+        console.log('TIKTOK CHAT');
+        console.log(`User: ${username}`);
+        console.log(`Message: ${message}`);
+        console.log('==============================');
+
+        // Chat display ONLY.
+        // Hindi ito Minecraft command.
+        broadcastToDashboard({
+            type: 'chat',
+            user: username,
+            message: message
+        });
+    });
+
+
     ensureTeamsExist();
 
 
@@ -225,16 +277,10 @@ export function setupSocialListener() {
             data.user?.displayId ||
             'Unknown';
 
-
-        // TikTok's `total` is the cumulative
-        // like count for the LIVE.
-
         const currentTotalLikes =
             Number(data.total || 0);
 
 
-        // Number of likes represented by
-        // this specific event.
 
         const eventLikes =
             Number(data.count || 0);
@@ -296,12 +342,25 @@ export function setupSocialListener() {
         // UPDATE LIKE TOTAL
         // ==========================================
 
-        totalLikes += newLikes;
+            totalLikes += newLikes;
 
-        lastKnownTotalLikes =
-            currentTotalLikes;
+            lastKnownTotalLikes =
+                currentTotalLikes;
 
+            botState.stats.totalLikes = totalLikes;
 
+            broadcastToDashboard({
+                type: 'stats_update',
+                stats: botState.stats
+            });
+
+            broadcastToDashboard({
+                type: 'like',
+                user: username,
+                count: newLikes,
+                total: totalLikes
+            });
+            
         console.log('');
         console.log('==============================');
         console.log('LIKE TRACKING');
@@ -369,6 +428,11 @@ export function setupSocialListener() {
             data.user?.displayId ||
             'Unknown';
 
+            broadcastToDashboard({
+                type: 'follow',
+                user: username
+            });
+
 
         console.log('');
         console.log('==============================');
@@ -407,6 +471,13 @@ export function setupSocialListener() {
             username
         );
 
+        botState.stats.totalFollows++;
+
+            broadcastToDashboard({
+                type: 'stats_update',
+                stats: botState.stats
+            });
+
 
         console.log(
             `NEW FOLLOWER: ${username}`
@@ -422,3 +493,4 @@ export function setupSocialListener() {
         );
     });
 }
+

@@ -1,9 +1,12 @@
 import { TikTokLiveConnection } from 'tiktok-live-connector';
-import { botState, broadcastToDashboard } from '../server.js';
+import { botState, broadcastToDashboard } from '../core/server.js'
 
 const tiktokUsername = 'zaaaayiiii';
 
-export const tiktok = new TikTokLiveConnection(tiktokUsername, {});
+export const tiktok = new TikTokLiveConnection(
+    tiktokUsername,
+    {}
+);
 
 export async function connectTikTok() {
     try {
@@ -12,7 +15,6 @@ export async function connectTikTok() {
         console.log(`TikTok connected! Room ID: ${connectionState.roomId}`);
         console.log('TikTok is ready.');
 
-        // ✅ I-update ang dashboard
         botState.tiktok.connected = true;
         botState.tiktok.roomId = connectionState.roomId;
 
@@ -31,5 +33,7 @@ export async function connectTikTok() {
         broadcastToDashboard({
             type: 'tiktok_disconnected'
         });
+
+        throw error;
     }
 }

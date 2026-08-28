@@ -1,5 +1,4 @@
-import { sendCommand } from '../../services/minecraft/lcon.jsx';
-
+import { sendCommand } from '../../services/minecraft/lcon.js'
 let spawnCounter = 0;
 
 
@@ -14,9 +13,10 @@ export function ensureTeamsExist() {
     // RED + YELLOW = MAGKAKAMPI
     // ==========================================
 
-    sendCommand('team add TeamA');
-    sendCommand('team modify TeamA color red');
-    sendCommand('team modify TeamA friendlyFire false');
+sendCommand('team add TeamA')
+sendCommand('team modify TeamA color red')
+sendCommand('team modify TeamA friendlyFire false')
+
 
 
     // ==========================================
@@ -24,10 +24,10 @@ export function ensureTeamsExist() {
     // BLUE + GREEN = MAGKAKAMPI
     // ==========================================
 
-    sendCommand('team add TeamB');
-    sendCommand('team modify TeamB color blue');
-    sendCommand('team modify TeamB friendlyFire false');
-}
+sendCommand('team add TeamB')
+sendCommand('team modify TeamB color blue')
+sendCommand('team modify TeamB friendlyFire false')
+    }
 
 
 // ==========================================

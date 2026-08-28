@@ -3,7 +3,6 @@
 // ==========================================
 
 import { useState } from 'react'
-import axios from 'axios'
 
 export default function MinecraftPage({ status }) {
 
@@ -14,26 +13,105 @@ export default function MinecraftPage({ status }) {
 
     async function sendCommand() {
         if (!command.trim()) return
+
         setSending(true)
+
         try {
-            await axios.post('http://localhost:3001/api/command', { command })
-            setResult({ ok: true, message: `Sent: ${command}` })
+            const response = await fetch('http://localhost:3001/api/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    command: command.trim(),
+                }),
+            })
+
+            if (!response.ok) {
+                throw new Error('Command failed')
+            }
+
+            setResult({
+                ok: true,
+                message: `Sent: ${command}`,
+            })
+
             setCommand('')
-        } catch (err) {
-            setResult({ ok: false, message: 'Failed. Is Minecraft connected?' })
+        } catch (error) {
+            console.error('Minecraft command error:', error)
+
+            setResult({
+                ok: false,
+                message: 'Failed. Is Minecraft connected?',
+            })
+        } finally {
+            setSending(false)
         }
-        setSending(false)
     }
+                    const quickCommands = [
+                    {
+                        label: '☀️ Day',
+                        commands: [
+                            'time set day'
+                        ]
+                    },
 
-    const quickCommands = [
-        { label: '☀️ Day', command: 'time set day' },
-        { label: '🌙 Night', command: 'time set night' },
-        { label: '☀️ Clear', command: 'weather clear' },
-        { label: '🌧️ Rain', command: 'weather rain' },
-        { label: '⚡ Thunder', command: 'weather thunder' },
-        { label: '💀 Kill All', command: 'kill @e[type=!player]' },
-    ]
+                    {
+                        label: '🌙 Night',
+                        commands: [
+                            'time set night'
+                        ]
+                    },
 
+                    {
+                        label: '☀️ Clear',
+                        commands: [
+                            'weather clear'
+                        ]
+                    },
+
+                    {
+                        label: '🌧️ Rain',
+                        commands: [
+                            'weather rain'
+                        ]
+                    },
+
+                    {
+                        label: '⚡ Thunder',
+                        commands: [
+                            'weather thunder'
+                        ]
+                    },
+
+                    {
+                        label: '💀 Kill All',
+                        commands: [
+                            'kill @e[type=!player]'
+                        ]
+                    },
+
+                    {
+                        label: '⚔️ Setup Teams',
+                        commands: [
+                            'team add TeamA',
+                            'team modify TeamA color red',
+                            'team modify TeamA friendlyFire false',
+
+                            'team add TeamB',
+                            'team modify TeamB color blue',
+                            'team modify TeamB friendlyFire false',
+                        ]
+                    },
+
+                    {
+                        label: '🗑️ Remove Teams',
+                        commands: [
+                            'team remove TeamA',
+                            'team remove TeamB',
+                        ]
+                    },
+                ]
     return (
         <div>
             <div className="page-title">Minecraft</div>
@@ -60,7 +138,63 @@ export default function MinecraftPage({ status }) {
                         <button
                             key={q.command}
                             className="btn btn-ghost"
-                            onClick={() => setCommand(q.command)}
+                          onClick={async () => {
+                                if (q.commands) {
+
+                                    setSending(true)
+
+                                    try {
+
+                                        for (const command of q.commands) {
+
+                                            const response = await fetch(
+                                                'http://localhost:3001/api/command',
+                                                {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify({
+                                                        command,
+                                                    }),
+                                                }
+                                            )
+
+                                            if (!response.ok) {
+                                                throw new Error(
+                                                    `Command failed: ${command}`
+                                                )
+                                            }
+                                        }
+
+                                        setResult({
+                                            ok: true,
+                                            message: 'Teams created successfully.',
+                                        })
+
+                                    } catch (error) {
+
+                                        console.error(
+                                            'Team setup error:',
+                                            error
+                                        )
+
+                                        setResult({
+                                            ok: false,
+                                            message: 'Failed to setup teams.',
+                                        })
+
+                                    } finally {
+
+                                        setSending(false)
+
+                                    }
+
+                                    return
+                                }
+
+                                setCommand(q.command)
+                            }}
                         >
                             {q.label}
                         </button>

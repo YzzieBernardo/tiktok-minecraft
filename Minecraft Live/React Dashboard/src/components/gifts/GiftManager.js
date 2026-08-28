@@ -1,11 +1,9 @@
-import { zombieGiftListA } from '../gift/teamA/zombieGiftList.js';
-import { mutantGiftListA } from '../gift/teamA/mutantGiftList.js';
+import { zombieGiftListA } from '../../data/gifts/teamA/zombieGiftList.js';
+import { mutantGiftListA } from '../../data/gifts/teamA/mutantGiftList.js';
 
-import { zombieGiftListB } from '../gift/teamB/zombieGiftList.js';
-import { mutantGiftListB } from '../gift/teamB/mutantGiftList.js';
-
-import { bombList } from '../gift/bombList.js';
-
+import { zombieGiftListB } from '../../data/gifts/teamB/zombieGiftList.js';
+import { mutantGiftListB } from '../../data/gifts/teamB/mutantGiftList.js';
+import { bombList } from '../../data/gifts/Bomblist.js';
 
 // ==========================================
 // MERGE TEAM GIFTS
