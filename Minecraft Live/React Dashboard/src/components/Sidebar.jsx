@@ -1,3 +1,22 @@
+const navigationSections = [
+    {
+        section: 'Overview',
+        items: [{ id: 'overview', icon: '▦', label: 'Overview' }],
+    },
+    {
+        section: 'TikTok Live',
+        items: [
+            { id: 'tiktok', icon: '◉', label: 'TikTok Connection' },
+            { id: 'social', icon: '♥', label: 'Likes & Follows' },
+            { id: 'gifts', icon: '◆', label: 'Gift List' },
+        ],
+    },
+    {
+        section: 'Minecraft',
+        items: [{ id: 'minecraft', icon: '◈', label: 'Minecraft' }],
+    },
+]
+
 export default function Sidebar({
     activePage,
     onNavigate,
@@ -13,223 +32,95 @@ export default function Sidebar({
     onStartBot,
     onStopBot,
 }) {
-    
     const tiktokConnected = status?.tiktok?.connected
     const minecraftConnected = status?.minecraft?.connected
 
-    const navItems = [
-        {
-            section: 'OVERVIEW',
-            items: [
-                { id: 'overview', icon: '📊', label: 'Overview' },
-            ]
-        },
-        {
-            section: 'TIKTOK',
-            items: [
-                { id: 'tiktok', icon: '🎵', label: 'TikTok Connection' },
-                { id: 'social', icon: '❤️', label: 'Likes & Follows' },
-                { id: 'gifts', icon: '🎁', label: 'Gift List' },
-            ]
-        },
-        {
-            section: 'MINECRAFT',
-            items: [
-                { id: 'minecraft', icon: '⛏️', label: 'Minecraft' },
-            ]
-        },
-    ]
-
     return (
-        <div className="sidebar">
-
-            {/* Logo */}
+        <aside className="sidebar">
             <div className="sidebar-logo">
-                <h1>⚔️ Mob Battle</h1>
+                <span className="sidebar-kicker">Live control center</span>
+                <h1>Mob Battle</h1>
                 <p>TikTok × Minecraft</p>
             </div>
 
-            {/* Status Pills */}
-            <div style={{
-                padding: '10px 16px',
-                borderBottom: '1px solid var(--border)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '6px'
-            }}>
-
-                {/* MINECRAFT CONTROL */}
-                <div style={{
-                    padding: '12px 16px',
-                    borderBottom: '1px solid var(--border)'
-                }}>
-                    <div style={{
-                        fontSize: '11px',
-                        color: 'var(--text-muted)',
-                        marginBottom: '8px',
-                        fontWeight: 600,
-                        letterSpacing: '0.5px'
-                    }}>
-                        MINECRAFT LCON
+            <div className="sidebar-controls">
+                <section className="sidebar-panel">
+                    <div className="sidebar-panel-heading">
+                        <span>Minecraft LCon</span>
+                        <span className={`connection-indicator ${minecraftConnected ? 'is-online' : ''}`} />
                     </div>
-                    
                     <button
-                        className={`btn ${minecraftConnected ? 'btn-ghost' : 'btn-primary'}`}
-                        style={{
-                            width: '100%',
-                            justifyContent: 'center',
-                            borderColor: minecraftConnected
-                                ? 'var(--accent-red)'
-                                : 'var(--accent-green)',
-                            color: minecraftConnected
-                                ? 'var(--accent-red)'
-                                : 'var(--accent-green)'
-                        }}
+                        className={`btn sidebar-action ${minecraftConnected ? 'btn-danger-outline' : 'btn-primary'}`}
                         disabled={minecraftLoading}
-                        onClick={
-                            minecraftConnected
-                                ? onStopMinecraft
-                                : onStartMinecraft
-                        }
+                        onClick={minecraftConnected ? onStopMinecraft : onStartMinecraft}
                     >
                         {minecraftLoading
-                            ? 'Connecting...'
+                            ? 'Connecting…'
                             : minecraftConnected
-                                ? '⏹ Disconnect Minecraft'
-                                : '▶ Connect Minecraft'
-                        }
+                                ? 'Disconnect Minecraft'
+                                : 'Connect Minecraft'}
                     </button>
+                    <p className="sidebar-helper">
+                        {minecraftConnected ? 'LCon is connected' : 'Waiting for LCon'}
+                    </p>
+                </section>
 
-                    <div style={{
-                        marginTop: '7px',
-                        textAlign: 'center',
-                        fontSize: '11px',
-                        color: minecraftConnected
-                            ? 'var(--accent-green)'
-                            : 'var(--text-muted)'
-                    }}>
-                        {minecraftConnected
-                            ? 'LCon is connected'
-                            : 'LCon is disconnected'
-                        }
+                <div className="status-stack" aria-label="Connection status">
+                    <div className={`status-badge ${tiktokConnected ? 'connected' : 'disconnected'}`}>
+                        <span className="status-dot" />
+                        TikTok {tiktokConnected ? 'Live' : 'Offline'}
+                    </div>
+                    <div className={`status-badge ${minecraftConnected ? 'connected' : 'disconnected'}`}>
+                        <span className="status-dot" />
+                        Minecraft {minecraftConnected ? 'Connected' : 'Offline'}
                     </div>
                 </div>
-                <div className={`status-badge ${tiktokConnected ? 'connected' : 'disconnected'}`}>
-                    <span className="status-dot" />
-                    TikTok {tiktokConnected ? 'Live' : 'Offline'}
-                </div>
-                <div className={`status-badge ${minecraftConnected ? 'connected' : 'disconnected'}`}>
-                    <span className="status-dot" />
-                    Minecraft {minecraftConnected ? 'Connected' : 'Offline'}
-                </div>
-            </div>
 
-            {/* Refresh Button */}
-            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)' }}>
+                <button className="btn btn-ghost sidebar-action" onClick={onRefresh}>
+                    Refresh status
+                </button>
+
+                <section className="sidebar-panel sidebar-panel-compact">
+                    <div className="sidebar-panel-heading">Gift chat filter</div>
+                    <button
+                        className={`btn sidebar-action ${giftFilterEnabled ? 'btn-success-outline' : 'btn-danger-outline'}`}
+                        onClick={onToggleGiftFilter}
+                    >
+                        {giftFilterEnabled ? 'Gift filter on' : 'Gift filter off'}
+                    </button>
+                    <p className="sidebar-helper">
+                        {giftFilterEnabled
+                            ? 'Gift + number messages are blocked'
+                            : 'Gift messages are allowed'}
+                    </p>
+                </section>
+
                 <button
-                    className="btn btn-ghost"
-                    style={{ width: '100%', justifyContent: 'center' }}
-                    onClick={onRefresh}
+                    className={`btn sidebar-action ${botRunning ? 'btn-danger-outline' : 'btn-success-outline'}`}
+                    onClick={botRunning ? onStopBot : onStartBot}
+                    disabled={botLoading}
                 >
-                    🔄 Refresh Status
+                    {botLoading ? 'Working…' : botRunning ? 'Stop bot' : 'Start bot'}
                 </button>
             </div>
 
-      
-{/* GIFT FILTER */}
-<div
-    style={{
-        padding: '10px 16px',
-        borderBottom: '1px solid var(--border)'
-    }}
->
-    <div style={{
-        fontSize: '11px',
-        color: 'var(--text-muted)',
-        marginBottom: '8px',
-        fontWeight: 600,
-        letterSpacing: '0.5px'
-    }}>
-        GIFT FILTER
-    </div>
-
-    <button
-        className="btn btn-ghost"
-        style={{
-            width: '100%',
-            justifyContent: 'center',
-            borderColor: giftFilterEnabled
-                ? 'var(--accent-green)'
-                : 'var(--accent-red)',
-            color: giftFilterEnabled
-                ? 'var(--accent-green)'
-                : 'var(--accent-red)'
-        }}
-        onClick={onToggleGiftFilter}
-    >
-        {giftFilterEnabled
-            ? '🟢 Gift Filter ON'
-            : '🔴 Gift Filter OFF'
-        }
-    </button>
-
-    <div style={{
-        marginTop: '7px',
-        textAlign: 'center',
-        fontSize: '11px',
-        color: giftFilterEnabled
-            ? 'var(--accent-green)'
-            : 'var(--text-muted)'
-    }}>
-        {giftFilterEnabled
-            ? 'Gift + number messages are blocked'
-            : 'Gift messages are allowed'
-        }
-    </div>
-</div>
-
-            {/* Bot Start / Stop */}
-<div
-    style={{
-        padding: '10px 16px',
-        borderBottom: '1px solid var(--border)'
-    }}
->
-    <button
-        className="btn btn-ghost"
-        style={{
-            width: '100%',
-            justifyContent: 'center'
-        }}
-        onClick={botRunning ? onStopBot : onStartBot}
-        disabled={botLoading}
-    >
-        {botLoading
-            ? '⏳ Starting...'
-            : botRunning
-                ? '■ Stop Bot'
-                : '▶ Start Bot'
-        }
-    </button>
-</div>
-
-            {/* Nav Items */}
-            {navItems.map(section => (
-                <div className="sidebar-section" key={section.section}>
-                    <div className="sidebar-section-label">{section.section}</div>
-                    {section.items.map(item => (
-                        <div
-                            key={item.id}
-                            className={`sidebar-item ${activePage === item.id ? 'active' : ''}`}
-                            onClick={() => onNavigate(item.id)}
-                        >
-                            <span className="icon">{item.icon}</span>
-                            {item.label}
-                        </div>
-                    ))}
-                </div>
-            ))}
-
-        </div>
+            <nav className="sidebar-navigation" aria-label="Dashboard navigation">
+                {navigationSections.map(section => (
+                    <div className="sidebar-section" key={section.section}>
+                        <div className="sidebar-section-label">{section.section}</div>
+                        {section.items.map(item => (
+                            <button
+                                key={item.id}
+                                className={`sidebar-item ${activePage === item.id ? 'active' : ''}`}
+                                onClick={() => onNavigate(item.id)}
+                            >
+                                <span className="icon" aria-hidden="true">{item.icon}</span>
+                                {item.label}
+                            </button>
+                        ))}
+                    </div>
+                ))}
+            </nav>
+        </aside>
     )
 }

@@ -1,0 +1,26 @@
+{
+  "gifts": {
+    "9087": {
+      "name": "Flame heart",
+      "coins": 1,
+      "team": "A",
+      "zombie": 10,
+      "skeleton": 9,
+      "creeper": 10,
+      "enderman": 10,
+      "mutantCreepers": 1,
+      "mutantZombies": 1,
+      "mutantEndermen": 1,
+      "mutantSkeletons": 1,
+      "mutantOthers": 1
+    },
+    "13061": {
+      "name": "Sports Car",
+      "coins": 4999,
+      "blast": "fragmentation",
+      "fuse": 100,
+      "quantity": 1
+    }
+  },
+  "deletedIds": []
+}

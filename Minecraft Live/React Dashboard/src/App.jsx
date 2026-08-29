@@ -1,697 +1,251 @@
-import { useState, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Sidebar from './components/Sidebar'
-import OverviewPage from './pages/OverviewPage'
-import TikTokPage from './pages/TikTokPage'
-import MinecraftPage from './pages/MinecraftPage'
 import GiftListPage from './pages/GiftListPage'
+import MinecraftPage from './pages/MinecraftPage'
+import OverviewPage from './pages/OverviewPage'
 import SocialPage from './pages/SocialPage'
+import TikTokPage from './pages/TikTokPage'
 
+// UI ENTRY POINT: React dashboard only. It talks to the bot through HTTP and WebSocket.
+const API_URL = 'http://localhost:3001'
+const DASHBOARD_WS_URL = 'ws://localhost:3001'
 
+const initialStatus = {
+    tiktok: { connected: false, username: 'zaaaayiiii', roomId: null },
+    minecraft: { connected: false },
+    stats: { totalLikes: 0, totalFollows: 0, totalGifts: 0 },
+}
 
-
-function useBotConnection(setGiftFilterEnabled) {
-    const [status, setStatus] = useState({
-        tiktok: {
-            connected: false,
-            username: 'zaaaayiiii',
-            roomId: null
-        },
-
-        minecraft: {
-            connected: false
-        },
-
-        stats: {
-            totalLikes: 0,
-            totalFollows: 0,
-            totalGifts: 0
-        }
+async function postJson(path, body) {
+    const response = await fetch(`${API_URL}${path}`, {
+        method: 'POST',
+        headers: body ? { 'Content-Type': 'application/json' } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
     })
+    const data = await response.json()
 
-    const [logs, setLogs] = useState([])
-
-    const wsRef = useRef(null)
-
-
-    // ==========================================
-    // ADD LOG
-    // ==========================================
-
-    function addLog(message, type = '') {
-
-        const time = new Date().toLocaleTimeString()
-
-        setLogs(prev => [
-            {
-                id: Date.now(),
-                time,
-                message,
-                type
-            },
-            ...prev
-        ].slice(0, 50))
+    if (!response.ok) {
+        throw new Error(data.error || data.message || 'Request failed')
     }
 
+    return data
+}
 
-    // ==========================================
-    // CONNECT DASHBOARD TO NODE.JS
-    // ==========================================
+function useBotConnection(setGiftFilterEnabled) {
+    const [status, setStatus] = useState(initialStatus)
+    const [logs, setLogs] = useState([])
+    const wsRef = useRef(null)
+    const reconnectTimerRef = useRef(null)
 
-    function connect() {
+    const addLog = useCallback((message, type = '') => {
+        setLogs(previousLogs => [
+            {
+                id: `${Date.now()}-${Math.random()}`,
+                time: new Date().toLocaleTimeString(),
+                message,
+                type,
+            },
+            ...previousLogs,
+        ].slice(0, 50))
+    }, [])
 
-        if (
-            wsRef.current &&
-            wsRef.current.readyState === WebSocket.OPEN
-        ) {
-            return
+    const updateStatus = useCallback((section, updates) => {
+        setStatus(previousStatus => ({
+            ...previousStatus,
+            [section]: {
+                ...previousStatus[section],
+                ...updates,
+            },
+        }))
+    }, [])
+
+    const handleMessage = useCallback((data) => {
+        console.log('Dashboard received:', data)
+
+        switch (data.type) {
+            case 'state':
+                setStatus(data.data)
+                if (data.data.settings?.giftChatFilter !== undefined) {
+                    setGiftFilterEnabled(data.data.settings.giftChatFilter)
+                }
+                return
+
+            case 'tiktok_connected':
+                updateStatus('tiktok', { connected: true, roomId: data.roomId })
+                addLog(`TikTok connected! Room: ${data.roomId}`, 'follow')
+                return
+
+            case 'tiktok_disconnected':
+                updateStatus('tiktok', { connected: false })
+                addLog('TikTok disconnected.', 'like')
+                return
+
+            case 'minecraft_connected':
+                updateStatus('minecraft', { connected: true })
+                addLog('Minecraft LCon connected!', 'minecraft')
+                return
+
+            case 'minecraft_disconnected':
+                updateStatus('minecraft', { connected: false })
+                addLog('Minecraft LCon disconnected.', 'like')
+                return
+
+            case 'minecraft_log':
+                addLog(data.message, data.logType || 'minecraft')
+                return
+
+            case 'minecraft_event':
+                addLog(`Minecraft: ${data.message}`, data.logType || 'minecraft')
+                return
+
+            case 'gift':
+                addLog(
+                    `🎁 ${data.user} sent ${data.giftName} (${data.coins} coins) → Team ${data.team}`,
+                    'gift',
+                )
+                setStatus(previousStatus => ({
+                    ...previousStatus,
+                    stats: {
+                        ...previousStatus.stats,
+                        totalGifts: previousStatus.stats.totalGifts + 1,
+                    },
+                }))
+                return
+
+            case 'stats_update':
+                updateStatus('stats', data.stats)
+                return
+
+            case 'like':
+                addLog(`❤️ ${data.user} liked ${data.count} times`, 'like')
+                return
+
+            case 'chat':
+                addLog(`💬 ${data.user}: ${data.message}`, 'chat')
+                return
+
+            case 'follow':
+                addLog(`➕ ${data.user} followed`, 'follow')
+                return
+
+            default:
+                return
         }
+    }, [addLog, setGiftFilterEnabled, updateStatus])
 
-        const ws = new WebSocket('ws://localhost:3001')
+    useEffect(() => {
+        let shouldReconnect = true
 
-        wsRef.current = ws
+        function connect() {
+            if (!shouldReconnect || wsRef.current?.readyState === WebSocket.OPEN) {
+                return
+            }
 
+            const ws = new WebSocket(DASHBOARD_WS_URL)
+            wsRef.current = ws
 
-        // ==========================================
-        // WEBSOCKET CONNECTED
-        // ==========================================
-
-        ws.onopen = () => {
-
-            addLog(
-                'Dashboard connected to bot server.',
-                'minecraft'
-            )
-        }
-
-
-        // ==========================================
-        // MESSAGE FROM NODE.JS
-        // ==========================================
-               
-                ws.onmessage = (event) => {
-
-                    const data = JSON.parse(event.data)
-
-                    console.log('Dashboard received:', data)
-
-
-            // ==========================================
-            // FULL CURRENT STATE
-            // ==========================================
-                if (data.type === 'state') {
-
-                    setStatus(data.data)
-
-                    if (data.data.settings?.giftChatFilter !== undefined) {
-                        setGiftFilterEnabled(
-                            data.data.settings.giftChatFilter
-                        )
-                    }
-
+            ws.onopen = () => addLog('Dashboard connected to bot server.', 'minecraft')
+            ws.onmessage = event => {
+                try {
+                    handleMessage(JSON.parse(event.data))
+                } catch (error) {
+                    console.error('Invalid dashboard WebSocket message:', error)
+                }
+            }
+            ws.onerror = () => ws.close()
+            ws.onclose = event => {
+                if (!shouldReconnect) {
                     return
                 }
 
-
-            // ==========================================
-            // TIKTOK CONNECTED
-            // ==========================================
-
-            if (data.type === 'tiktok_connected') {
-
-                setStatus(prev => ({
-                    ...prev,
-
-                    tiktok: {
-                        ...prev.tiktok,
-                        connected: true,
-                        roomId: data.roomId
-                    }
-                }))
-
-                addLog(
-                    `TikTok connected! Room: ${data.roomId}`,
-                    'follow'
-                )
-
-                return
-            }
-
-
-            // ==========================================
-            // TIKTOK DISCONNECTED
-            // ==========================================
-
-            if (data.type === 'tiktok_disconnected') {
-
-                setStatus(prev => ({
-                    ...prev,
-
-                    tiktok: {
-                        ...prev.tiktok,
-                        connected: false
-                    }
-                }))
-
-                addLog(
-                    'TikTok disconnected.',
-                    'like'
-                )
-
-                return
-            }
-
-
-            // ==========================================
-            // MINECRAFT CONNECTED
-            // ==========================================
-if (data.type === 'minecraft_connected') {
-
-    setStatus(prev => ({
-        ...prev,
-
-        minecraft: {
-            ...prev.minecraft,
-            connected: true
-        }
-    }))
-
-    addLog(
-        'Minecraft LCon connected!',
-        'minecraft'
-    )
-
-    return
-}
-
-if (data.type === 'minecraft_disconnected') {
-
-    setStatus(prev => ({
-        ...prev,
-
-        minecraft: {
-            ...prev.minecraft,
-            connected: false
-        }
-    }))
-
-    addLog(
-        'Minecraft LCon disconnected.',
-        'like'
-    )
-
-    return
-}
-
-if (data.type === 'minecraft_log') {
-
-    addLog(
-        data.message,
-        data.logType || 'minecraft'
-    )
-
-    return
-}
-
-if (data.type === 'minecraft_event') {
-
-    addLog(
-        `Minecraft: ${data.message}`,
-        data.logType || 'minecraft'
-    )
-
-    return
-
-            }
-
-            // ==========================================
-            // GIFT
-            // ==========================================
-
-            if (data.type === 'gift') {
-
-                addLog(
-                    `🎁 ${data.user} sent ${data.giftName} (${data.coins} coins) → Team ${data.team}`,
-                    'gift'
-                )
-
-                setStatus(prev => ({
-                    ...prev,
-
-                    stats: {
-                        ...prev.stats,
-                        totalGifts:
-                            prev.stats.totalGifts + 1
-                    }
-                }))
-
-                return
-            }
-
-
-            // ==========================================
-            // LIKE
-            // ==========================================
-
-            if (data.type === 'stats_update') {
-
-                console.log('Stats update received:', data.stats)
-
-                setStatus(prev => ({
-                    ...prev,
-                    stats: {
-                        ...prev.stats,
-                        ...data.stats
-                    }
-                }))
-
-                return
-            }
-
-           if (data.type === 'like') {
-
-                addLog(
-                    `❤️ ${data.user} liked ${data.count} times`,
-                    'like'
-                )
-
-                setStatus(prev => ({
-                    ...prev,
-
-                    stats: {
-                        ...prev.stats,
-                        totalLikes:
-                            prev.stats.totalLikes + Number(data.count || 0)
-                    }
-                }))
-
-                return
-}
-
-
-            // ==========================================
-            // TIKTOK CHAT
-            // ==========================================
-
-            if (data.type === 'chat') {
-
-                addLog(
-                    `💬 ${data.user}: ${data.message}`,
-                    'chat'
-                )
-
-                return
-            }
-
-            // ==========================================
-            // FOLLOW
-            // ==========================================
-
-            if (data.type === 'follow') {
-
-                addLog(
-                    `➕ ${data.user} followed`,
-                    'follow'
-                )
-
-                setStatus(prev => ({
-                    ...prev,
-
-                    stats: {
-                        ...prev.stats,
-                        totalFollows:
-                            prev.stats.totalFollows + 1
-                    }
-                }))
-
-                return
+                addLog(`Dashboard WebSocket closed. Code: ${event.code}`, 'like')
+                reconnectTimerRef.current = setTimeout(connect, 3000)
             }
         }
-
-
-        // ==========================================
-        // WEBSOCKET CLOSED
-        // ==========================================
-
-        ws.onclose = (event) => {
-
-            addLog(
-                `Dashboard WebSocket closed. Code: ${event.code}`,
-                'like'
-            )
-
-            console.log(
-                'Dashboard WebSocket closed:',
-                event.code,
-                event.reason
-            )
-
-            setTimeout(() => {
-                connect()
-            }, 3000)
-        }
-
-        // ==========================================
-        // WEBSOCKET ERROR
-        // ==========================================
-
-        ws.onerror = () => {
-            ws.close()
-        }
-    }
-
-
-    // ==========================================
-    // MANUAL REFRESH
-    // ==========================================
-
-    function manualRefresh() {
-
-        addLog(
-            'Manual refresh...',
-            'minecraft'
-        )
-
-        if (wsRef.current) {
-            wsRef.current.close()
-        }
-    }
-
-
-    // ==========================================
-    // START WEBSOCKET
-    // ==========================================
-
-    useEffect(() => {
 
         connect()
 
         return () => {
-
-            if (wsRef.current) {
-                wsRef.current.close()
-            }
+            shouldReconnect = false
+            clearTimeout(reconnectTimerRef.current)
+            wsRef.current?.close()
         }
+    }, [addLog, handleMessage])
 
-    }, [])
+    const manualRefresh = useCallback(() => {
+        addLog('Manual refresh...', 'minecraft')
+        wsRef.current?.close()
+    }, [addLog])
 
-
-    return {
-        status,
-        logs,
-        manualRefresh
-    }
+    return { status, logs, manualRefresh }
 }
-
-
-// ==========================================
-// APP
-// ==========================================
 
 export default function App() {
+    const [activePage, setActivePage] = useState('overview')
+    const [giftFilterEnabled, setGiftFilterEnabled] = useState(true)
+    const [minecraftLoading, setMinecraftLoading] = useState(false)
+    const [botRunning, setBotRunning] = useState(false)
+    const [botLoading, setBotLoading] = useState(false)
 
-    const [giftFilterEnabled, setGiftFilterEnabled] =
-        useState(true)
+    const { status, logs, manualRefresh } = useBotConnection(setGiftFilterEnabled)
 
-        async function toggleGiftFilter() {
+    async function toggleGiftFilter() {
+        const enabled = !giftFilterEnabled
+        setGiftFilterEnabled(enabled)
 
-        const newValue = !giftFilterEnabled
-
-        setGiftFilterEnabled(newValue)
-
-    try {
-
-    const response = await fetch(
-        'http://localhost:3001/api/settings/gift-chat-filter',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    enabled: newValue
-                })
-            }
-        )
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            throw new Error(
-                data.error || 'Failed to update setting'
-            )
+        try {
+            await postJson('/api/settings/gift-chat-filter', { enabled })
+        } catch (error) {
+            console.error('TikTok Chat → Minecraft toggle error:', error)
+            setGiftFilterEnabled(!enabled)
         }
-
-            console.log(
-                `Gift Chat Filter: ${
-                    data.enabled ? 'ON' : 'OFF'
-            }`
-        )
-
-    } catch (error) {
-
-        console.error(
-            'TikTok Chat → Minecraft toggle error:',
-            error
-        )
-
-        // Balik sa dating value kapag failed
-        setGiftFilterEnabled(!newValue)    }
-}
-
-
-
-        async function startBot() {
-    if (botLoading || botRunning) return
-
-    setBotLoading(true)
-
-    try {
-        const response = await fetch(
-            'http://localhost:3001/api/bot/start',
-            {
-                method: 'POST'
-            }
-        )
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to start bot')
-        }
-
-        setBotRunning(true)
-
-        console.log('Bot started:', data.message)
-
-    } catch (error) {
-
-        console.error('Start bot error:', error)
-
-    } finally {
-
-        setBotLoading(false)
     }
-}
 
-
-async function stopBot() {
-    if (botLoading || !botRunning) return
-
-    setBotLoading(true)
-
-    try {
-        const response = await fetch(
-            'http://localhost:3001/api/bot/stop',
-            {
-                method: 'POST'
-            }
-        )
-
-        const data = await response.json()
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to stop bot')
+    async function updateBot(shouldStart) {
+        if (botLoading || botRunning === shouldStart) {
+            return
         }
 
-        setBotRunning(false)
+        setBotLoading(true)
 
-        console.log('Bot stopped:', data.message)
-
-    } catch (error) {
-
-        console.error('Stop bot error:', error)
-
-    } finally {
-
-        setBotLoading(false)
+        try {
+            const data = await postJson(`/api/bot/${shouldStart ? 'start' : 'stop'}`)
+            setBotRunning(data.running)
+            console.log(data.message)
+        } catch (error) {
+            console.error(`${shouldStart ? 'Start' : 'Stop'} bot error:`, error)
+        } finally {
+            setBotLoading(false)
+        }
     }
-}
 
-    const [activePage, setActivePage] =
-        useState('overview')
-
-
- const {
-    status,
-    logs,
-    manualRefresh
-} = useBotConnection(setGiftFilterEnabled)
-
-
-    // ==========================================
-    // MINECRAFT LOADING
-    // ==========================================
-
-  const [minecraftLoading, setMinecraftLoading] =
-    useState(false)
-
-        const [botRunning, setBotRunning] = useState(false)
-        const [botLoading, setBotLoading] = useState(false)
-
-    async function startMinecraft() {
-
-        if (
-            minecraftLoading ||
-            status.minecraft.connected
-        ) {
+    async function updateMinecraftConnection(shouldConnect) {
+        if (minecraftLoading || status.minecraft.connected === shouldConnect) {
             return
         }
 
         setMinecraftLoading(true)
 
         try {
-
-            console.log('Minecraft: sending connect request...')
-            
-            const response = await fetch(
-                'http://localhost:3001/api/minecraft/connect',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-
-
-            if (!response.ok) {
-                throw new Error(
-                    'Failed to connect Minecraft'
-                )
-            }
-
-
-            console.log(
-                'Minecraft connect request sent.'
-            )
-
+            await postJson(`/api/minecraft/${shouldConnect ? 'connect' : 'disconnect'}`)
         } catch (error) {
-
-            console.error(
-                'Minecraft start error:',
-                error
-            )
-
+            console.error(`Minecraft ${shouldConnect ? 'connect' : 'disconnect'} error:`, error)
         } finally {
-
             setMinecraftLoading(false)
         }
     }
-
-
-    // ==========================================
-    // STOP MINECRAFT
-    // ==========================================
-
-    async function stopMinecraft() {
-
-        if (
-            minecraftLoading ||
-            !status.minecraft.connected
-        ) {
-            return
-        }
-
-        setMinecraftLoading(true)
-
-        try {
-
-            const response = await fetch(
-                    'http://localhost:3001/api/minecraft/disconnect',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-
-
-            if (!response.ok) {
-                throw new Error(
-                    'Failed to disconnect Minecraft'
-                )
-            }
-
-
-            console.log(
-                'Minecraft disconnect request sent.'
-            )
-
-        } catch (error) {
-
-            console.error(
-                'Minecraft stop error:',
-                error
-            )
-
-        } finally {
-
-            setMinecraftLoading(false)
-        }
-    }
-
-
-    // ==========================================
-    // PAGES
-    // ==========================================
 
     const pages = {
-
-        overview:
-            <OverviewPage
-                status={status}
-                logs={logs}
-            />,
-
-        tiktok:
-            <TikTokPage
-                status={status}
-            />,
-
-        minecraft:
-            <MinecraftPage
-                status={status}
-            />,
-
-        gifts:
-            <GiftListPage />,
-
-        social:
-            <SocialPage
-                status={status}
-            />,
+        overview: <OverviewPage status={status} logs={logs} />,
+        tiktok: <TikTokPage status={status} />,
+        minecraft: <MinecraftPage status={status} />,
+        gifts: <GiftListPage />,
+        social: <SocialPage status={status} />,
     }
 
-
-    // ==========================================
-    // RENDER
-    // ==========================================
-
     return (
-
         <div className="app-layout">
-         <Sidebar
+            <Sidebar
                 activePage={activePage}
                 onNavigate={setActivePage}
                 status={status}
@@ -699,20 +253,17 @@ async function stopBot() {
                 onToggleGiftFilter={toggleGiftFilter}
                 onRefresh={manualRefresh}
                 minecraftLoading={minecraftLoading}
-                onStartMinecraft={startMinecraft}
-                onStopMinecraft={stopMinecraft}
+                onStartMinecraft={() => updateMinecraftConnection(true)}
+                onStopMinecraft={() => updateMinecraftConnection(false)}
                 botRunning={botRunning}
                 botLoading={botLoading}
-                onStartBot={startBot}
-                onStopBot={stopBot}
+                onStartBot={() => updateBot(true)}
+                onStopBot={() => updateBot(false)}
             />
 
-            <div className="main-content">
-
+            <main className="main-content">
                 {pages[activePage]}
-
-            </div>
-
+            </main>
         </div>
     )
-    }
+}

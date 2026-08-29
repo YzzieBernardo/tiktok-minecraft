@@ -2,10 +2,7 @@ import { WebcastEvent } from 'tiktok-live-connector';
 
 import { tiktok } from './connection.js';
 
-import {
-    broadcastToDashboard,
-    isGiftChatFilterEnabled
-} from '../core/server.js';
+import { isGiftChatFilterEnabled } from '../core/server.js';
 
 import {
     sendMinecraftChat

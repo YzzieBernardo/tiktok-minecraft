@@ -3,10 +3,6 @@ import { WebcastEvent } from 'tiktok-live-connector';
 import { tiktok } from '../../services/tiktok/connection.js';
 
 import {
-    sendMinecraftChat
-} from '../../services/minecraft/lcon.js';
-
-import {
     botState,
     broadcastToDashboard
 } from '../../services/core/server.js';
@@ -58,6 +54,14 @@ const FOLLOW_SKELETONS = 10;
 const FOLLOW_CREEPERS = 10;
 const FOLLOW_ENDERMEN = 10;
 
+function spawnMobs(team, mobCounts) {
+    for (const [mobType, amount] of Object.entries(mobCounts)) {
+        for (let count = 0; count < amount; count++) {
+            spawnMobForTeam(mobType, team);
+        }
+    }
+}
+
 
 // ==========================================
 // LIKE STATE
@@ -102,48 +106,12 @@ function spawnLikeReward(username = 'Unknown') {
     console.log('==============================');
 
 
-    // Zombie
-
-    for (let i = 0; i < LIKE_ZOMBIES; i++) {
-
-        spawnMobForTeam(
-            'zombie',
-            'A'
-        );
-    }
-
-
-    // Skeleton
-
-    for (let i = 0; i < LIKE_SKELETONS; i++) {
-
-        spawnMobForTeam(
-            'skeleton',
-            'A'
-        );
-    }
-
-
-    // Creeper
-
-    for (let i = 0; i < LIKE_CREEPERS; i++) {
-
-        spawnMobForTeam(
-            'creeper',
-            'A'
-        );
-    }
-
-
-    // Enderman
-
-    for (let i = 0; i < LIKE_ENDERMEN; i++) {
-
-        spawnMobForTeam(
-            'enderman',
-            'A'
-        );
-    }
+    spawnMobs('A', {
+        zombie: LIKE_ZOMBIES,
+        skeleton: LIKE_SKELETONS,
+        creeper: LIKE_CREEPERS,
+        enderman: LIKE_ENDERMEN,
+    });
 }
 
 
@@ -167,48 +135,12 @@ function spawnFollowReward(username = 'Unknown') {
     console.log('==============================');
 
 
-    // Zombie
-
-    for (let i = 0; i < FOLLOW_ZOMBIES; i++) {
-
-        spawnMobForTeam(
-            'zombie',
-            'B'
-        );
-    }
-
-
-    // Skeleton
-
-    for (let i = 0; i < FOLLOW_SKELETONS; i++) {
-
-        spawnMobForTeam(
-            'skeleton',
-            'B'
-        );
-    }
-
-
-    // Creeper
-
-    for (let i = 0; i < FOLLOW_CREEPERS; i++) {
-
-        spawnMobForTeam(
-            'creeper',
-            'B'
-        );
-    }
-
-
-    // Enderman
-
-    for (let i = 0; i < FOLLOW_ENDERMEN; i++) {
-
-        spawnMobForTeam(
-            'enderman',
-            'B'
-        );
-    }
+    spawnMobs('B', {
+        zombie: FOLLOW_ZOMBIES,
+        skeleton: FOLLOW_SKELETONS,
+        creeper: FOLLOW_CREEPERS,
+        enderman: FOLLOW_ENDERMEN,
+    });
 }
 
 

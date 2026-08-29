@@ -17,11 +17,33 @@ import {
     sendCommand
 } from '../../services/minecraft/lcon.js';
 
+const mobTypes = [
+    ['zombie', 'zombie'],
+    ['skeleton', 'skeleton'],
+    ['creeper', 'creeper'],
+    ['enderman', 'enderman'],
+    ['mutantCreepers', 'mutantmonsters:mutant_creeper'],
+    ['mutantZombies', 'mutantmonsters:mutant_zombie'],
+    ['mutantEndermen', 'mutantmonsters:mutant_enderman'],
+    ['mutantSkeletons', 'mutantmonsters:mutant_skeleton'],
+];
+
+function spawnGiftMobs(gift) {
+    for (const [countKey, mobType] of mobTypes) {
+        for (let count = 0; count < (gift[countKey] ?? 0); count++) {
+            spawnMobForTeam(mobType, gift.team);
+        }
+    }
+}
+
 // ==========================================
 // SPAWN ONE GIFT
 // ==========================================
 
-export function triggerGift(  giftId,   donorName = 'Unknown'
+export function triggerGift(
+    giftId,
+    donorName = 'Unknown',
+    quantity = 1
 ) {
 
     const gift = giftList[Number(giftId)];
@@ -102,149 +124,13 @@ sendCommand(
     // ==========================================
     // BALLISTIX BOMB
     // ==========================================
-
-    if (gift.blast) {
-
-        triggerBomb(gift);
-
-        return;
-    }
+        if (gift.blast) {
+            triggerBomb(gift, gift.quantity);
+            return;
+        }
 
 
-    // ==========================================
-    // NORMAL ZOMBIES
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.zombie;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'zombie',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // NORMAL SKELETONS
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.skeleton;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'skeleton',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // NORMAL CREEPERS
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.creeper;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'creeper',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // NORMAL ENDERMEN
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.enderman;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'enderman',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // MUTANT CREEPERS
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.mutantCreepers;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'mutantmonsters:mutant_creeper',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // MUTANT ZOMBIES
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.mutantZombies;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'mutantmonsters:mutant_zombie',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // MUTANT ENDERMEN
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.mutantEndermen;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'mutantmonsters:mutant_enderman',
-            gift.team
-        );
-    }
-
-
-    // ==========================================
-    // MUTANT SKELETONS
-    // ==========================================
-
-    for (
-        let i = 0;
-        i < gift.mutantSkeletons;
-        i++
-    ) {
-
-        spawnMobForTeam(
-            'mutantmonsters:mutant_skeleton',
-            gift.team
-        );
-    }
+    spawnGiftMobs(gift);
 
 
     // ==========================================
@@ -260,7 +146,8 @@ sendCommand(
 // BALLISTIX BOMB
 // ==========================================
 
-function triggerBomb(bomb) {
+function triggerBomb(bomb, quantity = 1) {
+    const count = Math.max(1, Number(quantity) || 1);
 
     console.log('');
     console.log('==============================');
@@ -268,14 +155,16 @@ function triggerBomb(bomb) {
     console.log(`Bomb: ${bomb.name}`);
     console.log(`Blast: ${bomb.blast}`);
     console.log(`Fuse: ${bomb.fuse}`);
+    console.log(`Quantity: ${count}`);
     console.log('Team: NEUTRAL');
     console.log('==============================');
 
-
-    sendCommand(
-        `summon ballistix:explosive ~ ~1 ~ ` +
-        `{type:"ballistix:${bomb.blast}",Fuse:${bomb.fuse}}`
-    );
+    for (let i = 0; i < count; i++) {
+        sendCommand(
+            `summon ballistix:explosive ~ ~1 ~ ` +
+            `{type:"ballistix:${bomb.blast}",Fuse:${bomb.fuse}}`
+        );
+    }
 }
 
 
@@ -306,13 +195,14 @@ onMinecraftMessage(message => {
 
     // Only react to actual Minecraft chat messages.
     // LCon responses such as 200:"empty" are ignored.
-    const match = text.match(/(?:<[^>]+>\s*)?gift\s+(\d+)/i);
+    const match = text.match(/(?:<([^>]+)>\s*)?gift\s+(\d+)/i);
 
     if (!match) {
         return;
     }
 
-    const giftId = Number(match[1]);
+    const donorName = match[1]?.trim() || 'Minecraft Player';
+    const giftId = Number(match[2]);
 
     console.log('');
     console.log('==============================');
@@ -322,7 +212,7 @@ onMinecraftMessage(message => {
 
     triggerGift(
         giftId,
-        'Minecraft Test'
+        donorName
     );
 });
 
@@ -429,10 +319,11 @@ onMinecraftMessage(message => {
             // TRIGGER GIFT
             // ==========================================
 
-            triggerGift(
-                data.giftId,
-                username
-            );
+       triggerGift(
+    data.giftId,
+    username,
+    Number(data.repeatCount ?? 1)
+);
         }
     );
 }

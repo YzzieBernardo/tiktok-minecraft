@@ -1,7 +1,5 @@
 import { startServer } from './server.js';
 
-// ==========================================
-// START APPLICATION
-// ==========================================
+// BACKEND ENTRY POINT: starts the TikTok/Minecraft connector, HTTP API, and dashboard WebSocket.
 
 startServer();

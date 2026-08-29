@@ -12,6 +12,7 @@ import { createServer } from 'http';
 
 import { connectTikTok } from '../tiktok/connection.js';
 import { setupGiftListener } from '../../components/gifts/giftActions.js';
+import { listGifts, removeGift, saveGift } from '../../components/gifts/GiftManager.js';
 import { setupSocialListener } from '../../components/tiktok/social.js';
 import { setupChatListener } from '../../services/tiktok/chat.js';
 
@@ -150,6 +151,60 @@ export function broadcastToDashboard(data) {
 }
 
 
+const mobCountFields = [
+    'zombie', 'skeleton', 'creeper', 'enderman', 'mutantCreepers',
+    'mutantZombies', 'mutantEndermen', 'mutantSkeletons', 'mutantOthers',
+];
+
+function toNonNegativeNumber(value) {
+    return Math.max(0, Number(value) || 0);
+}
+
+function parseGift(id, data) {
+    const giftId = Number(id);
+
+    if (!Number.isInteger(giftId) || giftId <= 0) {
+        throw new Error('TikTok Gift ID must be a positive whole number');
+    }
+
+    const name = String(data.name || '').trim();
+
+    if (!name) {
+        throw new Error('Gift name is required');
+    }
+
+    const gift = { name, coins: toNonNegativeNumber(data.coins) };
+if (data.kind === 'bomb') {
+    const blast = String(data.blast || '').trim();
+
+    if (!blast) {
+        throw new Error('Bomb blast type is required');
+    }
+
+    return {
+        id: giftId,
+        gift: {
+            ...gift,
+            blast,
+            fuse: toNonNegativeNumber(data.fuse),
+            quantity: Math.max(1, Number(data.quantity) || 1),
+        },
+    };
+}
+
+    if (!['A', 'B'].includes(data.team)) {
+        throw new Error('Choose Red Team or Blue Team');
+    }
+
+    gift.team = data.team;
+
+    for (const field of mobCountFields) {
+        gift[field] = toNonNegativeNumber(data[field]);
+    }
+
+    return { id: giftId, gift };
+}
+
 // ==========================================
 // GET STATUS
 // ==========================================
@@ -158,6 +213,34 @@ app.get('/api/status', (req, res) => {
 
     res.json(botState);
 
+});
+
+// ==========================================
+// GIFT LIST MANAGEMENT
+// ==========================================
+
+app.get('/api/gifts', (req, res) => {
+    res.json(listGifts());
+});
+
+function saveGiftRoute(req, res) {
+    try {
+        const { id, gift } = parseGift(req.params.id || req.body.id, req.body);
+        res.json({ ok: true, gift: saveGift(id, gift) });
+    } catch (error) {
+        res.status(400).json({ ok: false, error: error.message });
+    }
+}
+
+app.post('/api/gifts', saveGiftRoute);
+app.put('/api/gifts/:id', saveGiftRoute);
+
+app.delete('/api/gifts/:id', (req, res) => {
+    if (!removeGift(req.params.id)) {
+        return res.status(404).json({ ok: false, error: 'Gift not found' });
+    }
+
+    res.json({ ok: true });
 });
 
 
