@@ -8,8 +8,11 @@ import {
 } from '../../services/core/server.js';
 
 import {
-    spawnMobForTeam,
-    ensureTeamsExist
+    canMobBattleReceiveEvents
+} from '../../services/core/mobBattleServer.js';
+
+import {
+    spawnMobForTeam
 } from '../../data/teams/teams.js';
 
 
@@ -17,19 +20,20 @@ import {
 // SOCIAL SYSTEM
 // ==========================================
 //
-// RED TEAM / TEAM A
-// 100 LIKES =
-// 3 Zombie
-// 3 Skeleton
-// 3 Creeper
-// 3 Enderman
+// MOB BATTLE SOCIAL LISTENER
 //
-// BLUE TEAM / TEAM B
-// 1 UNIQUE FOLLOW =
-// 10 Zombie
-// 10 Skeleton
-// 10 Creeper
-// 10 Enderman
+// Zombie Apocalypse has its own listener:
+// src/Zombie Apocalypse/zombieSocial.js
+//
+// ROUTING:
+//
+// Mob Battle ON
+//     -> this file processes LIKE/FOLLOW
+//
+// Mob Battle OFF
+//     -> this file ignores the event
+//     -> Zombie Apocalypse may process it
+//
 // ==========================================
 
 
@@ -54,12 +58,38 @@ const FOLLOW_SKELETONS = 10;
 const FOLLOW_CREEPERS = 10;
 const FOLLOW_ENDERMEN = 10;
 
-function spawnMobs(team, mobCounts) {
-    for (const [mobType, amount] of Object.entries(mobCounts)) {
-        for (let count = 0; count < amount; count++) {
-            spawnMobForTeam(mobType, team);
+
+// ==========================================
+// SPAWN MOBS
+// ==========================================
+
+function spawnMobs(
+    team,
+    mobCounts,
+    donorName = 'Unknown'
+) {
+
+    for (
+        const [mobType, amount]
+        of Object.entries(mobCounts)
+    ) {
+
+        for (
+            let count = 0;
+            count < amount;
+            count++
+        ) {
+
+            spawnMobForTeam(
+                mobType,
+                team,
+                donorName
+            );
+
         }
+
     }
+
 }
 
 
@@ -67,13 +97,22 @@ function spawnMobs(team, mobCounts) {
 // LIKE STATE
 // ==========================================
 
-// Likes counted by this bot session.
+// Likes counted during this bot session.
 let totalLikes = 0;
 
-// Last cumulative TikTok like total we received.
+
+// TikTok's previous cumulative like total.
+//
+// Example:
+//
+// Previous = 1958
+// Current  = 1965
+// New      = 7
+//
 let lastKnownTotalLikes = null;
 
-// Number of 100-like rewards already spawned.
+
+// Number of 100-like rewards already given.
 let likeRewardsGiven = 0;
 
 
@@ -81,9 +120,8 @@ let likeRewardsGiven = 0;
 // FOLLOW STATE
 // ==========================================
 
-// Users who already received their
-// follow reward during this bot session.
-const processedFollowers = new Set();
+const processedFollowers =
+    new Set();
 
 
 // ==========================================
@@ -91,7 +129,9 @@ const processedFollowers = new Set();
 // TEAM A / RED
 // ==========================================
 
-function spawnLikeReward(username = 'Unknown') {
+function spawnLikeReward(
+    username = 'Unknown'
+) {
 
     console.log('');
     console.log('==============================');
@@ -106,12 +146,24 @@ function spawnLikeReward(username = 'Unknown') {
     console.log('==============================');
 
 
-    spawnMobs('A', {
-        zombie: LIKE_ZOMBIES,
-        skeleton: LIKE_SKELETONS,
-        creeper: LIKE_CREEPERS,
-        enderman: LIKE_ENDERMEN,
-    });
+    spawnMobs(
+        'A',
+        {
+            zombie:
+                LIKE_ZOMBIES,
+
+            skeleton:
+                LIKE_SKELETONS,
+
+            creeper:
+                LIKE_CREEPERS,
+
+            enderman:
+                LIKE_ENDERMEN,
+        },
+        username
+    );
+
 }
 
 
@@ -120,7 +172,9 @@ function spawnLikeReward(username = 'Unknown') {
 // TEAM B / BLUE
 // ==========================================
 
-function spawnFollowReward(username = 'Unknown') {
+function spawnFollowReward(
+    username = 'Unknown'
+) {
 
     console.log('');
     console.log('==============================');
@@ -135,12 +189,24 @@ function spawnFollowReward(username = 'Unknown') {
     console.log('==============================');
 
 
-    spawnMobs('B', {
-        zombie: FOLLOW_ZOMBIES,
-        skeleton: FOLLOW_SKELETONS,
-        creeper: FOLLOW_CREEPERS,
-        enderman: FOLLOW_ENDERMEN,
-    });
+    spawnMobs(
+        'B',
+        {
+            zombie:
+                FOLLOW_ZOMBIES,
+
+            skeleton:
+                FOLLOW_SKELETONS,
+
+            creeper:
+                FOLLOW_CREEPERS,
+
+            enderman:
+                FOLLOW_ENDERMEN,
+        },
+        username
+    );
+
 }
 
 
@@ -150,279 +216,431 @@ function spawnFollowReward(username = 'Unknown') {
 
 export function setupSocialListener() {
 
-    // ==========================================
-    // CREATE TEAMS
-    // ==========================================
-
-
-
-        // ==========================================
-    // TIKTOK CHAT
-    // ==========================================
-
-    tiktok.on(WebcastEvent.CHAT, data => {
-
-        const username =
-            data.user?.uniqueId ||
-            data.user?.displayId ||
-            'Unknown';
-
-        const message =
-            data.content ||
-            data.comment ||
-            data.text ||
-            data.message ||
-            '';
-
-        if (!message.trim()) {
-            return;
-        }
-
-        console.log('');
-        console.log('==============================');
-        console.log('TIKTOK CHAT');
-        console.log(`User: ${username}`);
-        console.log(`Message: ${message}`);
-        console.log('==============================');
-
-        // Chat display ONLY.
-        // Hindi ito Minecraft command.
-        broadcastToDashboard({
-            type: 'chat',
-            user: username,
-            message: message
-        });
-    });
-
-
-    ensureTeamsExist();
+    console.log(
+        '>>> MOB BATTLE SOCIAL LISTENER SETUP <<<'
+    );
 
 
     // ==========================================
     // TIKTOK LIKES
     // ==========================================
 
-    tiktok.on(WebcastEvent.LIKE, data => {
+    tiktok.on(
+        WebcastEvent.LIKE,
+        data => {
 
-        const username =
-            data.user?.uniqueId ||
-            data.user?.displayId ||
-            'Unknown';
+            // ==========================================
+            // MOB BATTLE CHECK
+            // ==========================================
 
-        const currentTotalLikes =
-            Number(data.total || 0);
+            if (
+                !canMobBattleReceiveEvents()
+            ) {
 
+                return;
 
-
-        const eventLikes =
-            Number(data.count || 0);
-
-
-        console.log('');
-        console.log('==============================');
-        console.log('TIKTOK LIKE DETECTED');
-        console.log(`User: ${username}`);
-        console.log(`Likes this event: ${eventLikes}`);
-        console.log(`TikTok total likes: ${currentTotalLikes}`);
-        console.log(`Bot previous total: ${lastKnownTotalLikes}`);
-        console.log('Red Team: LIKE');
-        console.log('==============================');
+            }
 
 
-        // ==========================================
-        // FIRST LIKE EVENT
-        // ==========================================
+            // ==========================================
+            // USER
+            // ==========================================
 
-        if (lastKnownTotalLikes === null) {
-
-            lastKnownTotalLikes =
-                currentTotalLikes;
-
-            console.log(
-                `Starting like tracker at ` +
-                `${currentTotalLikes} likes.`
-            );
-
-            return;
-        }
+            const username =
+                data.user?.uniqueId ||
+                data.user?.displayId ||
+                'Unknown';
 
 
-        // ==========================================
-        // CALCULATE NEW LIKES
-        // ==========================================
+            // ==========================================
+            // TIKTOK TOTAL
+            // ==========================================
 
-        const newLikes =
-            currentTotalLikes -
-            lastKnownTotalLikes;
-
-
-        // ==========================================
-        // IGNORE DUPLICATE / OLD EVENTS
-        // ==========================================
-
-        if (newLikes <= 0) {
-
-            console.log(
-                'No new likes detected.'
-            );
-
-            return;
-        }
+            const currentTotalLikes =
+                Number(
+                    data.total || 0
+                );
 
 
-        // ==========================================
-        // UPDATE LIKE TOTAL
-        // ==========================================
+            // ==========================================
+            // EVENT LIKE COUNT
+            // ==========================================
+            //
+            // This preserves TikTok burst likes.
+            //
+            // Example:
+            //
+            // x7 likes
+            // data.count = 7
+            //
+            // We display this in the log.
+            // ==========================================
 
-            totalLikes += newLikes;
-
-            lastKnownTotalLikes =
-                currentTotalLikes;
-
-            botState.stats.totalLikes = totalLikes;
-
-            broadcastToDashboard({
-                type: 'stats_update',
-                stats: botState.stats
-            });
-
-            broadcastToDashboard({
-                type: 'like',
-                user: username,
-                count: newLikes,
-                total: totalLikes
-            });
-            
-        console.log('');
-        console.log('==============================');
-        console.log('LIKE TRACKING');
-        console.log(`New likes: ${newLikes}`);
-        console.log(`Session likes: ${totalLikes}`);
-        console.log(
-            `Next reward: ${
-                (likeRewardsGiven + 1) *
-                LIKES_PER_REWARD
-            } likes`
-        );
-        console.log('==============================');
+            const eventLikes =
+                Number(
+                    data.count || 0
+                );
 
 
-        // ==========================================
-        // CALCULATE REWARDS
-        // ==========================================
-
-        const rewardsEarned =
-            Math.floor(
-                totalLikes /
-                LIKES_PER_REWARD
-            );
-
-
-        // ==========================================
-        // SPAWN NEW REWARDS ONLY
-        // ==========================================
-
-        while (
-            likeRewardsGiven <
-            rewardsEarned
-        ) {
-
-            likeRewardsGiven++;
-
+            // ==========================================
+            // LOG RAW TIKTOK EVENT
+            // ==========================================
 
             console.log('');
             console.log('==============================');
-            console.log('LIKE MILESTONE REACHED');
             console.log(
-                `Reward #${likeRewardsGiven}`
+                'TIKTOK LIKE DETECTED'
             );
             console.log(
-                `${likeRewardsGiven * LIKES_PER_REWARD}` +
-                ` SESSION LIKES`
+                `User: ${username}`
             );
-            console.log('TEAM A / RED');
+            console.log(
+                `Likes this event: ${eventLikes}`
+            );
+            console.log(
+                `TikTok total likes: ${currentTotalLikes}`
+            );
+            console.log(
+                `Bot previous total: ${lastKnownTotalLikes}`
+            );
+            console.log(
+                'Red Team: LIKE'
+            );
+            console.log(
+                '=============================='
+            );
+
+
+            // ==========================================
+            // FIRST LIKE EVENT
+            // ==========================================
+            //
+            // Do NOT count the existing TikTok total.
+            //
+            // Example:
+            //
+            // Bot starts at 1958
+            //
+            // First event:
+            // TikTok total = 1965
+            //
+            // We establish the baseline.
+            // ==========================================
+
+            if (
+                lastKnownTotalLikes === null
+            ) {
+
+                lastKnownTotalLikes =
+                    currentTotalLikes;
+
+
+                console.log(
+                    `Starting like tracker at ${currentTotalLikes} likes.`
+                );
+
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // CALCULATE NEW LIKES
+            // ==========================================
+            //
+            // Example:
+            //
+            // Current total  = 1965
+            // Previous total = 1958
+            //
+            // New likes = 7
+            // ==========================================
+
+            const newLikes =
+                currentTotalLikes -
+                lastKnownTotalLikes;
+
+
+            // ==========================================
+            // UPDATE PREVIOUS TOTAL
+            // ==========================================
+            //
+            // Important:
+            //
+            // Always move the tracker forward.
+            // ==========================================
+
+            lastKnownTotalLikes =
+                currentTotalLikes;
+
+
+            // ==========================================
+            // IGNORE OLD / DUPLICATE EVENT
+            // ==========================================
+
+            if (
+                newLikes <= 0
+            ) {
+
+                console.log(
+                    'No new likes detected.'
+                );
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // ADD SESSION LIKES
+            // ==========================================
+
+            totalLikes +=
+                newLikes;
+
+
+            // ==========================================
+            // UPDATE DASHBOARD STATS
+            // ==========================================
+
+            botState.stats.totalLikes =
+                totalLikes;
+
+
+            broadcastToDashboard({
+                type:
+                    'stats_update',
+
+                stats:
+                    botState.stats
+            });
+
+
+            // ==========================================
+            // SEND LIKE EVENT TO DASHBOARD
+            // ==========================================
+
+            broadcastToDashboard({
+                type:
+                    'like',
+
+                user:
+                    username,
+
+                count:
+                    newLikes,
+
+                total:
+                    totalLikes
+            });
+
+
+            // ==========================================
+            // LIKE TRACKING
+            // ==========================================
+
+            console.log('');
             console.log('==============================');
+            console.log(
+                'LIKE TRACKING'
+            );
+            console.log(
+                `New likes: ${newLikes}`
+            );
+            console.log(
+                `Session likes: ${totalLikes}`
+            );
+            console.log(
+                `Next reward: ${
+                    (likeRewardsGiven + 1) *
+                    LIKES_PER_REWARD
+                } likes`
+            );
+            console.log(
+                '=============================='
+            );
 
 
-            spawnLikeReward(username);
+            // ==========================================
+            // CALCULATE REWARDS EARNED
+            // ==========================================
+
+            const rewardsEarned =
+                Math.floor(
+                    totalLikes /
+                    LIKES_PER_REWARD
+                );
+
+
+            // ==========================================
+            // PROCESS NEW LIKE REWARDS
+            // ==========================================
+
+            while (
+                likeRewardsGiven <
+                rewardsEarned
+            ) {
+
+                likeRewardsGiven++;
+
+
+                console.log('');
+                console.log('==============================');
+                console.log(
+                    'LIKE MILESTONE REACHED'
+                );
+                console.log(
+                    `Reward #${likeRewardsGiven}`
+                );
+                console.log(
+                    `${
+                        likeRewardsGiven *
+                        LIKES_PER_REWARD
+                    } SESSION LIKES`
+                );
+                console.log(
+                    'TEAM A / RED'
+                );
+                console.log(
+                    'SYSTEM: MOB BATTLE'
+                );
+                console.log(
+                    '=============================='
+                );
+
+
+                spawnLikeReward(
+                    username
+                );
+
+            }
+
         }
-    });
+    );
 
 
     // ==========================================
     // TIKTOK FOLLOWS
     // ==========================================
 
-    tiktok.on(WebcastEvent.FOLLOW, data => {
+    tiktok.on(
+        WebcastEvent.FOLLOW,
+        data => {
 
-        const username =
-            data.user?.uniqueId ||
-            data.user?.displayId ||
-            'Unknown';
+            // ==========================================
+            // MOB BATTLE CHECK
+            // ==========================================
 
-            broadcastToDashboard({
-                type: 'follow',
-                user: username
-            });
+            if (
+                !canMobBattleReceiveEvents()
+            ) {
 
+                return;
 
-        console.log('');
-        console.log('==============================');
-        console.log('TIKTOK FOLLOW DETECTED');
-        console.log(`User: ${username}`);
-        console.log('Team: B / BLUE');
-        console.log('==============================');
+            }
 
 
-        // ==========================================
-        // CHECK DUPLICATE FOLLOW
-        // ==========================================
+            // ==========================================
+            // USER
+            // ==========================================
 
-        if (
-            processedFollowers.has(username)
-        ) {
+            const username =
+                data.user?.uniqueId ||
+                data.user?.displayId ||
+                'Unknown';
 
+
+            // ==========================================
+            // LOG FOLLOW
+            // ==========================================
+
+            console.log('');
+            console.log('==============================');
             console.log(
-                `FOLLOW IGNORED: ` +
-                `${username} already processed.`
+                'TIKTOK FOLLOW DETECTED'
             );
-
+            console.log(
+                `User: ${username}`
+            );
+            console.log(
+                'System: Mob Battle'
+            );
+            console.log(
+                'Team: B / BLUE'
+            );
             console.log(
                 '=============================='
             );
 
-            return;
-        }
+
+            // ==========================================
+            // DUPLICATE FOLLOW
+            // ==========================================
+
+            if (
+                processedFollowers.has(
+                    username
+                )
+            ) {
+
+                console.log(
+                    `FOLLOW IGNORED: ${username} already processed.`
+                );
+
+                return;
+
+            }
 
 
-        // ==========================================
-        // SAVE FOLLOWER
-        // ==========================================
+            // ==========================================
+            // SAVE FOLLOWER
+            // ==========================================
 
-        processedFollowers.add(
-            username
-        );
+            processedFollowers.add(
+                username
+            );
 
-        botState.stats.totalFollows++;
+
+            // ==========================================
+            // UPDATE DASHBOARD
+            // ==========================================
+
+            botState.stats.totalFollows++;
+
 
             broadcastToDashboard({
-                type: 'stats_update',
-                stats: botState.stats
+                type:
+                    'stats_update',
+
+                stats:
+                    botState.stats
             });
 
 
-        console.log(
-            `NEW FOLLOWER: ${username}`
-        );
+            broadcastToDashboard({
+                type:
+                    'follow',
+
+                user:
+                    username
+            });
 
 
-        // ==========================================
-        // SPAWN BLUE TEAM REWARD
-        // ==========================================
+            console.log(
+                `NEW FOLLOWER: ${username}`
+            );
 
-        spawnFollowReward(
-            username
-        );
-    });
+
+            // ==========================================
+            // SPAWN MOB BATTLE FOLLOW REWARD
+            // ==========================================
+
+            spawnFollowReward(
+                username
+            );
+
+        }
+    );
+
 }
-

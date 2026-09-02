@@ -1,4 +1,13 @@
-import { sendCommand } from '../../services/minecraft/lcon.js'
+
+//Minecraft Live/React Dashboard/src/data/teams/teams.js
+
+import {
+    sendCommand
+} from '../../services/minecraft/lcon.js';
+
+import {
+    getMobBattleSpawnName
+} from '../../services/core/mobBattleConfig.js';
 let spawnCounter = 0;
 
 
@@ -65,7 +74,7 @@ function getCombatTeam(team) {
 export function spawnMobForTeam(
     entityId,
     team,
-    donorName = 'Unknown',
+    donorName = null,
     nameColor = null
 ) {
 
@@ -81,15 +90,6 @@ export function spawnMobForTeam(
     const summonId = entityId.includes(':')
         ? entityId
         : `minecraft:${entityId}`;
-
-
-    // ==========================================
-    // SAFE DONOR NAME
-    // ==========================================
-
-    const safeDonorName = String(donorName)
-        .replace(/\\/g, '\\\\')
-        .replace(/"/g, '\\"');
 
 
     // ==========================================
@@ -151,12 +151,11 @@ export function spawnMobForTeam(
     //
     // Unknown -> TEST
 
-    const displayName =
-        donorName === 'Unknown' || !donorName
-            ? 'TEST'
-            : safeDonorName;
-
-
+const displayName =
+    getMobBattleSpawnName(
+        team,
+        donorName
+    );
     // ==========================================
     // FINAL NAMETAG
     // ==========================================
@@ -173,8 +172,14 @@ export function spawnMobForTeam(
     // [RED] TEST
     // [BLUE] TEST
 
-    const nameText =
-        `[${displayColor}] ${displayName}`;
+const safeDisplayName = String(
+    displayName || 'MOB'
+)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"');
+
+const nameText =
+    `[${displayColor}] ${safeDisplayName}`;
 
 
 

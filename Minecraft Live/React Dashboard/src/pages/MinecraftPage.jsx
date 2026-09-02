@@ -4,12 +4,14 @@
 
 import { useState } from 'react'
 
+
 export default function MinecraftPage({ status }) {
 
     const { minecraft } = status
     const [command, setCommand] = useState('')
     const [sending, setSending] = useState(false)
     const [result, setResult] = useState(null)
+    
 
     async function sendCommand() {
         if (!command.trim()) return

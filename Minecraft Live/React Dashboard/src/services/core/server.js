@@ -1,5 +1,5 @@
 // ==========================================
-// bot\server.js
+// E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\services\core\server.js
 // ==========================================
 // Web server para ma-connect ang React
 // dashboard sa iyong bot.
@@ -26,7 +26,15 @@ import {
     sendCommand
 } from '../minecraft/lcon.js';
 
+import { setupZombieApocalypseServer } from '../../Zombie Apocalypse/zombieApocalypseServer.js';
+import { setupZombieGiftListener } from '../../Zombie Apocalypse/zombieGiftListener.js';
+import { setupZombieFollowListener } from '../../Zombie Apocalypse/zombieFollowListener.js';
+import { setupZombieLikeListener } from '../../Zombie Apocalypse/zombieLikeListener.js';
 
+import {
+    setupMobBattleServer,
+    isMobBattleRunning
+} from './mobBattleServer.js';
 // ==========================================
 // APP SETUP
 // ==========================================
@@ -35,13 +43,15 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+setupZombieApocalypseServer(app);
+setupMobBattleServer(app);
 
 
 // ==========================================
 // BOT STATE
 // ==========================================
 
-export const botState = {
+export const botState = {   
 
     tiktok: {
         connected: false,
@@ -68,6 +78,7 @@ export const botState = {
 let botRunning = false;
 let botStarting = false;
 let listenersRegistered = false;
+
 
 // ==========================================
 // TIKTOK CHAT → MINECRAFT
@@ -307,32 +318,80 @@ app.post('/api/bot/start', async (req, res) => {
             // START LISTENERS ONCE
             // ------------------------------------------
 
-            if (!listenersRegistered) {
+       if (!listenersRegistered) {
 
-                setupGiftListener();
+    console.log(
+        'Registering TikTok and Minecraft listeners...'
+    );
 
-                console.log('Gift listener started.');
+    try {
 
+        setupGiftListener();
 
-                setupSocialListener();
-
-                console.log('Social listener started.');
-
-
-                setupChatListener();
-
-                console.log('Chat listener started.');
+        console.log(
+            'Gift listener started.'
+        );
 
 
-                listenersRegistered = true;
+        setupZombieGiftListener();
 
-            } else {
+        console.log(
+            'Zombie Apocalypse gift listener started.'
+        );
 
-                console.log(
-                    'TikTok listeners already registered. Skipping duplicate registration.'
-                );
 
-            }
+        setupZombieFollowListener();
+
+        console.log(
+            'Zombie Apocalypse follow listener started.'
+        );
+
+
+        setupZombieLikeListener();
+
+        console.log(
+            'Zombie Apocalypse like listener started.'
+        );
+
+
+        setupSocialListener();
+
+        console.log(
+            'Social listener started.'
+        );
+
+
+        setupChatListener();
+
+        console.log(
+            'Chat listener started.'
+        );
+
+
+        // ==========================================
+        // ONLY MARK REGISTERED AFTER EVERYTHING
+        // SUCCEEDS
+        // ==========================================
+
+        listenersRegistered = true;
+
+        console.log(
+            'All listeners registered successfully.'
+        );
+
+    } catch (error) {
+
+        console.error(
+            'Listener registration failed:',
+            error
+        );
+
+        listenersRegistered = false;
+
+        throw error;
+    }
+
+}
         // ------------------------------------------
         // CONNECT TIKTOK
         // ------------------------------------------

@@ -2,11 +2,16 @@ import { WebcastEvent } from 'tiktok-live-connector';
 
 import { tiktok } from './connection.js';
 
-import { isGiftChatFilterEnabled } from '../core/server.js';
+import {
+    isGiftChatFilterEnabled,
+    broadcastToDashboard
+} from '../core/server.js';
 
 import {
     sendMinecraftChat
 } from '../minecraft/lcon.js';
+
+
 // ==========================================
 // SETUP TIKTOK CHAT LISTENER
 // ==========================================
@@ -22,78 +27,121 @@ export function setupChatListener() {
     // TIKTOK CHAT
     // ==========================================
 
-    tiktok.on(WebcastEvent.CHAT, data => {
+    tiktok.on(
+        WebcastEvent.CHAT,
+        data => {
 
-        // ==========================================
-        // GET USERNAME
-        // ==========================================
+            // ==========================================
+            // GET USERNAME
+            // ==========================================
 
-        const username =
-            data.user?.uniqueId ||
-            data.user?.displayId ||
-            'Unknown';
-
-
-        // ==========================================
-        // GET MESSAGE
-        // ==========================================
-
-        const message =
-            data.content ||
-            data.comment ||
-            data.text ||
-            data.message ||
-            '';
+            const username =
+                data.user?.uniqueId ||
+                data.user?.displayId ||
+                'Unknown';
 
 
-        // ==========================================
-        // IGNORE EMPTY MESSAGE
-        // ==========================================
+            // ==========================================
+            // GET MESSAGE
+            // ==========================================
 
-        if (!message.trim()) {
+            const message =
+                data.content ||
+                data.comment ||
+                data.text ||
+                data.message ||
+                '';
 
-            return;
-        }
-
-
-        console.log('');
-        console.log('==============================');
-        console.log('TIKTOK CHAT');
-        console.log(`User: ${username}`);
-        console.log(`Message: ${message}`);
-        console.log('TYPE: CHAT ONLY');
-        console.log('==============================');
+                const normalizedMessage =
+    String(message)
+        .replace(/\s+/g, ' ')
+        .trim();
 
 
-        // ==========================================
-        // GIFT + NUMBER FILTER
-        // ==========================================
+            // ==========================================
+            // IGNORE EMPTY MESSAGE
+            // ==========================================
 
-        const giftNumberPattern = /\bgift\s*\+?\s*\d+\b/i;
+            if (!message.trim()) {
 
-        const isGiftNumberMessage =
-            giftNumberPattern.test(message);
+                return;
 
-        if (
-            isGiftChatFilterEnabled() &&
-            isGiftNumberMessage
-        ) {
+            }
+
+
+            console.log('');
 
             console.log(
-                `CHAT FILTERED: ${username}: ${message}`
+                '=============================='
             );
 
-            return;
-        }
+            console.log(
+                'TIKTOK CHAT'
+            );
 
-        // ==========================================
-        // SEND TO MINECRAFT CHAT
-        // ==========================================
+            console.log(
+                `User: ${username}`
+            );
 
-                sendMinecraftChat(
+            console.log(
+                `Message: ${message}`
+            );
+
+            console.log(
+                '=============================='
+            );
+
+
+            // ==========================================
+            // GIFT + NUMBER FILTER
+            // ==========================================
+
+       const giftNumberPattern =
+    /^\s*\*?\s*(?:z)?gift\s*\+?\s*\d+\s*$/i;
+
+
+const isGiftNumberMessage =
+    giftNumberPattern.test(normalizedMessage);
+
+
+            if (
+                isGiftChatFilterEnabled() &&
+                isGiftNumberMessage
+            ) {
+
+                console.log(
+                    `CHAT FILTERED: ${username}: ${message}`
+                );
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // SEND TO MINECRAFT CHAT
+            // ==========================================
+
+            sendMinecraftChat(
                 `<${username}> ${message}`
             );
 
 
-    });
+            // ==========================================
+            // SEND TO DASHBOARD
+            // ==========================================
+
+            broadcastToDashboard({
+
+                type: 'chat',
+
+                user: username,
+
+                message: message
+
+            });
+
+        }
+    );
+
 }

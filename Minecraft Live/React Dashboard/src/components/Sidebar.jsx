@@ -1,3 +1,4 @@
+//Minecraft Live/React Dashboard/src/components/Sidebar.jsx
 const navigationSections = [
     {
         section: 'Overview',
@@ -11,10 +12,31 @@ const navigationSections = [
             { id: 'gifts', icon: '◆', label: 'Gift List' },
         ],
     },
-    {
-        section: 'Minecraft',
-        items: [{ id: 'minecraft', icon: '◈', label: 'Minecraft' }],
-    },
+{
+    section: 'Minecraft',
+    items: [{ id: 'minecraft', icon: '◈', label: 'Minecraft' }],
+},
+{
+    section: 'Zombie Apocalypse',
+    items: [
+        {
+            id: 'zombie-apocalypse',
+            icon: '☠',
+            label: 'Zombie Apocalypse',
+        },
+    ],
+},
+
+{
+    section: 'Mob Battle',
+    items: [
+        {
+            id: 'mob-battle',
+            icon: '⚔',
+            label: 'Mob Battle',
+        },
+    ],
+},
 ]
 
 export default function Sidebar({

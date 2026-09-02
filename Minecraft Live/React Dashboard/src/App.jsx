@@ -2,9 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import Sidebar from './components/Sidebar'
 import GiftListPage from './pages/GiftListPage'
 import MinecraftPage from './pages/MinecraftPage'
+import ZombieApocalypse from "./pages/ZombieApocalypse/components/ZombieApocalypse";
 import OverviewPage from './pages/OverviewPage'
 import SocialPage from './pages/SocialPage'
 import TikTokPage from './pages/TikTokPage'
+import MobBattle from './pages/MobBattle'
 
 // UI ENTRY POINT: React dashboard only. It talks to the bot through HTTP and WebSocket.
 const API_URL = 'http://localhost:3001'
@@ -235,14 +237,15 @@ export default function App() {
         }
     }
 
-    const pages = {
-        overview: <OverviewPage status={status} logs={logs} />,
-        tiktok: <TikTokPage status={status} />,
-        minecraft: <MinecraftPage status={status} />,
-        gifts: <GiftListPage />,
-        social: <SocialPage status={status} />,
-    }
-
+            const pages = {
+                overview: <OverviewPage status={status} logs={logs} />,
+                tiktok: <TikTokPage status={status} />,
+                minecraft: <MinecraftPage status={status} />,
+                gifts: <GiftListPage />,
+                social: <SocialPage status={status} />,
+                'zombie-apocalypse': <ZombieApocalypse />,
+                'mob-battle': <MobBattle />,
+            }
     return (
         <div className="app-layout">
             <Sidebar

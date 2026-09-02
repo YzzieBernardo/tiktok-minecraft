@@ -1,0 +1,8 @@
+{
+    "maxActiveZombies": 100,
+    "minSpawnDistance": 10,
+    "maxSpawnDistance": 20,
+    "zombiesPerBatch": 5,
+    "spawnIntervalMs": 1000,
+    "maxPositionAttempts": 20
+}

@@ -1,8 +1,9 @@
+
 import WebSocket from 'ws';
 
 let ws = null;
 
-let minecraftMessageHandler = null;
+const minecraftMessageHandlers = new Set();
 let minecraftStatusHandler = null;
 let minecraftEventHandler = null;
 
@@ -147,29 +148,54 @@ ws.on('message', data => {
 
     const message = data.toString();
 
-    console.log(
-        'Minecraft:',
-        message
-    );
+    console.log('');
+    console.log('================================');
+    console.log('LCon MESSAGE RECEIVED');
+    console.log('RAW:', JSON.stringify(message));
+    console.log('READY STATE:', ws?.readyState);
+    console.log('CONNECTED:', isMinecraftConnected());
+    console.log('================================');
+    for (const handler of minecraftMessageHandlers) {
 
-    console.log(
-        'LCon RAW MESSAGE:',
-        JSON.stringify(message)
-    );
+        try {
 
-    if (minecraftMessageHandler) {
-        minecraftMessageHandler(message);
+            console.log(
+                'Calling Minecraft message handler...'
+            );
+
+            handler(message);
+
+            console.log(
+                'Minecraft message handler finished.'
+            );
+
+        } catch (error) {
+
+            console.error(
+                'Minecraft message handler ERROR:',
+                error
+            );
+
+        }
+
     }
-});
 
+});
 
     // ==========================================
     // ERROR
     // ==========================================
-
-    ws.on('error', error => {
+ws.on('error', error => {
 
     clearTimeout(connectionTimeout);
+
+    console.log('');
+    console.log('================================');
+    console.log('MINECRAFT LCON WEBSOCKET ERROR');
+    console.log('ERROR MESSAGE:', error.message);
+    console.log('ERROR CODE:', error.code);
+    console.log('ERROR:', error);
+    console.log('================================');
 
     notifyEvent(
         `Minecraft LCon error: ${error.message}`,
@@ -178,26 +204,34 @@ ws.on('message', data => {
 
 });
 
-
     // ==========================================
     // CLOSED
     // ==========================================
 
-    ws.on('close', () => {
+ws.on('close', (code, reason) => {
 
-        notifyEvent(
-            'Minecraft LCon: Connection closed.',
-            'like'
-        );
+    console.log('');
+    console.log('================================');
+    console.log('MINECRAFT LCON WEBSOCKET CLOSED');
+    console.log('CLOSE CODE:', code);
+    console.log(
+        'CLOSE REASON:',
+        reason?.toString() || '(empty)'
+    );
+    console.log('================================');
 
+    notifyEvent(
+        `Minecraft LCon: Connection closed. Code=${code} Reason=${reason?.toString() || '(empty)'}`,
+        'like'
+    );
 
-        ws = null;
+    ws = null;
 
-        notifyStatus();
+    notifyStatus();
 
-    });
+});
 
-}
+        }
 
 
 // ==========================================
@@ -237,17 +271,31 @@ export function disconnectMinecraft() {
 // ==========================================
 
 export function onMinecraftMessage(handler) {
-    minecraftMessageHandler = handler;
+    minecraftMessageHandlers.add(handler);
 }
 
 
 // ==========================================
 // SEND COMMAND
 // ==========================================
-
 export function sendCommand(command) {
 
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
+    const text =
+        String(command || '').trim();
+
+
+    if (!text) {
+
+        notifyEvent(
+            'Minecraft: Cannot send empty command.',
+            'like'
+        );
+
+        return false;
+    }
+
+
+    if (!isMinecraftConnected()) {
 
         notifyEvent(
             'Minecraft: Cannot send command. LCon is disconnected.',
@@ -258,16 +306,29 @@ export function sendCommand(command) {
     }
 
 
-    ws.send(`[server]${command}`);
+    try {
 
-    console.log(
-        `Minecraft: ${command}`
-    );
+        ws.send(
+            `[server]${text}`
+        );
 
-    return true;
+        console.log(
+            `Minecraft: ${text}`
+        );
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            'Minecraft: Failed to send command:',
+            error
+        );
+
+        return false;
+
+    }
 }
-
-
 // ==========================================
 // SEND MINECRAFT CHAT
 // ==========================================

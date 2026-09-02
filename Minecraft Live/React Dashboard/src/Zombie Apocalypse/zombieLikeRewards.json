@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "likesRequired": 400,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 100,
+        "enabled": true,
+        "createdAt": "2026-09-01T13:42:33.603Z",
+        "updatedAt": "2026-09-01T14:26:43.926Z"
+    },
+    {
+        "id": 1,
+        "likesRequired": 330,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 100,
+        "enabled": true,
+        "createdAt": "2026-09-01T14:26:24.202Z",
+        "updatedAt": "2026-09-01T14:26:24.202Z"
+    }
+]

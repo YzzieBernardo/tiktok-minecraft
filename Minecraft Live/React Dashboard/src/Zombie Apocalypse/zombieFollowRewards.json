@@ -1,0 +1,11 @@
+[
+    {
+        "id": 1,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 100,
+        "enabled": true,
+        "createdAt": "2026-09-01T13:21:28.192Z",
+        "updatedAt": "2026-09-01T13:21:37.526Z"
+    }
+]

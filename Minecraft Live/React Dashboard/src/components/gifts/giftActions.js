@@ -1,3 +1,5 @@
+//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\components\gifts\giftActions.js
+
 import { WebcastEvent } from 'tiktok-live-connector';
 import { tiktok } from '../../services/tiktok/connection.js';
 import { giftList } from './GiftManager.js';
@@ -17,6 +19,23 @@ import {
     sendCommand
 } from '../../services/minecraft/lcon.js';
 
+import {
+canMobBattleReceiveEvents
+} from '../../services/core/mobBattleServer.js';
+
+
+// ==========================================
+// MOB BATTLE STATUS
+// ==========================================
+
+function isMobBattleEnabled() {
+
+    return canMobBattleReceiveEvents();
+
+}
+
+let giftListenerRegistered = false;
+
 const mobTypes = [
     ['zombie', 'zombie'],
     ['skeleton', 'skeleton'],
@@ -28,11 +47,30 @@ const mobTypes = [
     ['mutantSkeletons', 'mutantmonsters:mutant_skeleton'],
 ];
 
-function spawnGiftMobs(gift) {
-    for (const [countKey, mobType] of mobTypes) {
-        for (let count = 0; count < (gift[countKey] ?? 0); count++) {
-            spawnMobForTeam(mobType, gift.team);
+function spawnGiftMobs(
+    gift,
+    donorName = null
+) {
+
+    for (
+        const [countKey, mobType]
+        of mobTypes
+    ) {
+
+        for (
+            let count = 0;
+            count < (gift[countKey] ?? 0);
+            count++
+        ) {
+
+            spawnMobForTeam(
+                mobType,
+                gift.team,
+                donorName
+            );
+
         }
+
     }
 }
 
@@ -130,9 +168,45 @@ sendCommand(
         }
 
 
-    spawnGiftMobs(gift);
+// ==========================================
+// MOB BATTLE ON / OFF VALIDATION
+// ==========================================
+if (isMobBattleEnabled()) {
 
+    console.log(
+        'Mob Battle: Gift mobs enabled.'
+    );
 
+    const giftQuantity =
+        Math.max(
+            1,
+            Number(quantity) || 1
+        );
+
+    console.log(
+        `Mob Battle: Gift quantity = ${giftQuantity}`
+    );
+
+    for (
+        let i = 0;
+        i < giftQuantity;
+        i++
+    ) {
+
+        spawnGiftMobs(
+            gift,
+            donorName
+        );
+
+    }
+
+} else {
+
+    console.log(
+        'Mob Battle: OFF — Gift mobs skipped.'
+    );
+
+}
     // ==========================================
     // OTHER MUTANTS
     // ==========================================
@@ -174,6 +248,18 @@ function triggerBomb(bomb, quantity = 1) {
 
 export function setupGiftListener() {
 
+
+    if (giftListenerRegistered) {
+
+    console.log(
+        'Gift listener already registered. Skipping duplicate registration.'
+    );
+
+    return;
+}
+
+giftListenerRegistered = true;
+
     // ==========================================
     // CREATE TEAMS
     // ==========================================
@@ -191,18 +277,60 @@ export function setupGiftListener() {
 
 onMinecraftMessage(message => {
 
-    const text = String(message || '').trim();
+const text =
+    String(message || '').trim();
 
-    // Only react to actual Minecraft chat messages.
-    // LCon responses such as 200:"empty" are ignored.
-    const match = text.match(/(?:<([^>]+)>\s*)?gift\s+(\d+)/i);
+const normalizedText =
+    text
+        // Convert JSON unicode escapes.
+        .replace(/\\u003c/gi, '<')
+        .replace(/\\u003e/gi, '>')
+        // Remove LCon response prefix.
+        .replace(/^200:/, '')
+        // Remove surrounding JSON quotes.
+        .replace(/^"|"$/g, '')
+        // Remove literal{} wrapper.
+        .replace(/^literal\{/, '')
+        .replace(/\}$/, '')
+        // Clean any remaining escaped characters.
+        .replace(/\\"/g, '"')
+        .trim();
 
-    if (!match) {
-        return;
-    }
+console.log(
+    'Mob Battle: Normalized Minecraft message:',
+    normalizedText
+);
+
+const match =
+    normalizedText.match(
+        /<([^>]+)>\s*mgift\s+(\d+)/i
+    );
+if (!match) {
+    return;
+}
 
     const donorName = match[1]?.trim() || 'Minecraft Player';
     const giftId = Number(match[2]);
+
+    // ==========================================
+    // MOB BATTLE ON / OFF VALIDATION
+    // ==========================================
+
+if (!isMobBattleEnabled()) {
+
+    console.log('');
+    console.log('==============================');
+    console.log('REGULAR GIFT BLOCKED');
+    console.log('Mob Battle: OFF');
+    console.log('Please turn Mob Battle ON.');
+    console.log('==============================');
+
+    sendCommand(
+        'say Please turn Mob Battle ON.'
+    );
+
+    return;
+}
 
     console.log('');
     console.log('==============================');

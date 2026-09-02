@@ -1,0 +1,67 @@
+[
+    {
+        "giftId": 5655,
+        "giftName": "Rose",
+        "action": "give_item",
+        "rewardName": "minecraft:bread",
+        "amount": 64,
+        "enabled": true,
+        "createdAt": 1788026306515,
+        "updatedAt": 1788026306515
+    },
+    {
+        "giftId": 5654,
+        "giftName": "RoseTest",
+        "action": "spawn_mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 20,
+        "enabled": true,
+        "createdAt": 1788027373719,
+        "updatedAt": 1788226808708,
+        "mobId": "minecraft:zombie"
+    },
+    {
+        "giftId": 5653,
+        "giftName": "rosetest3",
+        "action": "spawn_mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 200,
+        "enabled": true,
+        "createdAt": 1788027788126,
+        "updatedAt": 1788184996142,
+        "mobId": "minecraft:zombie"
+    },
+    {
+        "giftId": 5652,
+        "giftName": "Rose",
+        "action": "give_item",
+        "rewardName": "minecraft:gold_ingot",
+        "amount": 20,
+        "mobId": "minecraft:zombie",
+        "enabled": true,
+        "createdAt": 1788101364821,
+        "updatedAt": 1788101423292
+    },
+    {
+        "giftId": 5656,
+        "giftName": "Donut",
+        "action": "spawn_mob",
+        "rewardName": "mutantmonsters:mutant_zombie",
+        "amount": 1,
+        "mobId": "mutantmonsters:mutant_zombie",
+        "enabled": true,
+        "createdAt": 1788101516842,
+        "updatedAt": 1788182019096
+    },
+    {
+        "giftId": 5657,
+        "giftName": "Rosesss",
+        "action": "spawn_mob",
+        "rewardName": "mutantmonsters:mutant_zombie",
+        "amount": 100,
+        "mobId": "mutantmonsters:mutant_zombie",
+        "enabled": true,
+        "createdAt": 1788160371397,
+        "updatedAt": 1788182242756
+    }
+]
