@@ -1,6 +1,6 @@
 //E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\MobBattle.jsx
-
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import "../styles/mobBattle.css";
 
 const API_URL = 'http://localhost:3001'
 

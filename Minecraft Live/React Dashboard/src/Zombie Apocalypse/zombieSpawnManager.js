@@ -22,6 +22,10 @@ import {
 } from './zombieApocalypseConfig.js';
 
 import {
+    resolveZombieMobName,
+} from './zombieMobNameSource.js';
+
+import {
     getZombieSpawnPosition,
 } from './zombieSpawnPosition.js';
 
@@ -116,8 +120,10 @@ export function spawnMob(
     String(mobId || '').trim();
 
 const displayName =
-    String(donorName || '').trim() || 'Unknown';
-
+    resolveZombieMobName({
+        tiktokUsername: donorName,
+    });
+    
     if (!mob) {
 
         console.log(

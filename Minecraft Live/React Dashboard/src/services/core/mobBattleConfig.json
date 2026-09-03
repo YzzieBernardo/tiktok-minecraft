@@ -1,6 +1,6 @@
 {
-    "nameMode": "tiktok",
-    "specificNameId": null,
+    "nameMode": "specific",
+    "specificNameId": 1,
     "names": [
         {
             "id": 1,

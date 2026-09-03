@@ -40,17 +40,16 @@ import {
 } from './zombieGiftManager.js';
 
 // ==========================================
-// ZOMBIE LIKE REWARDS
+// ZOMBIE MOB NAME SOURCE
 // ==========================================
 
 import {
-    getZombieLikeRewards,
-    getZombieLikeReward,
-    createZombieLikeReward,
-    updateZombieLikeReward,
-    deleteZombieLikeReward,
-    setZombieLikeRewardEnabled,
-} from './zombieLikeManager.js';
+    getZombieMobNameSource,
+    setZombieMobNameSource,
+    addZombieMobName,
+    deleteZombieMobName,
+    selectZombieMobName,
+} from './zombieMobNameSource.js';
 
 
 // ==========================================
@@ -65,6 +64,19 @@ import {
     deleteZombieFollowReward,
     setZombieFollowRewardEnabled,
 } from './zombieFollowManager.js';
+
+// ==========================================
+// ZOMBIE LIKE REWARDS
+// ==========================================
+
+import {
+    getZombieLikeRewards,
+    getZombieLikeReward,
+    createZombieLikeReward,
+    updateZombieLikeReward,
+    deleteZombieLikeReward,
+    setZombieLikeRewardEnabled,
+} from './zombieLikeManager.js';
 
 
 
@@ -259,6 +271,8 @@ export function setupZombieApocalypseServer(app) {
 
         }
     );
+
+    
 
 
     // ======================================
@@ -1141,6 +1155,267 @@ app.put(
             reward,
 
         });
+
+    }
+);
+
+// ======================================
+// ZOMBIE MOB NAME SOURCE
+// ======================================
+
+// GET MOB NAME SOURCE
+
+app.get(
+    '/api/zombie-apocalypse/mob-name-source',
+    (req, res) => {
+
+        try {
+
+            const data =
+                getZombieMobNameSource();
+
+            res.json({
+
+                ok: true,
+
+                ...data,
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Zombie mob name source get error:',
+                error
+            );
+
+            res.status(500).json({
+
+                ok: false,
+
+                error:
+                    error.message,
+
+            });
+
+        }
+
+    }
+);
+
+
+// ======================================
+// SET NAME SOURCE
+// ======================================
+
+app.put(
+    '/api/zombie-apocalypse/mob-name-source/source',
+    (req, res) => {
+
+        try {
+
+            const source =
+                String(
+                    req.body?.source || ''
+                ).trim();
+
+
+            const data =
+                setZombieMobNameSource(
+                    source
+                );
+
+
+            res.json({
+
+                ok: true,
+
+                ...data,
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Zombie mob name source update error:',
+                error
+            );
+
+
+            res.status(400).json({
+
+                ok: false,
+
+                error:
+                    error.message,
+
+            });
+
+        }
+
+    }
+);
+
+
+// ======================================
+// ADD CUSTOM MOB NAME
+// ======================================
+
+app.post(
+    '/api/zombie-apocalypse/mob-name-source/names',
+    (req, res) => {
+
+        try {
+
+            const saved =
+             addZombieMobName(
+    req.body?.name
+);
+
+
+            res.json({
+
+                ok: true,
+
+                name:
+                    saved,
+
+                config:
+                    getZombieMobNameSource(),
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Zombie mob name create error:',
+                error
+            );
+
+
+            res.status(400).json({
+
+                ok: false,
+
+                error:
+                    error.message,
+
+            });
+
+        }
+
+    }
+);
+
+
+// ======================================
+// DELETE CUSTOM MOB NAME
+// ======================================
+
+app.delete(
+    '/api/zombie-apocalypse/mob-name-source/names/:id',
+    (req, res) => {
+
+        try {
+
+            const removed =
+                deleteZombieMobName(
+                    Number(
+                        req.params.id
+                    )
+                );
+
+
+            if (!removed) {
+
+                return res.status(404).json({
+
+                    ok: false,
+
+                    error:
+                        'Saved mob name not found.',
+
+                });
+
+            }
+
+
+            res.json({
+
+                ok: true,
+
+                removed,
+
+                config:
+                    getZombieMobNameSource(),
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Zombie mob name delete error:',
+                error
+            );
+
+
+            res.status(400).json({
+
+                ok: false,
+
+                error:
+                    error.message,
+
+            });
+
+        }
+
+    }
+);
+
+
+// ======================================
+// SELECT SPECIFIC MOB NAME
+// ======================================
+
+app.put(
+    '/api/zombie-apocalypse/mob-name-source/specific',
+    (req, res) => {
+
+        try {
+
+            const data =
+                selectZombieMobName(
+                    req.body?.id
+                );
+
+
+            res.json({
+
+                ok: true,
+
+                ...data,
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                'Zombie specific mob name error:',
+                error
+            );
+
+
+            res.status(400).json({
+
+                ok: false,
+
+                error:
+                    error.message,
+
+            });
+
+        }
 
     }
 );

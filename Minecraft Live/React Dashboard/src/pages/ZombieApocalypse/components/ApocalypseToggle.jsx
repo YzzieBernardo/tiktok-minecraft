@@ -1,48 +1,56 @@
-//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\ZombieApocalypse\components\ApocalypseToggle.jsx
 export default function ApocalypseToggle({
     running,
     loading,
     onToggle,
 }) {
     return (
-        <section className="za-card">
+        <div className="za-system-toggle">
 
-            <div className="za-card-title">
-                ZOMBIE APOCALYPSE
-            </div>
+            <div className="za-system-toggle-indicator">
 
-            <div className="za-status-row">
-
-                <div>
-                    <div className="za-label">
-                        Zombie Spawning
-                    </div>
-
-                    <div className="za-description">
-                        {running
-                            ? 'Zombie Apocalypse is active.'
-                            : 'Zombie Apocalypse is disabled.'}
-                    </div>
-                </div>
-
-                <button
+                <div
                     className={
                         running
-                            ? 'btn btn-primary'
-                            : 'btn btn-ghost'
+                            ? "za-power-light za-power-on"
+                            : "za-power-light za-power-off"
                     }
-                    onClick={onToggle}
-                    disabled={loading}
-                >
-                    {loading
-                        ? 'Working...'
-                        : running
-                            ? '🟢 ON'
-                            : '🔴 OFF'}
-                </button>
+                />
 
             </div>
 
-        </section>
+
+            <div className="za-system-toggle-info">
+
+                <div className="za-system-toggle-status">
+                    {loading
+                        ? "..."
+                        : running
+                            ? "ON"
+                            : "OFF"}
+                </div>
+
+                <div className="za-system-toggle-description">
+                    {running
+                        ? "Zombie Apocalypse is active"
+                        : "Zombie Apocalypse is disabled"}
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                className="za-system-toggle-button"
+                onClick={onToggle}
+                disabled={loading}
+            >
+                {loading
+                    ? "Working..."
+                    : running
+                        ? "Disable"
+                        : "Enable"}
+            </button>
+
+        </div>
     );
 }

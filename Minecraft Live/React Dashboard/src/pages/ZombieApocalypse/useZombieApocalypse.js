@@ -27,15 +27,17 @@ import {
 
 export default function useZombieApocalypse() {
 
-    const [state, setState] = useState({
-        running: false,
-        maxActiveZombies: 100,
-        minSpawnRange: 100,
-        maxSpawnRange: 120,
-        activeZombies: 0,
-        queuedZombies: 0,
-    })
+const [state, setState] = useState({
+    running: false,
 
+    maxActiveZombies: null,
+    minSpawnRange: null,
+    maxSpawnRange: null,
+
+    activeZombies: 0,
+    queuedZombies: 0,
+    totalSpawned: 0,
+})
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
@@ -77,38 +79,52 @@ export default function useZombieApocalypse() {
     })
 
 
-    async function refreshStatus() {
+   async function refreshStatus() {
 
-        try {
+    try {
 
-            const data =
-                await getZombieStatus()
+        const data =
+            await getZombieStatus()
 
-            setState(prev => ({
-                ...prev,
+        setState(prev => ({
+            ...prev,
 
-                running:
-                    data.running ??
-                    prev.running,
+            // LIVE STATUS
+            running:
+                data.running ??
+                prev.running,
 
-                activeZombies:
-                    data.activeZombies ??
-                    0,
+            activeZombies:
+                data.activeZombies ??
+                0,
 
-                queuedZombies:
-                    data.queuedZombies ??
-                    0,
-            }))
+            queuedZombies:
+                data.queuedZombies ??
+                0,
 
-        } catch (error) {
+            // LIVE CONFIGURATION
+            maxActiveZombies:
+                data.maxActiveZombies ??
+                prev.maxActiveZombies,
 
-            console.error(
-                'Zombie Apocalypse refresh error:',
-                error
-            )
+            minSpawnRange:
+                data.minSpawnRange ??
+                prev.minSpawnRange,
 
-        }
+            maxSpawnRange:
+                data.maxSpawnRange ??
+                prev.maxSpawnRange,
+        }))
+
+    } catch (error) {
+
+        console.error(
+            'Zombie Apocalypse refresh error:',
+            error
+        )
+
     }
+}
 
 
     useEffect(() => {
@@ -120,26 +136,27 @@ export default function useZombieApocalypse() {
                 const data =
                     await getZombieStatus()
 
-                setState({
-                    running:
-                        data.running ?? false,
+setState({
+    running: data.running ?? false,
 
-                    maxActiveZombies:
-                        data.maxActiveZombies ?? 100,
+    maxActiveZombies:
+        data.maxActiveZombies ?? null,
 
-                    minSpawnRange:
-                        data.minSpawnRange ?? 100,
+    minSpawnRange:
+        data.minSpawnDistance ?? null,
 
-                    maxSpawnRange:
-                        data.maxSpawnRange ?? 120,
+    maxSpawnRange:
+        data.maxSpawnDistance ?? null,
 
-                    activeZombies:
-                        data.activeZombies ?? 0,
+    activeZombies:
+        data.activeZombies ?? 0,
 
-                    queuedZombies:
-                        data.queuedZombies ?? 0,
-                })
+    queuedZombies:
+        data.queuedZombies ?? 0,
 
+    totalSpawned:
+        data.totalSpawned ?? 0,
+})
             } catch (error) {
 
                 console.error(
@@ -185,12 +202,27 @@ export default function useZombieApocalypse() {
                     !state.running
                 )
 
-            setState(prev => ({
-                ...prev,
-                running:
-                    data.running,
-            }))
+     setState(prev => ({
+    ...prev,
 
+    running: data.running ?? prev.running,
+
+    activeZombies: data.activeZombies ?? 0,
+    queuedZombies: data.queuedZombies ?? 0,
+
+    totalSpawned: data.totalSpawned ?? prev.totalSpawned,
+
+    maxActiveZombies:
+        data.maxActiveZombies ?? prev.maxActiveZombies,
+
+minSpawnRange:
+    data.minSpawnDistance ??
+    prev.minSpawnRange,
+
+maxSpawnRange:
+    data.maxSpawnDistance ??
+    prev.maxSpawnRange,
+}))
         } catch (error) {
 
             console.error(
@@ -208,55 +240,57 @@ export default function useZombieApocalypse() {
     }
 
 
-    async function saveConfig() {
+   async function saveConfig(config) {
 
-        if (saving) return
+    if (saving) return
 
-        setSaving(true)
-        setError('')
+    setSaving(true)
+    setError('')
 
-        try {
+    try {
 
-            const data =
-                await saveZombieConfig({
+      const data =
+    await saveZombieConfig({
 
-                    maxActiveZombies:
-                        Number(
-                            state.maxActiveZombies
-                        ),
+        maxActiveZombies:
+            Number(
+                config.maxActiveZombies
+            ),
 
-                    minSpawnRange:
-                        Number(
-                            state.minSpawnRange
-                        ),
+        minSpawnDistance:
+            Number(
+                config.minSpawnRange
+            ),
 
-                    maxSpawnRange:
-                        Number(
-                            state.maxSpawnRange
-                        ),
-                })
+        maxSpawnDistance:
+            Number(
+                config.maxSpawnRange
+            ),
 
-            setState(prev => ({
-                ...prev,
-                ...data.config,
-            }))
+    })
 
-        } catch (error) {
+        setState(prev => ({
+            ...prev,
+            ...data.config,
+        }))
 
-            console.error(
-                'Zombie Apocalypse config error:',
-                error
-            )
+    } catch (error) {
 
-            setError(error.message)
+        console.error(
+            'Zombie Apocalypse config error:',
+            error
+        )
 
-        } finally {
+        setError(error.message)
 
-            setSaving(false)
+        throw error
 
-        }
+    } finally {
+
+        setSaving(false)
+
     }
-
+}
 
     useEffect(() => {
 

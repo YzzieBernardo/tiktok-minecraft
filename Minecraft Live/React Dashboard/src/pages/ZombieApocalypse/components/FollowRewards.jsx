@@ -1,4 +1,5 @@
-//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\ZombieApocalypse\components\FollowRewards.jsx
+import { useEffect, useState } from "react";
+
 export default function FollowRewards({
     rewards,
     loading,
@@ -11,203 +12,506 @@ export default function FollowRewards({
     onDelete,
     onCancel,
 }) {
+    const [manageOpen, setManageOpen] = useState(false);
+
+    function openManage() {
+        setManageOpen(true);
+    }
+
+    function closeManage() {
+        setManageOpen(false);
+
+        if (editingId !== null) {
+            onCancel();
+        }
+    }
+
+    function handleEdit(reward) {
+        onEdit(reward);
+        setManageOpen(true);
+    }
+
+    function handleAddNew() {
+        if (editingId !== null) {
+            onCancel();
+        }
+    }
+
+    useEffect(() => {
+        function handleEscape(event) {
+            if (event.key === "Escape" && manageOpen) {
+                closeManage();
+            }
+        }
+
+        document.addEventListener("keydown", handleEscape);
+
+        return () => {
+            document.removeEventListener(
+                "keydown",
+                handleEscape
+            );
+        };
+    }, [manageOpen, editingId]);
+
+    const visibleRewards = rewards.slice(0, 4);
+
     return (
-        <section className="za-card">
+        <>
+            <section className="za-card za-management-card">
 
-            <div className="za-card-title">
-                ZOMBIE FOLLOW REWARDS
-            </div>
+                <div className="za-management-header">
 
-            <div className="za-gift-form">
+                    <div className="za-management-title">
+                        <span className="za-management-icon za-follow-icon">
+                            ●
+                        </span>
 
-                <label className="za-field">
-                    <span>Reward Type</span>
+                        <span>
+                            FOLLOW REWARDS
+                        </span>
+                    </div>
 
-                    <select
-                        value={form.rewardType}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                rewardType: event.target.value,
-                                rewardName: '',
-                                amount: 1,
-                            }))
-                        }
-                    >
-                        <option value="mob">
-                            Mob
-                        </option>
-
-                        <option value="item">
-                            Item
-                        </option>
-                    </select>
-                </label>
-
-                <label className="za-field">
-
-                    <span>
-                        {form.rewardType === 'mob'
-                            ? 'Mob Name'
-                            : 'Item Name'}
+                    <span className="za-live-badge">
+                        LIVE
                     </span>
 
-                    <input
-                        type="text"
-                        placeholder={
-                            form.rewardType === 'mob'
-                                ? 'minecraft:zombie'
-                                : 'minecraft:diamond'
-                        }
-                        value={form.rewardName}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                rewardName: event.target.value,
-                            }))
-                        }
-                    />
+                </div>
 
-                </label>
 
-                <label className="za-field">
+                <div className="za-management-stats">
 
-                    <span>
-                        {form.rewardType === 'mob'
-                            ? 'Mob Amount'
-                            : 'Item Amount'}
-                    </span>
+                    <div className="za-management-stat">
 
-                    <input
-                        type="number"
-                        min="1"
-                        value={form.amount}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                amount: event.target.value,
-                            }))
-                        }
-                    />
+                        <span className="za-management-stat-label">
+                            Total Rewards
+                        </span>
 
-                </label>
+                        <strong>
+                            {rewards.length}
+                        </strong>
 
-            </div>
+                        <span className="za-management-stat-subtitle">
+                            Configured
+                        </span>
 
-            <div className="za-actions">
+                    </div>
 
-                <button
-                    className="btn btn-primary"
-                    onClick={onSave}
-                    disabled={saving}
-                >
-                    {saving
-                        ? 'Saving...'
-                        : editingId !== null
-                            ? 'Update Follow Reward'
-                            : 'Add Follow Reward'}
-                </button>
 
-                {editingId !== null && (
-                    <button
-                        className="btn btn-ghost"
-                        onClick={onCancel}
-                    >
-                        Cancel
-                    </button>
+                    <div className="za-management-stat">
+
+                        <span className="za-management-stat-label">
+                            Total Given
+                        </span>
+
+                        <strong>
+                            —
+                        </strong>
+
+                        <span className="za-management-stat-subtitle">
+                            This Session
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div className="za-management-table-wrapper">
+
+                    <table className="za-table">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    REWARD
+                                </th>
+
+                                <th>
+                                    TYPE
+                                </th>
+
+                                <th>
+                                    AMOUNT
+                                </th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            {loading ? (
+
+                                <tr>
+                                    <td colSpan="3">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            ) : visibleRewards.length === 0 ? (
+
+                                <tr>
+                                    <td colSpan="3">
+                                        No Follow Rewards configured.
+                                    </td>
+                                </tr>
+
+                            ) : (
+
+                                visibleRewards.map(reward => (
+
+                                    <tr key={reward.id}>
+
+                                        <td>
+                                            {reward.rewardName || "None"}
+                                        </td>
+
+                                        <td>
+                                            {reward.rewardType === "item"
+                                                ? "Item"
+                                                : "Mob"}
+                                        </td>
+
+                                        <td>
+                                            x{reward.amount ?? 0}
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            )}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                {rewards.length > 4 && (
+                    <div className="za-management-more">
+                        +{rewards.length - 4} more rewards...
+                    </div>
                 )}
 
-            </div>
 
-            <div className="za-table-wrapper">
+                <button
+                    type="button"
+                    className="za-management-button za-follow-button"
+                    onClick={openManage}
+                >
+                    Manage Follow Rewards
+                </button>
 
-                <table className="za-table">
+            </section>
 
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Reward</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
+            {manageOpen && (
 
-                        {loading ? (
+                <div
+                    className="za-modal-overlay"
+                    onMouseDown={event => {
+                        if (event.target === event.currentTarget) {
+                            closeManage();
+                        }
+                    }}
+                >
 
-                            <tr>
-                                <td colSpan="4">
-                                    Loading Follow Rewards...
-                                </td>
-                            </tr>
+                    <div className="za-modal za-reward-modal">
 
-                        ) : rewards.length === 0 ? (
+                        <div className="za-modal-header">
 
-                            <tr>
-                                <td colSpan="4">
-                                    No Follow Rewards configured.
-                                </td>
-                            </tr>
+                            <div>
 
-                        ) : (
+                                <h2>
+                                    {editingId !== null
+                                        ? "Edit Follow Reward"
+                                        : "Follow Rewards"}
+                                </h2>
 
-                            rewards.map(reward => (
+                                <p>
+                                    Configure rewards given when a viewer follows.
+                                </p>
 
-                                <tr key={reward.id}>
+                            </div>
 
-                                    <td>
-                                        {reward.rewardType === 'item'
-                                            ? 'Item'
-                                            : 'Mob'}
-                                    </td>
 
-                                    <td>
-                                        {reward.rewardName || 'None'}
-                                    </td>
+                            <button
+                                type="button"
+                                className="za-modal-close"
+                                onClick={closeManage}
+                                aria-label="Close"
+                            >
+                                ×
+                            </button>
 
-                                    <td>
-                                        {reward.amount ?? 0}
-                                    </td>
+                        </div>
 
-                                    <td>
 
-                                        <div className="za-table-actions">
+                        <div className="za-modal-body">
 
-                                            <button
-                                                className="btn btn-ghost"
-                                                onClick={() =>
-                                                    onEdit(reward)
-                                                }
-                                            >
-                                                Edit
-                                            </button>
+                            <div className="za-reward-management-toolbar">
 
-                                            <button
-                                                className="btn btn-ghost"
-                                                onClick={() =>
-                                                    onDelete(reward.id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
+                                <div>
+                                    <strong>
+                                        Configured Rewards
+                                    </strong>
+
+                                    <span>
+                                        {rewards.length} reward
+                                        {rewards.length !== 1 ? "s" : ""}
+                                    </span>
+                                </div>
+
+
+                                {editingId !== null && (
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-ghost"
+                                        onClick={handleAddNew}
+                                    >
+                                        + Add New
+                                    </button>
+
+                                )}
+
+                            </div>
+
+
+                            <div className="za-management-editor">
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        Reward Type
+                                    </label>
+
+                                    <select
+                                        value={form.rewardType}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                rewardType:
+                                                    event.target.value,
+                                                rewardName: "",
+                                                amount: 1,
+                                            }))
+                                        }
+                                    >
+
+                                        <option value="mob">
+                                            Mob
+                                        </option>
+
+                                        <option value="item">
+                                            Item
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        {form.rewardType === "mob"
+                                            ? "Mob Name"
+                                            : "Item Name"}
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        placeholder={
+                                            form.rewardType === "mob"
+                                                ? "minecraft:zombie"
+                                                : "minecraft:diamond"
+                                        }
+                                        value={form.rewardName}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                rewardName:
+                                                    event.target.value,
+                                            }))
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        {form.rewardType === "mob"
+                                            ? "Mob Amount"
+                                            : "Item Amount"}
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={form.amount}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                amount:
+                                                    event.target.value,
+                                            }))
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div className="za-modal-actions">
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={onSave}
+                                        disabled={saving}
+                                    >
+                                        {saving
+                                            ? "Saving..."
+                                            : editingId !== null
+                                                ? "Save Changes"
+                                                : "Add Follow Reward"}
+                                    </button>
+
+
+                                    {editingId !== null && (
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-ghost"
+                                            onClick={onCancel}
+                                            disabled={saving}
+                                        >
+                                            Cancel Edit
+                                        </button>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                        <div className="za-management-list za-follow-management-list">
+                                <div className="za-management-list-header">
+
+                                    <span>
+                                        REWARD
+                                    </span>
+
+                                    <span>
+                                        TYPE
+                                    </span>
+
+                                    <span>
+                                        AMOUNT
+                                    </span>
+
+                                    <span>
+                                        ACTIONS
+                                    </span>
+
+                                </div>
+
+
+                                {loading ? (
+
+                                    <div className="za-management-empty">
+                                        Loading Follow Rewards...
+                                    </div>
+
+                                ) : rewards.length === 0 ? (
+
+                                    <div className="za-management-empty">
+                                        No Follow Rewards configured.
+                                    </div>
+
+                                ) : (
+
+                                    rewards.map(reward => (
+
+                                        <div
+                                            className="za-management-list-row"
+                                            key={reward.id}
+                                        >
+
+                                            <span>
+                                                {reward.rewardName || "None"}
+                                            </span>
+
+                                            <span>
+                                                {reward.rewardType === "item"
+                                                    ? "Item"
+                                                    : "Mob"}
+                                            </span>
+
+                                            <span>
+                                                x{reward.amount ?? 0}
+                                            </span>
+
+                                            <span className="za-management-actions">
+
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-ghost"
+                                                    onClick={() =>
+                                                        handleEdit(reward)
+                                                    }
+                                                    disabled={saving}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-ghost"
+                                                    onClick={() =>
+                                                        onDelete(reward.id)
+                                                    }
+                                                    disabled={saving}
+                                                >
+                                                    Delete
+                                                </button>
+
+                                            </span>
 
                                         </div>
 
-                                    </td>
+                                    ))
 
-                                </tr>
+                                )}
 
-                            ))
+                            </div>
 
-                        )}
+                        </div>
 
-                    </tbody>
 
-                </table>
+                        <div className="za-modal-footer">
 
-            </div>
+                            <button
+                                type="button"
+                                className="za-modal-cancel"
+                                onClick={closeManage}
+                                disabled={saving}
+                            >
+                                Close
+                            </button>
 
-        </section>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            )}
+        </>
     );
 }

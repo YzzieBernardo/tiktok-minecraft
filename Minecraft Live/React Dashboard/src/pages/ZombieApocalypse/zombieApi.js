@@ -173,3 +173,67 @@ export async function deleteZombieGift(id) {
         }
     )
 }
+
+// =========================================================
+// MOB NAME SOURCE
+// =========================================================
+
+export async function getZombieMobNameSource() {
+    return request(
+        '/api/zombie-apocalypse/mob-name-source'
+    )
+}
+
+export async function saveZombieMobNameSource(source) {
+    return request(
+        '/api/zombie-apocalypse/mob-name-source/source',
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                source,
+            }),
+        }
+    )
+}
+
+export async function addZombieMobName(name) {
+    return request(
+        '/api/zombie-apocalypse/mob-name-source/names',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+            }),
+        }
+    )
+}
+
+export async function deleteZombieMobName(id) {
+    return request(
+        `/api/zombie-apocalypse/mob-name-source/names/${id}`,
+        {
+            method: 'DELETE',
+        }
+    )
+}
+
+export async function selectZombieMobName(id) {
+    return request(
+        '/api/zombie-apocalypse/mob-name-source/specific',
+        {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id,
+            }),
+        }
+    )
+}

@@ -1,17 +1,45 @@
-//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\ZombieApocalypse\components\ApocalypseHeader.jsx
 export default function ApocalypseHeader() {
     return (
-        <div className="page-header">
+        <header className="za-header">
 
-            <h1>
-                Zombie Apocalypse
-            </h1>
+            <div className="za-header-left">
 
-            <p>
-                Control zombie spawning,
-                limits, range and TikTok rewards.
-            </p>
+                <div className="za-header-icon">
+                    ☣
+                </div>
 
-        </div>
+                <div className="za-header-text">
+
+                    <h1>
+                        Zombie Apocalypse
+                    </h1>
+
+                    <p>
+                        Live monitor and control for Zombie Apocalypse system.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div className="za-header-right">
+
+                <div className="za-auto-refresh">
+
+                    <span className="za-live-dot" />
+
+                    <span>
+                        Auto-refresh:
+                    </span>
+
+                    <strong>
+                        ON
+                    </strong>
+
+                </div>
+            </div>
+
+        </header>
     );
 }

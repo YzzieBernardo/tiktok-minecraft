@@ -1,4 +1,5 @@
-//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\ZombieApocalypse\components\LikeRewards.jsx
+import { useEffect, useState } from "react";
+
 export default function LikeRewards({
     rewards,
     loading,
@@ -11,257 +12,547 @@ export default function LikeRewards({
     onDelete,
     onCancel,
 }) {
+    const [manageOpen, setManageOpen] = useState(false);
+
+    function openManage() {
+        setManageOpen(true);
+    }
+
+    function closeManage() {
+        setManageOpen(false);
+
+        if (editingId !== null) {
+            onCancel();
+        }
+    }
+
+    function handleEdit(reward) {
+        onEdit(reward);
+        setManageOpen(true);
+    }
+
+    async function handleSave() {
+        await onSave();
+    }
+
+    function handleAddNew() {
+        if (editingId !== null) {
+            onCancel();
+        }
+    }
+
+    useEffect(() => {
+        function handleEscape(event) {
+            if (event.key === "Escape" && manageOpen) {
+                closeManage();
+            }
+        }
+
+        document.addEventListener("keydown", handleEscape);
+
+        return () => {
+            document.removeEventListener(
+                "keydown",
+                handleEscape
+            );
+        };
+    }, [manageOpen, editingId]);
+
+    const visibleRewards = rewards.slice(0, 4);
 
     return (
-        <section className="za-card">
+        <>
+            <section className="za-card za-management-card">
 
-            <div className="za-card-title">
-                LIKE REWARDS
-            </div>
+                <div className="za-management-header">
 
-            <div className="za-description">
-                Reward players when the TikTok
-                like milestone is reached.
-            </div>
+                    <div className="za-management-title">
+                        <span className="za-management-icon za-like-icon">
+                            ♥
+                        </span>
 
+                        <span>
+                            LIKE REWARDS
+                        </span>
+                    </div>
 
-            <div className="za-gift-form">
-
-                <label className="za-field">
-
-                    <span>
-                        Likes Required
+                    <span className="za-live-badge">
+                        LIVE
                     </span>
 
-                    <input
-                        type="number"
-                        min="1"
-                        value={form.likesRequired}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                likesRequired:
-                                    event.target.value,
-                            }))
-                        }
-                    />
-
-                </label>
+                </div>
 
 
-                <label className="za-field">
+                <div className="za-management-stats">
 
-                    <span>
-                        Reward Type
-                    </span>
+                    <div className="za-management-stat">
 
-                    <select
-                        value={form.rewardType}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                rewardType:
-                                    event.target.value,
-                                rewardName: '',
-                                amount: 1,
-                            }))
-                        }
-                    >
-                        <option value="mob">
-                            Mob
-                        </option>
+                        <span className="za-management-stat-label">
+                            Total Milestones
+                        </span>
 
-                        <option value="item">
-                            Item
-                        </option>
+                        <strong>
+                            {rewards.length}
+                        </strong>
 
-                    </select>
+                        <span className="za-management-stat-subtitle">
+                            Configured
+                        </span>
 
-                </label>
+                    </div>
 
 
-                <label className="za-field">
+                    <div className="za-management-stat">
 
-                    <span>
-                        {form.rewardType === 'mob'
-                            ? 'Mob Name'
-                            : 'Item Name'}
-                    </span>
+                        <span className="za-management-stat-label">
+                            Total Rewards
+                        </span>
 
-                    <input
-                        type="text"
-                        placeholder={
-                            form.rewardType === 'mob'
-                                ? 'minecraft:zombie'
-                                : 'minecraft:bread'
-                        }
-                        value={form.rewardName}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                rewardName:
-                                    event.target.value,
-                            }))
-                        }
-                    />
+                        <strong>
+                            {rewards.length}
+                        </strong>
 
-                </label>
+                        <span className="za-management-stat-subtitle">
+                            Available
+                        </span>
+
+                    </div>
+
+                </div>
 
 
-                <label className="za-field">
+                <div className="za-management-table-wrapper">
 
-                    <span>
-                        {form.rewardType === 'mob'
-                            ? 'Mob Amount'
-                            : 'Item Amount'}
-                    </span>
+                    <table className="za-table">
 
-                    <input
-                        type="number"
-                        min="1"
-                        value={form.amount}
-                        onChange={event =>
-                            setForm(prev => ({
-                                ...prev,
-                                amount:
-                                    event.target.value,
-                            }))
-                        }
-                    />
+                        <thead>
+                            <tr>
+                                <th>
+                                    MILESTONE
+                                </th>
 
-                </label>
+                                <th>
+                                    REWARD
+                                </th>
 
-            </div>
+                                <th>
+                                    TYPE
+                                </th>
 
-
-            <div className="za-actions">
-
-                <button
-                    className="btn btn-primary"
-                    onClick={onSave}
-                    disabled={saving}
-                >
-                    {saving
-                        ? 'Saving...'
-                        : editingId !== null
-                            ? 'Update Like Reward'
-                            : 'Add Like Reward'}
-                </button>
+                                <th>
+                                    AMOUNT
+                                </th>
+                            </tr>
+                        </thead>
 
 
-                {editingId !== null && (
+                        <tbody>
 
-                    <button
-                        className="btn btn-ghost"
-                        onClick={onCancel}
-                    >
-                        Cancel
-                    </button>
+                            {loading ? (
 
+                                <tr>
+                                    <td colSpan="4">
+                                        Loading...
+                                    </td>
+                                </tr>
+
+                            ) : visibleRewards.length === 0 ? (
+
+                                <tr>
+                                    <td colSpan="4">
+                                        No Like Rewards configured.
+                                    </td>
+                                </tr>
+
+                            ) : (
+
+                                visibleRewards.map(reward => (
+
+                                    <tr key={reward.id}>
+
+                                        <td>
+                                            {reward.likesRequired} Likes
+                                        </td>
+
+                                        <td>
+                                            {reward.rewardName || "None"}
+                                        </td>
+
+                                        <td>
+                                            {reward.rewardType === "item"
+                                                ? "Item"
+                                                : "Mob"}
+                                        </td>
+
+                                        <td>
+                                            x{reward.amount ?? 0}
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            )}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                {rewards.length > 4 && (
+                    <div className="za-management-more">
+                        +{rewards.length - 4} more rewards...
+                    </div>
                 )}
 
-            </div>
+
+                <button
+                    type="button"
+                    className="za-management-button za-like-button"
+                    onClick={openManage}
+                >
+                    Manage Like Rewards
+                </button>
+
+            </section>
 
 
-            <div className="za-table-wrapper">
+            {manageOpen && (
 
-                <table className="za-table">
+                <div
+                    className="za-modal-overlay"
+                    onMouseDown={event => {
+                        if (event.target === event.currentTarget) {
+                            closeManage();
+                        }
+                    }}
+                >
 
-                    <thead>
+                    <div className="za-modal za-reward-modal">
 
-                        <tr>
-                            <th>Likes</th>
-                            <th>Type</th>
-                            <th>Reward</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
+                        <div className="za-modal-header">
 
-                    </thead>
+                            <div>
+
+                                <h2>
+                                    {editingId !== null
+                                        ? "Edit Like Reward"
+                                        : "Like Rewards"}
+                                </h2>
+
+                                <p>
+                                    Configure TikTok like milestone rewards.
+                                </p>
+
+                            </div>
 
 
-                    <tbody>
+                            <button
+                                type="button"
+                                className="za-modal-close"
+                                onClick={closeManage}
+                                aria-label="Close"
+                            >
+                                ×
+                            </button>
 
-                        {loading ? (
+                        </div>
 
-                            <tr>
-                                <td colSpan="5">
-                                    Loading like rewards...
-                                </td>
-                            </tr>
 
-                        ) : rewards.length === 0 ? (
+                        <div className="za-modal-body">
 
-                            <tr>
-                                <td colSpan="5">
-                                    No Like Rewards configured.
-                                </td>
-                            </tr>
+                            <div className="za-reward-management-toolbar">
 
-                        ) : (
+                                <div>
+                                    <strong>
+                                        Configured Rewards
+                                    </strong>
 
-                            rewards.map(reward => (
+                                    <span>
+                                        {rewards.length} milestone
+                                        {rewards.length !== 1 ? "s" : ""}
+                                    </span>
+                                </div>
 
-                                <tr key={reward.id}>
 
-                                    <td>
-                                        {reward.likesRequired}
-                                    </td>
+                                {editingId !== null && (
 
-                                    <td>
-                                        {reward.rewardType === 'item'
-                                            ? 'Item'
-                                            : 'Mob'}
-                                    </td>
+                                    <button
+                                        type="button"
+                                        className="btn btn-ghost"
+                                        onClick={handleAddNew}
+                                    >
+                                        + Add New
+                                    </button>
 
-                                    <td>
-                                        {reward.rewardName || 'None'}
-                                    </td>
+                                )}
 
-                                    <td>
-                                        {reward.amount ?? 0}
-                                    </td>
+                            </div>
 
-                                    <td>
 
-                                        <div className="za-table-actions">
+                            <div className="za-management-editor">
 
-                                            <button
-                                                className="btn btn-ghost"
-                                                onClick={() =>
-                                                    onEdit(reward)
-                                                }
-                                            >
-                                                Edit
-                                            </button>
+                                <div className="za-modal-field">
 
-                                            <button
-                                                className="btn btn-ghost"
-                                                onClick={() =>
-                                                    onDelete(
-                                                        reward.id
-                                                    )
-                                                }
-                                            >
-                                                Delete
-                                            </button>
+                                    <label>
+                                        Likes Required
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={form.likesRequired}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                likesRequired:
+                                                    event.target.value,
+                                            }))
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        Reward Type
+                                    </label>
+
+                                    <select
+                                        value={form.rewardType}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                rewardType:
+                                                    event.target.value,
+                                                rewardName: "",
+                                                amount: 1,
+                                            }))
+                                        }
+                                    >
+
+                                        <option value="mob">
+                                            Mob
+                                        </option>
+
+                                        <option value="item">
+                                            Item
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        {form.rewardType === "mob"
+                                            ? "Mob Name"
+                                            : "Item Name"}
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        placeholder={
+                                            form.rewardType === "mob"
+                                                ? "minecraft:zombie"
+                                                : "minecraft:bread"
+                                        }
+                                        value={form.rewardName}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                rewardName:
+                                                    event.target.value,
+                                            }))
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div className="za-modal-field">
+
+                                    <label>
+                                        {form.rewardType === "mob"
+                                            ? "Mob Amount"
+                                            : "Item Amount"}
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={form.amount}
+                                        onChange={event =>
+                                            setForm(prev => ({
+                                                ...prev,
+                                                amount:
+                                                    event.target.value,
+                                            }))
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div className="za-modal-actions">
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={handleSave}
+                                        disabled={saving}
+                                    >
+                                        {saving
+                                            ? "Saving..."
+                                            : editingId !== null
+                                                ? "Save Changes"
+                                                : "Add Like Reward"}
+                                    </button>
+
+
+                                    {editingId !== null && (
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-ghost"
+                                            onClick={onCancel}
+                                            disabled={saving}
+                                        >
+                                            Cancel Edit
+                                        </button>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div className="za-management-list">
+
+                                <div className="za-management-list-header">
+                                    <span>
+                                        MILESTONE
+                                    </span>
+
+                                    <span>
+                                        REWARD
+                                    </span>
+
+                                    <span>
+                                        TYPE
+                                    </span>
+
+                                    <span>
+                                        AMOUNT
+                                    </span>
+
+                                    <span>
+                                        ACTIONS
+                                    </span>
+                                </div>
+
+
+                                {loading ? (
+
+                                    <div className="za-management-empty">
+                                        Loading Like Rewards...
+                                    </div>
+
+                                ) : rewards.length === 0 ? (
+
+                                    <div className="za-management-empty">
+                                        No Like Rewards configured.
+                                    </div>
+
+                                ) : (
+
+                                    rewards.map(reward => (
+
+                                        <div
+                                            className="za-management-list-row"
+                                            key={reward.id}
+                                        >
+
+                                            <span>
+                                                {reward.likesRequired} Likes
+                                            </span>
+
+                                            <span>
+                                                {reward.rewardName || "None"}
+                                            </span>
+
+                                            <span>
+                                                {reward.rewardType === "item"
+                                                    ? "Item"
+                                                    : "Mob"}
+                                            </span>
+
+                                            <span>
+                                                x{reward.amount ?? 0}
+                                            </span>
+
+                                            <span className="za-management-actions">
+
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-ghost"
+                                                    onClick={() =>
+                                                        handleEdit(reward)
+                                                    }
+                                                    disabled={saving}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-ghost"
+                                                    onClick={() =>
+                                                        onDelete(reward.id)
+                                                    }
+                                                    disabled={saving}
+                                                >
+                                                    Delete
+                                                </button>
+
+                                            </span>
 
                                         </div>
 
-                                    </td>
+                                    ))
 
-                                </tr>
+                                )}
 
-                            ))
+                            </div>
 
-                        )}
+                        </div>
 
-                    </tbody>
 
-                </table>
+                        <div className="za-modal-footer">
 
-            </div>
+                            <button
+                                type="button"
+                                className="za-modal-cancel"
+                                onClick={closeManage}
+                                disabled={saving}
+                            >
+                                Close
+                            </button>
 
-        </section>
-    )
+                        </div>
+
+                    </div>
+
+                </div>
+
+            )}
+        </>
+    );
 }
