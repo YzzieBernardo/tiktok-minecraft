@@ -1,0 +1,316 @@
+[
+  {
+    "id": "minecraft:zombie",
+    "name": "Zombie"
+  },
+  {
+    "id": "minecraft:skeleton",
+    "name": "Skeleton"
+  },
+  {
+    "id": "minecraft:creeper",
+    "name": "Creeper"
+  },
+  {
+    "id": "minecraft:spider",
+    "name": "Spider"
+  },
+  {
+    "id": "minecraft:cave_spider",
+    "name": "Cave Spider"
+  },
+  {
+    "id": "minecraft:enderman",
+    "name": "Enderman"
+  },
+  {
+    "id": "minecraft:witch",
+    "name": "Witch"
+  },
+  {
+    "id": "minecraft:slime",
+    "name": "Slime"
+  },
+  {
+    "id": "minecraft:magma_cube",
+    "name": "Magma Cube"
+  },
+  {
+    "id": "minecraft:blaze",
+    "name": "Blaze"
+  },
+  {
+    "id": "minecraft:ghast",
+    "name": "Ghast"
+  },
+  {
+    "id": "minecraft:wither_skeleton",
+    "name": "Wither Skeleton"
+  },
+  {
+    "id": "minecraft:piglin",
+    "name": "Piglin"
+  },
+  {
+    "id": "minecraft:piglin_brute",
+    "name": "Piglin Brute"
+  },
+  {
+    "id": "minecraft:zombified_piglin",
+    "name": "Zombified Piglin"
+  },
+  {
+    "id": "minecraft:husk",
+    "name": "Husk"
+  },
+  {
+    "id": "minecraft:stray",
+    "name": "Stray"
+  },
+  {
+    "id": "minecraft:drowned",
+    "name": "Drowned"
+  },
+  {
+    "id": "minecraft:phantom",
+    "name": "Phantom"
+  },
+  {
+    "id": "minecraft:silverfish",
+    "name": "Silverfish"
+  },
+  {
+    "id": "minecraft:endermite",
+    "name": "Endermite"
+  },
+  {
+    "id": "minecraft:guardian",
+    "name": "Guardian"
+  },
+  {
+    "id": "minecraft:elder_guardian",
+    "name": "Elder Guardian"
+  },
+  {
+    "id": "minecraft:shulker",
+    "name": "Shulker"
+  },
+  {
+    "id": "minecraft:vindicator",
+    "name": "Vindicator"
+  },
+  {
+    "id": "minecraft:evoker",
+    "name": "Evoker"
+  },
+  {
+    "id": "minecraft:pillager",
+    "name": "Pillager"
+  },
+  {
+    "id": "minecraft:vex",
+    "name": "Vex"
+  },
+  {
+    "id": "minecraft:ravager",
+    "name": "Ravager"
+  },
+  {
+    "id": "minecraft:illusioner",
+    "name": "Illusioner"
+  },
+  {
+    "id": "minecraft:zoglin",
+    "name": "Zoglin"
+  },
+  {
+    "id": "minecraft:hoglin",
+    "name": "Hoglin"
+  },
+  {
+    "id": "minecraft:wither",
+    "name": "Wither"
+  },
+  {
+    "id": "minecraft:ender_dragon",
+    "name": "Ender Dragon"
+  },
+  {
+    "id": "minecraft:iron_golem",
+    "name": "Iron Golem"
+  },
+  {
+    "id": "minecraft:snow_golem",
+    "name": "Snow Golem"
+  },
+  {
+    "id": "minecraft:wolf",
+    "name": "Wolf"
+  },
+  {
+    "id": "minecraft:polar_bear",
+    "name": "Polar Bear"
+  },
+  {
+    "id": "minecraft:bee",
+    "name": "Bee"
+  },
+  {
+    "id": "minecraft:goat",
+    "name": "Goat"
+  },
+  {
+    "id": "minecraft:llama",
+    "name": "Llama"
+  },
+  {
+    "id": "minecraft:trader_llama",
+    "name": "Trader Llama"
+  },
+  {
+    "id": "minecraft:horse",
+    "name": "Horse"
+  },
+  {
+    "id": "minecraft:donkey",
+    "name": "Donkey"
+  },
+  {
+    "id": "minecraft:mule",
+    "name": "Mule"
+  },
+  {
+    "id": "minecraft:camel",
+    "name": "Camel"
+  },
+  {
+    "id": "minecraft:fox",
+    "name": "Fox"
+  },
+  {
+    "id": "minecraft:ocelot",
+    "name": "Ocelot"
+  },
+  {
+    "id": "minecraft:cat",
+    "name": "Cat"
+  },
+  {
+    "id": "minecraft:panda",
+    "name": "Panda"
+  },
+  {
+    "id": "minecraft:parrot",
+    "name": "Parrot"
+  },
+  {
+    "id": "minecraft:rabbit",
+    "name": "Rabbit"
+  },
+  {
+    "id": "minecraft:polar_bear",
+    "name": "Polar Bear"
+  },
+  {
+    "id": "minecraft:goat",
+    "name": "Goat"
+  },
+  {
+    "id": "minecraft:axolotl",
+    "name": "Axolotl"
+  },
+  {
+    "id": "minecraft:turtle",
+    "name": "Turtle"
+  },
+  {
+    "id": "minecraft:frog",
+    "name": "Frog"
+  },
+  {
+    "id": "minecraft:tadpole",
+    "name": "Tadpole"
+  },
+  {
+    "id": "minecraft:cod",
+    "name": "Cod"
+  },
+  {
+    "id": "minecraft:salmon",
+    "name": "Salmon"
+  },
+  {
+    "id": "minecraft:pufferfish",
+    "name": "Pufferfish"
+  },
+  {
+    "id": "minecraft:tropical_fish",
+    "name": "Tropical Fish"
+  },
+  {
+    "id": "minecraft:dolphin",
+    "name": "Dolphin"
+  },
+  {
+    "id": "minecraft:squid",
+    "name": "Squid"
+  },
+  {
+    "id": "minecraft:glow_squid",
+    "name": "Glow Squid"
+  },
+  {
+    "id": "minecraft:pig",
+    "name": "Pig"
+  },
+  {
+    "id": "minecraft:cow",
+    "name": "Cow"
+  },
+  {
+    "id": "minecraft:mooshroom",
+    "name": "Mooshroom"
+  },
+  {
+    "id": "minecraft:sheep",
+    "name": "Sheep"
+  },
+  {
+    "id": "minecraft:chicken",
+    "name": "Chicken"
+  },
+  {
+    "id": "minecraft:villager",
+    "name": "Villager"
+  },
+  {
+    "id": "minecraft:zombie_villager",
+    "name": "Zombie Villager"
+  },
+  {
+    "id": "minecraft:wandering_trader",
+    "name": "Wandering Trader"
+  },
+  {
+    "id": "mutantmonsters:mutant_zombie",
+    "name": "Mutant Zombie"
+  },
+  {
+    "id": "mutantmonsters:mutant_skeleton",
+    "name": "Mutant Skeleton"
+  },
+  {
+    "id": "mutantmonsters:mutant_creeper",
+    "name": "Mutant Creeper"
+  },
+  {
+    "id": "mutantmonsters:mutant_enderman",
+    "name": "Mutant Enderman"
+  },
+  {
+  "id": "minecraft:warden",
+  "name": "Warden"
+}
+
+  
+]

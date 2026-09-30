@@ -1,0 +1,52 @@
+[
+  {
+    "id": "minecraft:wooden_sword",
+    "name": "Wooden Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:stone_sword",
+    "name": "Stone Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:iron_sword",
+    "name": "Iron Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:golden_sword",
+    "name": "Golden Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:diamond_sword",
+    "name": "Diamond Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:netherite_sword",
+    "name": "Netherite Sword",
+    "type": "sword"
+  },
+  {
+    "id": "minecraft:bow",
+    "name": "Bow",
+    "type": "ranged"
+  },
+  {
+    "id": "minecraft:crossbow",
+    "name": "Crossbow",
+    "type": "ranged"
+  },
+  {
+    "id": "minecraft:trident",
+    "name": "Trident",
+    "type": "ranged"
+  },
+  {
+    "id": "minecraft:shield",
+    "name": "Shield",
+    "type": "offhand"
+  }
+]

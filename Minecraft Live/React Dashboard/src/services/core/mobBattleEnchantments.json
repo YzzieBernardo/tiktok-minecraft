@@ -1,0 +1,398 @@
+[
+  {
+    "id": "minecraft:protection",
+    "name": "Protection",
+    "maxLevel": 4,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": [
+      "minecraft:fire_protection",
+      "minecraft:blast_protection",
+      "minecraft:projectile_protection"
+    ]
+  },
+  {
+    "id": "minecraft:fire_protection",
+    "name": "Fire Protection",
+    "maxLevel": 4,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": [
+      "minecraft:protection",
+      "minecraft:blast_protection",
+      "minecraft:projectile_protection"
+    ]
+  },
+  {
+    "id": "minecraft:feather_falling",
+    "name": "Feather Falling",
+    "maxLevel": 4,
+    "appliesTo": ["boots"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:blast_protection",
+    "name": "Blast Protection",
+    "maxLevel": 4,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": [
+      "minecraft:protection",
+      "minecraft:fire_protection",
+      "minecraft:projectile_protection"
+    ]
+  },
+  {
+    "id": "minecraft:projectile_protection",
+    "name": "Projectile Protection",
+    "maxLevel": 4,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": [
+      "minecraft:protection",
+      "minecraft:fire_protection",
+      "minecraft:blast_protection"
+    ]
+  },
+  {
+    "id": "minecraft:respiration",
+    "name": "Respiration",
+    "maxLevel": 3,
+    "appliesTo": ["helmet"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:aqua_affinity",
+    "name": "Aqua Affinity",
+    "maxLevel": 1,
+    "appliesTo": ["helmet"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:thorns",
+    "name": "Thorns",
+    "maxLevel": 3,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:depth_strider",
+    "name": "Depth Strider",
+    "maxLevel": 3,
+    "appliesTo": ["boots"],
+    "incompatibleWith": [
+      "minecraft:frost_walker"
+    ]
+  },
+  {
+    "id": "minecraft:frost_walker",
+    "name": "Frost Walker",
+    "maxLevel": 2,
+    "appliesTo": ["boots"],
+    "incompatibleWith": [
+      "minecraft:depth_strider"
+    ]
+  },
+  {
+    "id": "minecraft:binding_curse",
+    "name": "Curse of Binding",
+    "maxLevel": 1,
+    "appliesTo": ["helmet", "chestplate", "leggings", "boots"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:soul_speed",
+    "name": "Soul Speed",
+    "maxLevel": 3,
+    "appliesTo": ["boots"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:swift_sneak",
+    "name": "Swift Sneak",
+    "maxLevel": 3,
+    "appliesTo": ["leggings"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:sharpness",
+    "name": "Sharpness",
+    "maxLevel": 5,
+    "appliesTo": ["sword", "axe"],
+    "incompatibleWith": [
+      "minecraft:smite",
+      "minecraft:bane_of_arthropods"
+    ]
+  },
+  {
+    "id": "minecraft:smite",
+    "name": "Smite",
+    "maxLevel": 5,
+    "appliesTo": ["sword", "axe"],
+    "incompatibleWith": [
+      "minecraft:sharpness",
+      "minecraft:bane_of_arthropods"
+    ]
+  },
+  {
+    "id": "minecraft:bane_of_arthropods",
+    "name": "Bane of Arthropods",
+    "maxLevel": 5,
+    "appliesTo": ["sword", "axe"],
+    "incompatibleWith": [
+      "minecraft:sharpness",
+      "minecraft:smite"
+    ]
+  },
+  {
+    "id": "minecraft:knockback",
+    "name": "Knockback",
+    "maxLevel": 2,
+    "appliesTo": ["sword"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:fire_aspect",
+    "name": "Fire Aspect",
+    "maxLevel": 2,
+    "appliesTo": ["sword"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:looting",
+    "name": "Looting",
+    "maxLevel": 3,
+    "appliesTo": ["sword"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:sweeping_edge",
+    "name": "Sweeping Edge",
+    "maxLevel": 3,
+    "appliesTo": ["sword"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:efficiency",
+    "name": "Efficiency",
+    "maxLevel": 5,
+    "appliesTo": [
+      "pickaxe",
+      "axe",
+      "shovel",
+      "hoe",
+      "shears"
+    ],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:silk_touch",
+    "name": "Silk Touch",
+    "maxLevel": 1,
+    "appliesTo": [
+      "pickaxe",
+      "axe",
+      "shovel",
+      "hoe",
+      "shears"
+    ],
+    "incompatibleWith": [
+      "minecraft:fortune"
+    ]
+  },
+  {
+    "id": "minecraft:unbreaking",
+    "name": "Unbreaking",
+    "maxLevel": 3,
+    "appliesTo": [
+      "helmet",
+      "chestplate",
+      "leggings",
+      "boots",
+      "sword",
+      "axe",
+      "pickaxe",
+      "shovel",
+      "hoe",
+      "bow",
+      "crossbow",
+      "trident",
+      "fishing_rod",
+      "shield",
+      "shears",
+      "flint_and_steel",
+      "carrot_on_a_stick",
+      "warped_fungus_on_a_stick",
+      "brush"
+    ],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:fortune",
+    "name": "Fortune",
+    "maxLevel": 3,
+    "appliesTo": [
+      "pickaxe",
+      "axe",
+      "shovel",
+      "hoe"
+    ],
+    "incompatibleWith": [
+      "minecraft:silk_touch"
+    ]
+  },
+  {
+    "id": "minecraft:mending",
+    "name": "Mending",
+    "maxLevel": 1,
+    "appliesTo": [
+      "helmet",
+      "chestplate",
+      "leggings",
+      "boots",
+      "sword",
+      "axe",
+      "pickaxe",
+      "shovel",
+      "hoe",
+      "bow",
+      "crossbow",
+      "trident",
+      "fishing_rod",
+      "shield",
+      "shears",
+      "flint_and_steel",
+      "carrot_on_a_stick",
+      "warped_fungus_on_a_stick",
+      "brush"
+    ],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:power",
+    "name": "Power",
+    "maxLevel": 5,
+    "appliesTo": ["bow"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:punch",
+    "name": "Punch",
+    "maxLevel": 2,
+    "appliesTo": ["bow"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:flame",
+    "name": "Flame",
+    "maxLevel": 1,
+    "appliesTo": ["bow"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:infinity",
+    "name": "Infinity",
+    "maxLevel": 1,
+    "appliesTo": ["bow"],
+    "incompatibleWith": [
+      "minecraft:mending"
+    ]
+  },
+  {
+    "id": "minecraft:multishot",
+    "name": "Multishot",
+    "maxLevel": 1,
+    "appliesTo": ["crossbow"],
+    "incompatibleWith": [
+      "minecraft:piercing"
+    ]
+  },
+  {
+    "id": "minecraft:quick_charge",
+    "name": "Quick Charge",
+    "maxLevel": 3,
+    "appliesTo": ["crossbow"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:piercing",
+    "name": "Piercing",
+    "maxLevel": 4,
+    "appliesTo": ["crossbow"],
+    "incompatibleWith": [
+      "minecraft:multishot"
+    ]
+  },
+  {
+    "id": "minecraft:impaling",
+    "name": "Impaling",
+    "maxLevel": 5,
+    "appliesTo": ["trident"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:riptide",
+    "name": "Riptide",
+    "maxLevel": 3,
+    "appliesTo": ["trident"],
+    "incompatibleWith": [
+      "minecraft:loyalty",
+      "minecraft:channeling"
+    ]
+  },
+  {
+    "id": "minecraft:loyalty",
+    "name": "Loyalty",
+    "maxLevel": 3,
+    "appliesTo": ["trident"],
+    "incompatibleWith": [
+      "minecraft:riptide"
+    ]
+  },
+  {
+    "id": "minecraft:channeling",
+    "name": "Channeling",
+    "maxLevel": 1,
+    "appliesTo": ["trident"],
+    "incompatibleWith": [
+      "minecraft:riptide"
+    ]
+  },
+  {
+    "id": "minecraft:luck_of_the_sea",
+    "name": "Luck of the Sea",
+    "maxLevel": 3,
+    "appliesTo": ["fishing_rod"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:lure",
+    "name": "Lure",
+    "maxLevel": 3,
+    "appliesTo": ["fishing_rod"],
+    "incompatibleWith": []
+  },
+  {
+    "id": "minecraft:vanishing_curse",
+    "name": "Curse of Vanishing",
+    "maxLevel": 1,
+    "appliesTo": [
+      "helmet",
+      "chestplate",
+      "leggings",
+      "boots",
+      "sword",
+      "axe",
+      "pickaxe",
+      "shovel",
+      "hoe",
+      "bow",
+      "crossbow",
+      "trident",
+      "fishing_rod",
+      "shield",
+      "shears",
+      "flint_and_steel",
+      "carrot_on_a_stick",
+      "warped_fungus_on_a_stick",
+      "brush"
+    ],
+    "incompatibleWith": []
+  }
+]

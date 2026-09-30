@@ -1,0 +1,249 @@
+{
+  "loadouts": [
+    {
+      "id": 1,
+      "name": "Full netherite zombi",
+      "mobId": "minecraft:zombie",
+      "amount": 1,
+      "armor": {
+        "helmet": "minecraft:netherite_helmet",
+        "chestplate": "minecraft:netherite_chestplate",
+        "leggings": "minecraft:netherite_leggings",
+        "boots": "minecraft:netherite_boots"
+      },
+      "weapon": {
+        "mainHand": "minecraft:netherite_sword",
+        "offHand": "minecraft:totem_of_undying"
+      },
+      "enchantments": [
+        {
+          "id": "minecraft:sharpness",
+          "level": 5,
+          "target": "main_hand"
+        },
+        {
+          "id": "minecraft:unbreaking",
+          "level": 3,
+          "target": "main_hand"
+        },
+        {
+          "id": "minecraft:unbreaking",
+          "level": 3,
+          "target": "full_armor"
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "helmet",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "chestplate",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "leggings",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "boots",
+          "allowIncompatible": true
+        }
+      ],
+      "effects": [
+        {
+          "id": "minecraft:strength",
+          "amplifier": 9,
+          "duration": 12000
+        },
+        {
+          "id": "minecraft:resistance",
+          "amplifier": 9,
+          "duration": 6000
+        },
+        {
+          "id": "minecraft:speed",
+          "amplifier": 9,
+          "duration": 6000
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": 2,
+      "name": "Skeleton Army",
+      "mobId": "minecraft:skeleton",
+      "amount": 100,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "minecraft:bow",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    },
+    {
+      "id": 3,
+      "name": "OP IRON GOLEM",
+      "mobId": "minecraft:iron_golem",
+      "amount": 1,
+      "armor": {
+        "helmet": "minecraft:netherite_helmet",
+        "chestplate": "minecraft:netherite_chestplate",
+        "leggings": "minecraft:netherite_leggings",
+        "boots": "minecraft:netherite_boots"
+      },
+      "weapon": {
+        "mainHand": "minecraft:netherite_sword",
+        "offHand": "minecraft:totem_of_undying"
+      },
+      "enchantments": [
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "helmet",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "chestplate",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "leggings",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:protection",
+          "level": 255,
+          "target": "boots",
+          "allowIncompatible": true
+        },
+        {
+          "id": "minecraft:knockback",
+          "level": 255,
+          "target": "main_hand",
+          "allowIncompatible": true
+        }
+      ],
+      "effects": [
+        {
+          "id": "minecraft:speed",
+          "amplifier": 9,
+          "duration": 6000
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": 4,
+      "name": "Mutant Zombie",
+      "mobId": "mutantmonsters:mutant_zombie",
+      "amount": 1,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    },
+    {
+      "id": 5,
+      "name": "mutant Skeleton",
+      "mobId": "mutantmonsters:mutant_skeleton",
+      "amount": 1,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    },
+    {
+      "id": 6,
+      "name": "Creeper",
+      "mobId": "minecraft:creeper",
+      "amount": 1,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    },
+    {
+      "id": 7,
+      "name": "Enderman",
+      "mobId": "minecraft:enderman",
+      "amount": 1,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    },
+    {
+      "id": 8,
+      "name": "mutant enderman",
+      "mobId": "mutantmonsters:mutant_enderman",
+      "amount": 1,
+      "armor": {
+        "helmet": "",
+        "chestplate": "",
+        "leggings": "",
+        "boots": ""
+      },
+      "weapon": {
+        "mainHand": "",
+        "offHand": ""
+      },
+      "enchantments": [],
+      "effects": [],
+      "enabled": true
+    }
+  ]
+}

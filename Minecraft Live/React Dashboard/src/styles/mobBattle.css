@@ -1063,3 +1063,5401 @@
     }
 
 }
+/* =========================================================
+   MOB LOADOUTS
+========================================================= */
+
+.mob-loadouts-panel {
+    margin-top: 24px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.loadout-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.loadout-header p,
+.loadout-form-title p {
+    margin: 6px 0 0;
+    opacity: 0.65;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.loadout-form {
+    margin-top: 20px;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.loadout-form-title {
+    margin-bottom: 26px;
+}
+
+.loadout-form-title h3,
+.loadout-list-header h3 {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+}
+
+/* =========================================================
+   FORM SECTIONS
+========================================================= */
+
+.loadout-section {
+    margin-top: 26px;
+}
+
+.loadout-section:first-of-type {
+    margin-top: 0;
+}
+
+.loadout-section h4 {
+    margin: 0 0 14px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+}
+
+/* =========================================================
+   GRIDS
+========================================================= */
+
+.loadout-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.loadout-grid-basic {
+    grid-template-columns:
+        minmax(260px, 2fr)
+        minmax(220px, 1fr)
+        120px;
+}
+
+.loadout-grid-four {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.loadout-grid-two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* =========================================================
+   FIELD GROUP
+========================================================= */
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.field-group label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+/* =========================================================
+   TEXT / NUMBER INPUTS
+========================================================= */
+
+.field-group input {
+    width: 100%;
+    min-height: 40px;
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.22);
+    color: inherit;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.field-group input::placeholder {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+.field-group input:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.field-group input:focus {
+    border-color: rgba(77, 163, 255, 0.65);
+    background: rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.08);
+}
+
+/* Remove ugly browser number arrows where possible */
+
+.quantity-field input::-webkit-inner-spin-button,
+.quantity-field input::-webkit-outer-spin-button {
+    opacity: 0.7;
+}
+
+/* =========================================================
+   SEARCHABLE SELECT
+========================================================= */
+
+.searchable-select {
+    position: relative;
+    width: 100%;
+}
+
+/* Trigger */
+
+.searchable-select-trigger {
+    width: 100%;
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 0 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.22);
+    color: inherit;
+
+    font: inherit;
+    font-size: 13px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.searchable-select-trigger:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.28);
+}
+
+.searchable-select-trigger.open {
+    border-color: rgba(77, 163, 255, 0.65);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 2px rgba(77, 163, 255, 0.08);
+}
+
+.searchable-select-trigger > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.searchable-select-arrow {
+    flex-shrink: 0;
+
+    font-size: 9px;
+    opacity: 0.6;
+
+    transition: transform 0.15s ease;
+}
+
+.searchable-select-trigger.open .searchable-select-arrow {
+    opacity: 0.9;
+}
+
+/* =========================================================
+   SEARCHABLE SELECT MENU
+========================================================= */
+
+.searchable-select-menu {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+
+    z-index: 1000;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+
+    background: #15171c;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================================
+   SEARCH INPUT
+========================================================= */
+
+.searchable-select-search {
+    padding: 8px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.searchable-select-search input {
+    width: 100%;
+    min-height: 36px;
+
+    box-sizing: border-box;
+
+    padding: 0 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 7px;
+
+    background: rgba(0, 0, 0, 0.3);
+    color: inherit;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 12px;
+}
+
+.searchable-select-search input:focus {
+    border-color: rgba(77, 163, 255, 0.55);
+}
+
+/* =========================================================
+   SELECT OPTIONS
+========================================================= */
+
+.searchable-select-options {
+    max-height: 240px;
+
+    overflow-y: auto;
+
+    padding: 5px;
+}
+
+/* Scrollbar */
+
+.searchable-select-options::-webkit-scrollbar {
+    width: 6px;
+}
+
+.searchable-select-options::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.searchable-select-options::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.searchable-select-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Option */
+
+.searchable-select-option {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 34px;
+
+    padding: 0 10px;
+
+    border: 0;
+    border-radius: 6px;
+
+    background: transparent;
+    color: inherit;
+
+    font: inherit;
+    font-size: 12px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.12s ease,
+        color 0.12s ease;
+}
+
+.searchable-select-option:hover {
+    background: rgba(77, 163, 255, 0.1);
+}
+
+.searchable-select-option.selected {
+    background: rgba(77, 163, 255, 0.14);
+    color: #ffffff;
+}
+
+.searchable-select-option.selected::before {
+    content: "✓";
+
+    margin-right: 8px;
+
+    font-size: 10px;
+    opacity: 0.85;
+}
+
+.searchable-select-empty {
+    padding: 18px 10px;
+
+    color: rgba(255, 255, 255, 0.45);
+
+    font-size: 12px;
+    text-align: center;
+}
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quantity-field {
+    max-width: 140px;
+}
+
+/* =========================================================
+   ENABLED
+========================================================= */
+
+.loadout-enabled {
+    margin-top: 26px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+.checkbox-label input {
+    width: 16px;
+    height: 16px;
+
+    margin: 0;
+
+    cursor: pointer;
+
+    accent-color: #4da3ff;
+}
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.loadout-form-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 24px;
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.primary-button,
+.secondary-button,
+.danger-button,
+.status-toggle {
+    min-height: 38px;
+
+    padding: 0 15px;
+
+    border: 0;
+    border-radius: 8px;
+
+    font: inherit;
+    font-size: 12px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.12s ease,
+        background 0.12s ease,
+        opacity 0.12s ease;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.danger-button:hover,
+.status-toggle:hover {
+    transform: translateY(-1px);
+}
+
+.primary-button {
+    background: #4da3ff;
+    color: #fff;
+}
+
+.primary-button:hover {
+    background: #5babff;
+}
+
+.secondary-button {
+    background: rgba(255, 255, 255, 0.08);
+    color: inherit;
+}
+
+.secondary-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.danger-button {
+    background: rgba(255, 70, 70, 0.12);
+    color: #ff7777;
+}
+
+.danger-button:hover {
+    background: rgba(255, 70, 70, 0.18);
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================================================
+   LOADOUT LIST
+========================================================= */
+
+.loadout-list {
+    margin-top: 30px;
+}
+
+.loadout-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.loadout-list-header span {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+/* =========================================================
+   LOADOUT CARDS
+========================================================= */
+
+.loadout-cards {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.loadout-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.loadout-card:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.loadout-card.loadout-disabled {
+    opacity: 0.55;
+}
+
+.loadout-card-main {
+    min-width: 0;
+    flex: 1;
+}
+
+/* =========================================================
+   CARD TITLE
+========================================================= */
+
+.loadout-card-title {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.loadout-card-title h3 {
+    margin: 0;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* =========================================================
+   STATUS BADGE
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 22px;
+
+    padding: 0 8px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.status-on {
+    background: rgba(70, 220, 130, 0.12);
+    color: #63e39a;
+}
+
+.status-off {
+    background: rgba(255, 255, 255, 0.08);
+    color: #999;
+}
+
+/* =========================================================
+   CARD MOB
+========================================================= */
+
+.loadout-card-mob {
+    margin-top: 7px;
+
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.loadout-card-mob span {
+    margin-left: 6px;
+    opacity: 0.55;
+}
+
+/* =========================================================
+   CARD DETAILS
+========================================================= */
+
+.loadout-card-details {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 26px;
+
+    margin-top: 14px;
+}
+
+.loadout-card-details div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    min-width: 80px;
+}
+
+.loadout-card-details span {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    opacity: 0.45;
+}
+
+.loadout-card-details strong {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   CARD ACTIONS
+========================================================= */
+
+.loadout-card-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+.status-toggle {
+    background: rgba(255, 255, 255, 0.07);
+    color: inherit;
+}
+
+.status-toggle.active {
+    background: rgba(70, 220, 130, 0.12);
+    color: #63e39a;
+}
+
+.status-toggle.active:hover {
+    background: rgba(70, 220, 130, 0.18);
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.loadout-empty-state {
+    padding: 42px 20px;
+
+    text-align: center;
+
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+}
+
+.loadout-empty-state .empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    margin-bottom: 10px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    font-size: 22px;
+}
+
+.loadout-empty-state h3 {
+    margin: 0;
+
+    font-size: 14px;
+}
+
+.loadout-empty-state p {
+    margin: 7px 0 0;
+
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* =========================================================
+   MOB LOADOUTS - RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .loadout-grid-basic {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .loadout-grid-basic .field-group:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .quantity-field {
+        max-width: none;
+    }
+
+    .loadout-grid-four {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .loadout-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .loadout-card-actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .loadout-header {
+        flex-direction: column;
+    }
+
+    .loadout-header .primary-button {
+        width: 100%;
+    }
+
+    .loadout-grid-basic,
+    .loadout-grid-four,
+    .loadout-grid-two {
+        grid-template-columns: 1fr;
+    }
+
+    .loadout-grid-basic .field-group:first-child {
+        grid-column: auto;
+    }
+
+    .loadout-form {
+        padding: 16px;
+    }
+
+    .loadout-form-actions,
+    .loadout-card-actions {
+        flex-wrap: wrap;
+    }
+
+    .loadout-form-actions button,
+    .loadout-card-actions button {
+        flex: 1;
+    }
+
+    .loadout-card-details {
+        gap: 16px;
+    }
+
+    .searchable-select-menu {
+        max-height: 300px;
+    }
+}
+
+/* =========================================================
+   MOB LOADOUT UI REFINEMENT
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   LOADOUT FORM SPACING
+   --------------------------------------------------------- */
+
+.loadout-form {
+    margin-top: 22px;
+    padding: 24px;
+}
+
+.loadout-form-title {
+    margin-bottom: 30px;
+}
+
+.loadout-section {
+    margin-top: 30px;
+}
+
+.loadout-section:first-of-type {
+    margin-top: 0;
+}
+
+.loadout-section h4 {
+    margin-bottom: 16px;
+}
+
+.loadout-grid {
+    width: 100%;
+    gap: 16px;
+}
+
+.loadout-grid-basic {
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(220px, 1fr)
+        120px;
+}
+
+.loadout-grid-four {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+.loadout-grid-two {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.field-group {
+    min-width: 0;
+    gap: 8px;
+}
+
+.field-group label {
+    min-height: 14px;
+    line-height: 1.2;
+}
+
+/* ---------------------------------------------------------
+   INPUT / SELECT HEIGHT CONSISTENCY
+   --------------------------------------------------------- */
+
+.field-group input,
+.searchable-select-trigger {
+    min-height: 42px;
+    height: 42px;
+}
+
+.searchable-select-trigger {
+    box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   SEARCHABLE SELECT
+   --------------------------------------------------------- */
+
+.searchable-select {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.searchable-select-trigger {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 0 13px;
+
+    border-radius: 9px;
+}
+
+.searchable-select-value,
+.searchable-select-placeholder {
+    display: block;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.searchable-select-arrow {
+    flex: 0 0 auto;
+}
+
+/* ---------------------------------------------------------
+   DROPDOWN MENU
+   --------------------------------------------------------- */
+
+.searchable-select-menu {
+    position: absolute;
+
+    top: calc(100% + 7px);
+    left: 0;
+    right: 0;
+
+    z-index: 5000;
+
+    width: 100%;
+    max-height: 330px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+
+    background: #15171c;
+
+    box-shadow:
+        0 16px 35px rgba(0, 0, 0, 0.5),
+        0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------------------------------------------------------
+   SEARCH BOX
+   --------------------------------------------------------- */
+
+.searchable-select-search {
+    flex: 0 0 auto;
+
+    padding: 9px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: #181b21;
+}
+
+.searchable-select-search input {
+    width: 100%;
+    height: 38px;
+    min-height: 38px;
+
+    box-sizing: border-box;
+
+    padding: 0 11px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+
+    background: #0e1116;
+    color: #ffffff;
+
+    outline: none;
+
+    font-size: 12px;
+}
+
+.searchable-select-search input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.searchable-select-search input:focus {
+    border-color: rgba(77, 163, 255, 0.65);
+
+    box-shadow:
+        0 0 0 2px rgba(77, 163, 255, 0.08);
+}
+
+/* ---------------------------------------------------------
+   CLEAR BUTTON
+   --------------------------------------------------------- */
+
+.searchable-select-clear {
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    min-height: 34px;
+
+    padding: 0 10px;
+
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+    background: rgba(255, 255, 255, 0.025);
+    color: #8fbfff;
+
+    font-size: 11px;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.searchable-select-clear:hover {
+    background: rgba(77, 163, 255, 0.08);
+    color: #ffffff;
+}
+
+/* ---------------------------------------------------------
+   OPTIONS CONTAINER
+   --------------------------------------------------------- */
+
+.searchable-select-options {
+    flex: 1 1 auto;
+
+    min-height: 0;
+    max-height: 240px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    padding: 6px;
+}
+
+/* ---------------------------------------------------------
+   INDIVIDUAL OPTION
+   --------------------------------------------------------- */
+
+.searchable-select-option {
+    width: 100%;
+
+    min-height: 52px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    gap: 4px;
+
+    box-sizing: border-box;
+
+    padding: 8px 10px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: transparent;
+    color: #ffffff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.12s ease,
+        color 0.12s ease;
+}
+
+.searchable-select-option:hover {
+    background: rgba(77, 163, 255, 0.1);
+}
+
+.searchable-select-option.selected {
+    background: rgba(77, 163, 255, 0.14);
+}
+
+/* ---------------------------------------------------------
+   OPTION NAME
+   --------------------------------------------------------- */
+
+.searchable-select-option-name {
+    display: block;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: #f1f5fb;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+/* ---------------------------------------------------------
+   OPTION MINECRAFT ID
+   --------------------------------------------------------- */
+
+.searchable-select-option-id {
+    display: block;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: #788498;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size: 10px;
+    font-weight: 400;
+
+    line-height: 1.3;
+}
+
+/* Selected option ID */
+
+.searchable-select-option.selected
+.searchable-select-option-id {
+    color: #91bdf5;
+}
+
+/* ---------------------------------------------------------
+   SELECTED CHECKMARK
+   --------------------------------------------------------- */
+
+.searchable-select-option.selected::before {
+    position: absolute;
+
+    display: none;
+}
+
+/* ---------------------------------------------------------
+   EMPTY RESULT
+   --------------------------------------------------------- */
+
+.searchable-select-empty {
+    padding: 24px 12px;
+
+    color: rgba(255, 255, 255, 0.45);
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+/* ---------------------------------------------------------
+   DROPDOWN SCROLLBAR
+   --------------------------------------------------------- */
+
+.searchable-select-options::-webkit-scrollbar {
+    width: 7px;
+}
+
+.searchable-select-options::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.searchable-select-options::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.searchable-select-options::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+/* ---------------------------------------------------------
+   LOADOUT ENABLED
+   --------------------------------------------------------- */
+
+.loadout-enabled {
+    margin-top: 30px;
+
+    padding-top: 20px;
+}
+
+/* ---------------------------------------------------------
+   FORM ACTIONS
+   --------------------------------------------------------- */
+
+.loadout-form-actions {
+    margin-top: 28px;
+    padding-top: 20px;
+
+    gap: 10px;
+}
+
+/* =========================================================
+   LOADOUT RESPONSIVE REFINEMENT
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .loadout-grid-basic {
+        grid-template-columns:
+            minmax(0, 1.5fr)
+            minmax(190px, 1fr)
+            110px;
+    }
+
+    .loadout-grid-four {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .loadout-form {
+        padding: 18px;
+    }
+
+    .loadout-grid-basic,
+    .loadout-grid-four,
+    .loadout-grid-two {
+        grid-template-columns: 1fr;
+    }
+
+    .quantity-field {
+        max-width: none;
+    }
+
+    .searchable-select-menu {
+        max-height: 300px;
+    }
+
+    .searchable-select-options {
+        max-height: 220px;
+    }
+}
+
+/* =========================================================
+   CATALOG MANAGEMENT
+   ========================================================= */
+
+.catalog-management-panel {
+    margin-top: 24px;
+    overflow: visible;
+}
+
+
+/* =========================================================
+   CATALOG HEADER
+   ========================================================= */
+
+.catalog-management-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 20px;
+}
+
+.catalog-management-heading {
+    min-width: 0;
+}
+
+.catalog-management-heading h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+}
+
+.catalog-management-heading p {
+    margin: 6px 0 0;
+
+    color: #8d98ab;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.catalog-management-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   CATEGORY LIST
+   ========================================================= */
+
+.catalog-category-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+.catalog-category {
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.catalog-category:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.catalog-category-open {
+    border-color: rgba(255, 255, 255, 0.14);
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+
+/* =========================================================
+   CATEGORY HEADER
+   ========================================================= */
+
+.catalog-category-header {
+    width: 100%;
+
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 0 14px;
+
+    border: 0;
+
+    background: transparent;
+    color: #ffffff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease;
+}
+
+.catalog-category-header:hover {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.catalog-category-arrow {
+    width: 14px;
+
+    flex: 0 0 auto;
+
+    color: #8d98ab;
+
+    font-size: 10px;
+
+    text-align: center;
+}
+
+.catalog-category-name {
+    flex: 1;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+.catalog-category-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 30px;
+    height: 22px;
+
+    padding: 0 7px;
+
+    box-sizing: border-box;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: #8d98ab;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   CATEGORY CONTENT
+   ========================================================= */
+
+.catalog-category-content {
+    padding: 0 12px 12px;
+}
+
+
+/* =========================================================
+   SEARCH + ADD
+   ========================================================= */
+
+.catalog-search-row {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.catalog-search-row input {
+    flex: 1;
+
+    width: 100%;
+    height: 38px;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding: 0 11px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.22);
+    color: #ffffff;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 12px;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.catalog-search-row input::placeholder {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+.catalog-search-row input:hover {
+    border-color: rgba(255, 255, 255, 0.17);
+}
+
+.catalog-search-row input:focus {
+    border-color: rgba(77, 163, 255, 0.6);
+
+    background: rgba(0, 0, 0, 0.28);
+
+    box-shadow:
+        0 0 0 2px rgba(77, 163, 255, 0.08);
+}
+
+.catalog-search-row .secondary-button {
+    flex: 0 0 auto;
+
+    min-height: 38px;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.catalog-table-wrapper {
+    width: 100%;
+
+    max-height: 360px;
+
+    overflow-x: auto;
+    overflow-y: auto;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+
+    background: rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.catalog-table {
+    width: 100%;
+
+    min-width: 620px;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    table-layout: fixed;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.catalog-table thead {
+    position: sticky;
+    top: 0;
+
+    z-index: 2;
+}
+
+.catalog-table th {
+    height: 38px;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    background: #171a20;
+
+    color: #7f899a;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    text-align: left;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   COLUMN WIDTHS
+   ========================================================= */
+
+.catalog-table-name {
+    width: 27%;
+}
+
+.catalog-table-id {
+    width: 40%;
+}
+
+.catalog-table-metadata {
+    width: 15%;
+}
+
+.catalog-table-actions {
+    width: 18%;
+
+    text-align: right !important;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.catalog-table tbody tr {
+    transition:
+        background 0.12s ease;
+}
+
+.catalog-table tbody tr:hover {
+    background: rgba(77, 163, 255, 0.045);
+}
+
+.catalog-table td {
+    min-height: 46px;
+
+    padding: 9px 12px;
+
+    box-sizing: border-box;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+
+    color: #dce3ed;
+
+    font-size: 12px;
+
+    vertical-align: middle;
+}
+
+.catalog-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   NAME
+   ========================================================= */
+
+.catalog-item-name {
+    display: block;
+
+    overflow: hidden;
+
+    color: #f1f5fb;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   MINECRAFT ID
+   ========================================================= */
+
+.catalog-table-id code {
+    display: block;
+
+    overflow: hidden;
+
+    color: #7f9fc9;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size: 10px;
+    font-weight: 400;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   METADATA
+   ========================================================= */
+
+.catalog-table-metadata span {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 22px;
+
+    padding: 0 7px;
+
+    box-sizing: border-box;
+
+    border-radius: 5px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    color: #9ca8b9;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.catalog-item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
+}
+
+.catalog-item-actions button {
+    min-height: 30px;
+
+    padding: 0 9px;
+
+    border-radius: 6px;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   EMPTY TABLE
+   ========================================================= */
+
+.catalog-table-empty {
+    height: 100px;
+
+    color: #687487 !important;
+
+    font-size: 12px !important;
+
+    text-align: center !important;
+}
+
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
+
+.catalog-table-wrapper::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.catalog-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.catalog-table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.catalog-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================================
+   CATALOG RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .catalog-management-header {
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+    .catalog-management-actions {
+        width: 100%;
+    }
+
+    .catalog-management-actions button {
+        flex: 1;
+    }
+
+    .catalog-category-content {
+        padding: 0 8px 8px;
+    }
+
+    .catalog-search-row {
+        align-items: stretch;
+    }
+
+    .catalog-search-row .secondary-button {
+        flex: 0 0 auto;
+    }
+
+    .catalog-table-wrapper {
+        max-height: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .catalog-search-row {
+        flex-direction: column;
+    }
+
+    .catalog-search-row input,
+    .catalog-search-row .secondary-button {
+        width: 100%;
+    }
+
+    .catalog-table {
+        min-width: 580px;
+    }
+}
+
+/* =========================================================
+   CATALOG ITEM MODAL
+   ========================================================= */
+
+.catalog-modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 24px;
+
+    background: rgba(0, 0, 0, 0.68);
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.catalog-modal {
+    width: min(560px, 100%);
+
+    max-height: min(760px, calc(100vh - 48px));
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border: 1px solid #30394a;
+    border-radius: 14px;
+
+    background: #11151c;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.55),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.catalog-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 22px 24px 18px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    background: #151a22;
+}
+
+.catalog-modal-header > div {
+    min-width: 0;
+}
+
+.catalog-modal-header h3 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    letter-spacing: 0.05em;
+}
+
+.catalog-modal-header p {
+    margin: 6px 0 0;
+
+    color: #7f899a;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.catalog-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 7px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #9aa5b6;
+
+    font-size: 20px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.catalog-modal-close:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+
+    border-color: rgba(255, 255, 255, 0.16);
+
+    color: #ffffff;
+}
+
+.catalog-modal-close:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MODAL BODY
+   ========================================================= */
+
+.catalog-modal-body {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    padding: 22px 24px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   MODAL FIELD GROUPS
+   ========================================================= */
+
+.catalog-modal-body .field-group {
+    width: 100%;
+
+    gap: 7px;
+}
+
+.catalog-modal-body .field-group label {
+    display: block;
+
+    color: #8d98ab;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   MODAL INPUTS
+   ========================================================= */
+
+.catalog-modal-body input,
+.catalog-modal-body select {
+    width: 100%;
+
+    min-height: 42px;
+    height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    border: 1px solid #303a4b;
+    border-radius: 8px;
+
+    background: #0d1117;
+
+    color: #ffffff;
+
+    outline: none;
+
+    font: inherit;
+    font-size: 13px;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.catalog-modal-body input::placeholder {
+    color: #596476;
+}
+
+.catalog-modal-body input:hover,
+.catalog-modal-body select:hover {
+    border-color: #414d61;
+}
+
+.catalog-modal-body input:focus,
+.catalog-modal-body select:focus {
+    border-color: rgba(77, 163, 255, 0.7);
+
+    background: #10151d;
+
+    box-shadow:
+        0 0 0 2px rgba(77, 163, 255, 0.1);
+}
+
+.catalog-modal-body input:disabled,
+.catalog-modal-body select:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   SELECT ARROW
+   ========================================================= */
+
+.catalog-modal-body select {
+    cursor: pointer;
+
+    appearance: auto;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+   ========================================================= */
+
+.catalog-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    padding: 16px 24px 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+    background: #151a22;
+}
+
+.catalog-modal-actions button {
+    min-height: 38px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   MODAL SCROLLBAR
+   ========================================================= */
+
+.catalog-modal-body::-webkit-scrollbar {
+    width: 7px;
+}
+
+.catalog-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.catalog-modal-body::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.catalog-modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+
+/* =========================================================
+   MODAL RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .catalog-modal-backdrop {
+        align-items: flex-start;
+
+        padding: 16px;
+    }
+
+    .catalog-modal {
+        max-height: calc(100vh - 32px);
+
+        margin-top: 8px;
+
+        border-radius: 12px;
+    }
+
+    .catalog-modal-header {
+        padding: 18px 18px 15px;
+    }
+
+    .catalog-modal-body {
+        gap: 16px;
+
+        padding: 18px;
+    }
+
+    .catalog-modal-actions {
+        padding: 14px 18px 18px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .catalog-modal-backdrop {
+        padding: 10px;
+    }
+
+    .catalog-modal {
+        max-height: calc(100vh - 20px);
+    }
+
+    .catalog-modal-header {
+        padding: 16px;
+    }
+
+    .catalog-modal-body {
+        padding: 16px;
+    }
+
+    .catalog-modal-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+
+        padding: 14px 16px 16px;
+    }
+
+    .catalog-modal-actions button {
+        width: 100%;
+    }
+}
+
+/* ==========================================
+   MOB LOADOUT ENCHANTMENTS
+   ========================================== */
+
+.enchantment-add-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.enchantment-add-row .field-group {
+    min-width: 0;
+}
+
+.enchantment-add-button {
+    display: flex;
+    align-items: flex-end;
+}
+
+.enchantment-add-button .secondary-button {
+    height: 42px;
+    white-space: nowrap;
+}
+
+
+/* ENCHANTMENT LEVEL SELECT */
+
+.enchantment-add-row select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #30343b;
+    border-radius: 8px;
+
+    background: #0f1115;
+    color: #f5f7fa;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.enchantment-add-row select:focus {
+    border-color: #4da3ff;
+}
+
+
+/* ADDED ENCHANTMENTS */
+
+.enchantment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.enchantment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 10px 12px;
+
+    border: 1px solid #2a2e35;
+    border-radius: 8px;
+
+    background: #111318;
+}
+
+.enchantment-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.enchantment-info strong {
+    color: #f5f7fa;
+}
+
+.enchantment-info span {
+    color: #9da3ad;
+    font-size: 13px;
+}
+
+.enchantment-empty {
+    color: #8d939d;
+    font-size: 13px;
+    padding-top: 2px;
+}
+
+
+/* CARD SUMMARY */
+
+.loadout-card-enchantments {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #292d34;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.loadout-card-enchantments > span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8d939d;
+    letter-spacing: 0.04em;
+}
+
+.loadout-card-enchantments > strong {
+    color: #d9e1eb;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.enchantment-summary {
+    color: inherit;
+}
+
+/* =========================================================
+   MODERN MOB LOADOUT SPAWNER
+   ========================================================= */
+
+.mob-loadout-spawner {
+    position: relative;
+    overflow: hidden;
+
+    margin-top: 22px;
+    padding: 26px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.015)
+        );
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* subtle top highlight */
+
+.mob-loadout-spawner::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 1px;
+
+    background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.mob-loadout-spawner-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 26px;
+}
+
+.mob-loadout-spawner-eyebrow {
+    margin-bottom: 6px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.14em;
+
+    opacity: 0.45;
+}
+
+.mob-loadout-spawner-heading h2 {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+}
+
+.mob-loadout-spawner-heading p {
+    margin: 7px 0 0;
+
+    font-size: 13px;
+
+    opacity: 0.58;
+}
+
+
+/* =========================================================
+   STATUS BADGE
+   ========================================================= */
+
+.mob-loadout-spawner-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+
+    white-space: nowrap;
+
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.mob-loadout-spawner-status.is-online {
+    background: rgba(46, 204, 113, 0.10);
+    border-color: rgba(46, 204, 113, 0.18);
+}
+
+.mob-loadout-spawner-status.is-offline {
+    opacity: 0.55;
+}
+
+.mob-loadout-status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.mob-loadout-spawner-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   CONTROL GRID
+   ========================================================= */
+
+.mob-loadout-spawner-form
+    .minecraft-form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* first two controls */
+
+.mob-loadout-spawner-form
+    .minecraft-form-group:nth-child(1) {
+    width: 100%;
+}
+
+.mob-loadout-spawner-form
+    .minecraft-form-group:nth-child(2) {
+    width: 100%;
+}
+
+
+/* desktop control row */
+
+@media (min-width: 701px) {
+
+    .mob-loadout-spawner-form {
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 2fr)
+            minmax(180px, 0.75fr);
+
+        column-gap: 14px;
+        row-gap: 18px;
+    }
+
+    .mob-loadout-spawner-form
+        .minecraft-form-group:nth-child(1),
+    .mob-loadout-spawner-form
+        .minecraft-form-group:nth-child(2) {
+        width: auto;
+    }
+
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.mob-loadout-spawner-form
+    .minecraft-form-group label {
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+
+    opacity: 0.48;
+}
+
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+
+.mob-loadout-spawner-form
+    .minecraft-form-group select {
+            color-scheme: dark;
+
+    width: 100%;
+    min-height: 46px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: inherit;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    outline: none;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.mob-loadout-spawner-form
+    .minecraft-form-group select:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.mob-loadout-spawner-form
+    .minecraft-form-group select:focus {
+
+    border-color: rgba(255, 255, 255, 0.22);
+
+    background: rgba(255, 255, 255, 0.065);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.035);
+}
+
+.mob-loadout-spawner-form
+    .minecraft-form-group select option {
+    background: #1b1d23;
+    color: #f1f3f5;
+}
+
+.mob-loadout-spawner-form
+    .minecraft-form-group select option:checked {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   PREVIEW CARD
+   ========================================================= */
+
+.mob-loadout-spawner-preview {
+
+    grid-column: 1 / -1;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0.018)
+        );
+}
+
+
+/* =========================================================
+   PREVIEW HEADER
+   ========================================================= */
+
+.mob-loadout-spawner-preview-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 17px;
+}
+
+.mob-loadout-preview-label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    opacity: 0.42;
+}
+
+.mob-loadout-spawner-preview-header strong {
+
+    display: block;
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.mob-loadout-preview-team {
+
+    padding: 6px 10px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+/* =========================================================
+   PREVIEW INFORMATION
+   ========================================================= */
+
+.mob-loadout-spawner-preview-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(100px, 0.7fr)
+        minmax(100px, 0.7fr);
+
+    gap: 10px;
+}
+
+.mob-loadout-spawner-preview-item {
+
+    min-width: 0;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    background: rgba(0, 0, 0, 0.14);
+
+    border: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.mob-loadout-spawner-preview-item span {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+
+    opacity: 0.4;
+}
+
+.mob-loadout-spawner-preview-item strong {
+
+    display: block;
+
+    font-size: 12px;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   SPAWN BUTTON
+   ========================================================= */
+
+.mob-loadout-spawner-form
+    > .minecraft-button {
+
+    grid-column: 1 / -1;
+
+    justify-self: start;
+
+    min-height: 44px;
+
+    min-width: 155px;
+
+    padding: 0 18px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.02em;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.mob-loadout-spawner-form
+    > .minecraft-button:not(:disabled):hover {
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.22);
+}
+
+.mob-loadout-spawner-form
+    > .minecraft-button:not(:disabled):active {
+
+    transform: translateY(0);
+}
+
+.mob-loadout-spawner-form
+    > .minecraft-button:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.38;
+}
+
+
+/* =========================================================
+   STATUS MESSAGES
+   ========================================================= */
+
+.mob-loadout-spawner-form
+    .minecraft-success,
+.mob-loadout-spawner-form
+    .minecraft-error {
+
+    grid-column: 1 / -1;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 11px 14px;
+
+    border-radius: 9px;
+
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .mob-loadout-spawner {
+        padding: 20px;
+    }
+
+    .mob-loadout-spawner-heading {
+        flex-direction: column;
+    }
+
+    .mob-loadout-spawner-status {
+        align-self: flex-start;
+    }
+
+    .mob-loadout-spawner-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-loadout-spawner-form
+        > .minecraft-button {
+
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   ENHANCED MOB LOADOUT PREVIEW
+   ========================================================= */
+
+.mob-loadout-spawner-preview {
+    grid-column: 1 / -1;
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.018)
+        );
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+
+/* =========================================================
+   PREVIEW HEADER
+   ========================================================= */
+
+.mob-loadout-spawner-preview-header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+.mob-loadout-preview-label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    opacity: 0.4;
+}
+
+.mob-loadout-preview-name {
+
+    display: block;
+
+    font-size: 17px;
+    font-weight: 800;
+
+    letter-spacing: -0.01em;
+}
+
+.mob-loadout-preview-team {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   BASIC INFO
+   ========================================================= */
+
+.mob-loadout-spawner-preview-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(100px, 0.7fr)
+        minmax(100px, 0.7fr);
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.mob-loadout-spawner-preview-item {
+
+    min-width: 0;
+
+    padding: 12px 13px;
+
+    border-radius: 9px;
+
+    background: rgba(0, 0, 0, 0.14);
+
+    border: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.mob-loadout-spawner-preview-item span {
+
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+
+    opacity: 0.4;
+}
+
+.mob-loadout-spawner-preview-item strong {
+
+    display: block;
+
+    font-size: 12px;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   EQUIPMENT PREVIEW
+   ========================================================= */
+
+.mob-loadout-equipment-preview {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================================================
+   EQUIPMENT SECTION
+   ========================================================= */
+
+.mob-loadout-equipment-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.mob-loadout-equipment-title {
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+
+    opacity: 0.4;
+}
+
+
+/* =========================================================
+   EQUIPMENT GRID
+   ========================================================= */
+
+.mob-loadout-equipment-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+.mob-loadout-equipment-item {
+
+    min-width: 0;
+
+    padding: 11px 12px;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    border: 1px solid rgba(255, 255, 255, 0.045);
+}
+
+.mob-loadout-equipment-item span {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 9px;
+
+    opacity: 0.42;
+}
+
+.mob-loadout-equipment-item strong {
+
+    display: block;
+
+    font-size: 11px;
+
+    overflow-wrap: anywhere;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ENCHANTMENTS
+   ========================================================= */
+
+.mob-loadout-enchantments {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.mob-loadout-enchantment {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 11px;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.mob-loadout-enchantment strong {
+
+    font-size: 11px;
+
+    overflow-wrap: anywhere;
+}
+
+.mob-loadout-enchantment span {
+
+    font-size: 10px;
+
+    opacity: 0.55;
+}
+
+.mob-loadout-enchantment small {
+
+    padding: 3px 5px;
+
+    border-radius: 4px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    opacity: 0.5;
+}
+
+.mob-loadout-no-enchantments {
+
+    padding: 11px 12px;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+
+    font-size: 11px;
+
+    opacity: 0.45;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+    .mob-loadout-equipment-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .mob-loadout-spawner-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-loadout-spawner-preview-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .mob-loadout-equipment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-loadout-enchantments {
+        flex-direction: column;
+    }
+
+    .mob-loadout-enchantment {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+}
+
+/* ==========================================
+   MOB LOADOUT EFFECTS
+========================================== */
+
+.mob-loadout-effects {
+    width: 100%;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.mob-loadout-effects-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.mob-loadout-effects-header > div:first-child {
+    min-width: 0;
+}
+
+.mob-loadout-effects-label {
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #8b93a1;
+}
+
+.mob-loadout-effects-header h3 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #f1f3f5;
+}
+
+.mob-loadout-effects-header p {
+    margin: 6px 0 0;
+    max-width: 620px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #8f97a5;
+}
+
+.mob-loadout-effects-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    font-size: 12px;
+    font-weight: 700;
+    color: #cbd5e1;
+}
+
+
+/* ==========================================
+   EXISTING EFFECT LIST
+========================================== */
+
+.mob-loadout-effects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+
+/* ==========================================
+   EFFECT ROW
+========================================== */
+
+.mob-loadout-effect-row {
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) 110px 150px 38px;
+    align-items: end;
+    gap: 14px;
+
+    padding: 14px 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.mob-loadout-effect-row:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+
+/* ==========================================
+   EFFECT INFO
+========================================== */
+
+.mob-loadout-effect-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mob-loadout-effect-info strong {
+    overflow: hidden;
+
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 700;
+
+    color: #f1f3f5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mob-loadout-effect-info small {
+    overflow: hidden;
+
+    font-size: 11px;
+    line-height: 1.3;
+
+    color: #707987;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   EFFECT CONTROL
+========================================== */
+
+.mob-loadout-effect-control {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.mob-loadout-effect-control label {
+    display: block;
+
+    font-size: 10px;
+    line-height: 1;
+
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    color: #8b93a1;
+}
+
+
+/* ==========================================
+   EFFECT INPUTS
+========================================== */
+
+.mob-loadout-effect-control select,
+.mob-loadout-effect-control input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    box-sizing: border-box;
+
+    padding: 0 11px;
+
+    border: 1px solid #30343d;
+    border-radius: 7px;
+
+    background: #111318;
+
+    font-family: inherit;
+    font-size: 13px;
+    color: #f1f3f5;
+
+    outline: none;
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.mob-loadout-effect-control select {
+    cursor: pointer;
+}
+
+.mob-loadout-effect-control input {
+    cursor: default;
+}
+
+.mob-loadout-effect-control select:hover,
+.mob-loadout-effect-control input:hover {
+    border-color: #3c424d;
+}
+
+.mob-loadout-effect-control select:focus,
+.mob-loadout-effect-control input:focus {
+    border-color: #4b8df8;
+    box-shadow: 0 0 0 2px rgba(75, 141, 248, 0.12);
+}
+
+
+/* ==========================================
+   DARK SELECT POPUP
+========================================== */
+
+.mob-loadout-effect-control select {
+    color-scheme: dark;
+}
+
+.mob-loadout-effect-control select option {
+    background: #1b1d23;
+    color: #f1f3f5;
+}
+
+.mob-loadout-effect-control select option:checked {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+
+/* ==========================================
+   REMOVE BUTTON
+========================================== */
+
+.mob-loadout-effect-remove {
+    width: 38px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #30343d;
+    border-radius: 7px;
+
+    background: #111318;
+
+    font-family: inherit;
+    font-size: 20px;
+    line-height: 1;
+
+    color: #8b93a1;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.mob-loadout-effect-remove:hover {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(239, 68, 68, 0.08);
+    color: #f87171;
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.mob-loadout-effects-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 90px;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    border: 1px dashed #30343d;
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.015);
+
+    text-align: center;
+}
+
+.mob-loadout-effects-empty span {
+    margin-bottom: 5px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #aab2bf;
+}
+
+.mob-loadout-effects-empty small {
+    font-size: 12px;
+    line-height: 1.5;
+
+    color: #697281;
+}
+
+
+/* ==========================================
+   ADD EFFECT PANEL
+========================================== */
+
+.mob-loadout-effects-add {
+    padding: 16px;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.mob-loadout-effects-add-title {
+    margin-bottom: 14px;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+
+    color: #8b93a1;
+}
+
+
+/* ==========================================
+   ADD EFFECT GRID
+========================================== */
+
+.mob-loadout-effects-add-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.8fr) 100px 120px 130px auto;
+    align-items: end;
+    gap: 12px;
+}
+
+
+/* ==========================================
+   ADD EFFECT BUTTON
+========================================== */
+
+.mob-loadout-effect-add-button {
+    height: 40px;
+    min-width: 120px;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.mob-loadout-effect-add-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 900px) {
+
+    .mob-loadout-effect-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mob-loadout-effect-info {
+        grid-column: 1 / -1;
+    }
+
+    .mob-loadout-effect-remove {
+        width: 100%;
+    }
+
+    .mob-loadout-effects-add-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mob-loadout-effect-add-button {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .mob-loadout-effects-header {
+        gap: 12px;
+    }
+
+    .mob-loadout-effects-header p {
+        font-size: 12px;
+    }
+
+    .mob-loadout-effect-row {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-loadout-effect-info {
+        grid-column: auto;
+    }
+
+    .mob-loadout-effects-add-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.loadout-card-effects {
+    grid-column: 1 / -1;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #2a2d34;
+}
+
+.loadout-card-effects > span {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #6f737d;
+}
+
+.loadout-card-effects > strong {
+    display: block;
+    font-size: 12px;
+    line-height: 1.6;
+    font-weight: 600;
+    color: #aeb4bf;
+}
+
+.effect-summary {
+    display: inline;
+}
+
+.mob-loadout-spawner-effects {
+    width: 100%;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #2a2d34;
+}
+
+.mob-loadout-spawner-section-title {
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #6f737d;
+}
+
+.mob-loadout-spawner-effects-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mob-loadout-spawner-effect-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid #2d323b;
+    border-radius: 8px;
+    background: #20242c;
+}
+
+.mob-loadout-spawner-effect-chip strong {
+    color: #f1f3f5;
+    font-size: 12px;
+}
+
+.mob-loadout-spawner-effect-chip span {
+    color: #8f96a3;
+    font-size: 11px;
+}
+
+.mob-loadout-spawner-effects-empty {
+    color: #8f96a3;
+    font-size: 12px;
+}
+
+/* =========================================================
+   MOB BATTLEFIELD
+   ========================================================= */
+
+.mob-battlefield {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    color: #f4f4f7;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.mob-battlefield-header {
+    width: 100%;
+}
+
+.mob-battlefield-header h2 {
+    margin: 0;
+    color: #f5f5f7;
+    font-size: 24px;
+    font-weight: 750;
+    line-height: 1.2;
+}
+
+.mob-battlefield-header p {
+    margin: 6px 0 0;
+    color: #92929f;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   SECTION CARD
+   ========================================================= */
+
+.mob-battlefield-section {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid #292932;
+    border-radius: 12px;
+    background: #15151c;
+}
+
+.mob-battlefield-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.mob-battlefield-section-header > div {
+    min-width: 0;
+}
+
+.mob-battlefield-section-header h3 {
+    margin: 0;
+    color: #f1f1f4;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.mob-battlefield-section-header span {
+    display: block;
+    margin-top: 5px;
+    color: #858592;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.mob-battlefield-section-header > span {
+    flex-shrink: 0;
+    margin-top: 0;
+    padding: 5px 9px;
+    border: 1px solid #343442;
+    border-radius: 6px;
+    background: #1b1b24;
+    color: #aaaac0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+/* =========================================================
+   BATTLEFIELD SIZE
+   ========================================================= */
+
+.mob-battlefield-size-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.mob-battlefield-size-grid > label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.mob-battlefield-size-grid > label > span {
+    color: #a7a7b4;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   ALL BATTLEFIELD INPUTS
+   ========================================================= */
+
+.mob-battlefield input[type="number"],
+.mob-battlefield input[type="text"] {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    border: 1px solid #34343f;
+    border-radius: 8px;
+
+    background: #101017;
+    color: #f2f2f5;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.mob-battlefield input[type="number"]::placeholder,
+.mob-battlefield input[type="text"]::placeholder {
+    color: #666674;
+}
+
+.mob-battlefield input[type="number"]:hover,
+.mob-battlefield input[type="text"]:hover {
+    border-color: #454552;
+}
+
+.mob-battlefield input[type="number"]:focus,
+.mob-battlefield input[type="text"]:focus {
+    border-color: #7668ff;
+    background: #12121b;
+    box-shadow: 0 0 0 3px rgba(118, 104, 255, 0.10);
+}
+
+/* =========================================================
+   NUMBER INPUT ARROWS
+   ========================================================= */
+
+.mob-battlefield input[type="number"]::-webkit-inner-spin-button,
+.mob-battlefield input[type="number"]::-webkit-outer-spin-button {
+    opacity: 0.65;
+    cursor: pointer;
+}
+
+/* =========================================================
+   BATTLEFIELD CENTER
+   ========================================================= */
+
+.mob-battlefield-coordinate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.mob-battlefield-coordinate-grid > label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.mob-battlefield-coordinate-grid > label > span {
+    color: #a8a8b5;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* X Y Z labels */
+
+.mob-battlefield-coordinate-grid > label:nth-child(1) > span {
+    color: #d7d7df;
+}
+
+.mob-battlefield-coordinate-grid > label:nth-child(2) > span {
+    color: #d7d7df;
+}
+
+.mob-battlefield-coordinate-grid > label:nth-child(3) > span {
+    color: #d7d7df;
+}
+
+/* =========================================================
+   GET MINECRAFT POSITION BUTTON
+   ========================================================= */
+
+.mob-battlefield-position-button {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+
+    margin-top: 14px;
+    padding: 0 16px;
+
+    border: 1px solid #6254c9;
+    border-radius: 8px;
+
+    background: #211c36;
+    color: #f5f3ff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+.mob-battlefield-position-button:hover {
+    background: #292244;
+    border-color: #806fff;
+    box-shadow: 0 0 18px rgba(118, 104, 255, 0.10);
+}
+
+.mob-battlefield-position-button:active {
+    transform: translateY(1px);
+}
+
+.mob-battlefield-position-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   DIRECTION SELECT
+   ========================================================= */
+
+.mob-battlefield-section > select {
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+
+    box-sizing: border-box;
+    padding: 0 38px 0 12px;
+
+    border: 1px solid #34343f;
+    border-radius: 8px;
+
+    background-color: #101017;
+    color: #f2f2f5;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    outline: none;
+    cursor: pointer;
+
+    appearance: auto;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.mob-battlefield-section > select:hover {
+    border-color: #454552;
+    background-color: #12121a;
+}
+
+.mob-battlefield-section > select:focus {
+    border-color: #7668ff;
+    background-color: #12121b;
+    box-shadow: 0 0 0 3px rgba(118, 104, 255, 0.10);
+}
+
+.mob-battlefield-section > select option {
+    background: #15151c;
+    color: #f2f2f5;
+}
+
+/* =========================================================
+   TEAM LOADOUTS
+   ========================================================= */
+
+.mob-battlefield-loadout-teams {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.mob-battlefield-team-loadouts {
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border: 1px solid #292932;
+    border-radius: 10px;
+
+    background: #101017;
+}
+
+.mob-battlefield-team-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.mob-battlefield-team-header > div {
+    min-width: 0;
+}
+
+.mob-battlefield-team-header h4 {
+    display: inline-flex;
+    align-items: center;
+
+    margin: 0;
+    padding: 5px 8px;
+
+    border-radius: 6px;
+
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.mob-battlefield-team-header span {
+    margin-left: 8px;
+    color: #888895;
+    font-size: 11px;
+}
+
+/* =========================================================
+   TEAM A
+   ========================================================= */
+
+.mob-battlefield-team-loadouts:first-child {
+    border-color: rgba(255, 76, 76, 0.22);
+}
+
+.mob-battlefield-team-loadouts:first-child .mob-battlefield-team-header h4 {
+    border: 1px solid rgba(255, 76, 76, 0.25);
+    background: rgba(255, 76, 76, 0.10);
+    color: #ff7777;
+}
+
+/* =========================================================
+   TEAM B
+   ========================================================= */
+
+.mob-battlefield-team-loadouts:last-child {
+    border-color: rgba(82, 125, 255, 0.22);
+}
+
+.mob-battlefield-team-loadouts:last-child .mob-battlefield-team-header h4 {
+    border: 1px solid rgba(82, 125, 255, 0.25);
+    background: rgba(82, 125, 255, 0.10);
+    color: #789cff;
+}
+
+/* =========================================================
+   ADD LOADOUT BUTTON
+   ========================================================= */
+
+.mob-battlefield-team-header .secondary-button {
+    height: 34px;
+    min-height: 34px;
+
+    padding: 0 11px;
+
+    border: 1px solid #3a3947;
+    border-radius: 7px;
+
+    background: #1a1a23;
+    color: #d7d5e6;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.mob-battlefield-team-header .secondary-button:hover:not(:disabled) {
+    background: #252332;
+    border-color: #6e61d8;
+    color: #ffffff;
+}
+
+.mob-battlefield-team-header .secondary-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   EMPTY LOADOUT
+   ========================================================= */
+
+.mob-battlefield-loadout-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 72px;
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border: 1px dashed #343440;
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.01);
+
+    color: #70707d;
+
+    font-size: 12px;
+    text-align: center;
+}
+
+/* =========================================================
+   ASSIGNMENT ROW
+   ========================================================= */
+
+.mob-battlefield-assignment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mob-battlefield-assignment-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 90px auto;
+    align-items: end;
+    gap: 10px;
+
+    padding: 11px;
+
+    border: 1px solid #2c2c36;
+    border-radius: 8px;
+
+    background: #15151c;
+}
+
+.mob-battlefield-assignment-row .field-group {
+    min-width: 0;
+}
+
+.mob-battlefield-assignment-row .field-group > label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #858592;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.mob-battlefield-assignment-row .quantity-field input {
+    width: 100%;
+}
+
+/* =========================================================
+   SEARCHABLE SELECT
+   ========================================================= */
+
+/*
+   Your SearchableSelect component should already have its
+   own classes. These selectors make it fit the Battlefield
+   assignment rows.
+*/
+
+.mob-battlefield-assignment-row .searchable-select {
+    width: 100%;
+}
+
+.mob-battlefield-assignment-row .searchable-select-trigger {
+    width: 100%;
+    min-height: 40px;
+    height: 40px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #34343f;
+    border-radius: 7px;
+
+    background: #101017;
+    color: #eeeeF2;
+
+    font-family: inherit;
+    font-size: 12px;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.mob-battlefield-assignment-row .searchable-select-trigger:hover {
+    border-color: #4a4957;
+}
+
+.mob-battlefield-assignment-row .searchable-select-trigger:focus,
+.mob-battlefield-assignment-row .searchable-select.open
+    .searchable-select-trigger {
+    border-color: #7668ff;
+    background: #12121b;
+    box-shadow: 0 0 0 3px rgba(118, 104, 255, 0.08);
+}
+
+/* Search box inside dropdown */
+
+.mob-battlefield-assignment-row .searchable-select-search {
+    width: 100%;
+    box-sizing: border-box;
+
+    min-height: 36px;
+    height: 36px;
+
+    border: 1px solid #34343f;
+    border-radius: 7px;
+
+    background: #101017;
+    color: #eeeeF2;
+
+    outline: none;
+
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.mob-battlefield-assignment-row .searchable-select-search:focus {
+    border-color: #7668ff;
+}
+
+/* =========================================================
+   SELECTED LOADOUT INFO
+   ========================================================= */
+
+.mob-battlefield-assignment-info {
+    display: none;
+}
+
+/* =========================================================
+   REMOVE BUTTON
+   ========================================================= */
+
+.mob-battlefield-assignment-row .danger-button {
+    height: 40px;
+    min-height: 40px;
+
+    padding: 0 10px;
+
+    border: 1px solid rgba(255, 76, 76, 0.25);
+    border-radius: 7px;
+
+    background: rgba(255, 76, 76, 0.07);
+    color: #ff8585;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.mob-battlefield-assignment-row .danger-button:hover {
+    background: rgba(255, 76, 76, 0.14);
+    border-color: rgba(255, 76, 76, 0.45);
+}
+
+/* =========================================================
+   CALCULATED BATTLEFIELD
+   ========================================================= */
+
+.mob-battlefield-calculation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.mob-battlefield-card {
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    border: 1px solid #2d2d37;
+    border-radius: 10px;
+
+    background: #101017;
+}
+
+.mob-battlefield-card > span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #8c8c99;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mob-battlefield-card > strong {
+    display: block;
+
+    color: #f1f1f4;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.mob-battlefield-card > small {
+    display: block;
+
+    margin-top: 9px;
+
+    color: #777783;
+    font-size: 10px;
+    line-height: 1.7;
+}
+
+/* Team A */
+
+.mob-battlefield-card.team-a {
+    border-color: rgba(255, 76, 76, 0.25);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 76, 76, 0.055),
+            transparent 55%
+        ),
+        #101017;
+}
+
+.mob-battlefield-card.team-a > span {
+    color: #ff7777;
+}
+
+/* Team B */
+
+.mob-battlefield-card.team-b {
+    border-color: rgba(82, 125, 255, 0.25);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(82, 125, 255, 0.055),
+            transparent 55%
+        ),
+        #101017;
+}
+
+.mob-battlefield-card.team-b > span {
+    color: #789cff;
+}
+
+/* Total */
+
+.mob-battlefield-card.total {
+    border-color: #353540;
+}
+
+.mob-battlefield-card.total > span {
+    color: #b0b0bb;
+}
+
+/* =========================================================
+   BATTLEFIELD PREVIEW
+   ========================================================= */
+
+.mob-battlefield-preview {
+    display: flex;
+    align-items: stretch;
+
+    width: 100%;
+    min-height: 280px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border: 1px solid #2e2e39;
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+        ),
+        #0d0d13;
+
+    background-size: 24px 24px;
+}
+
+/* =========================================================
+   TEAM PREVIEW
+   ========================================================= */
+
+.battlefield-team {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 0;
+    min-height: 280px;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+}
+
+.battlefield-team > span {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.battlefield-team > small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #858592;
+    font-size: 10px;
+}
+
+/* Team A preview */
+
+.battlefield-team-a {
+    border: 1px solid rgba(255, 76, 76, 0.32);
+    border-right: 0;
+    border-radius: 9px 0 0 9px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255, 76, 76, 0.09),
+            transparent 65%
+        ),
+        rgba(255, 76, 76, 0.025);
+}
+
+.battlefield-team-a > span {
+    color: #ff7777;
+}
+
+/* Team B preview */
+
+.battlefield-team-b {
+    border: 1px solid rgba(82, 125, 255, 0.32);
+    border-left: 0;
+    border-radius: 0 9px 9px 0;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(82, 125, 255, 0.09),
+            transparent 65%
+        ),
+        rgba(82, 125, 255, 0.025);
+}
+
+.battlefield-team-b > span {
+    color: #789cff;
+}
+
+/* =========================================================
+   CENTER / WAR ZONE
+   ========================================================= */
+
+.battlefield-center-line {
+    position: relative;
+
+    width: 4px;
+    min-width: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #8c84ff;
+
+    box-shadow:
+        0 0 12px rgba(118, 104, 255, 0.45),
+        0 0 25px rgba(118, 104, 255, 0.12);
+
+    z-index: 2;
+}
+
+.battlefield-center-line > span {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%) rotate(-90deg);
+
+    padding: 6px 9px;
+
+    border: 1px solid #403b62;
+    border-radius: 5px;
+
+    background: #11111a;
+
+    color: #bcb7ff;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .mob-battlefield-loadout-teams {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-battlefield-calculation-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .mob-battlefield-size-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-battlefield-coordinate-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-battlefield-assignment-row {
+        grid-template-columns: 1fr;
+    }
+
+    .mob-battlefield-assignment-row .danger-button {
+        width: 100%;
+    }
+
+    .mob-battlefield-preview {
+        min-height: 220px;
+    }
+
+    .battlefield-team {
+        min-height: 220px;
+        padding: 12px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .mob-battlefield-section {
+        padding: 14px;
+    }
+
+    .mob-battlefield-section-header {
+        flex-direction: column;
+    }
+
+    .mob-battlefield-section-header > span {
+        align-self: flex-start;
+    }
+
+}
+
+/* ==========================================
+   SAVED MOB NAMES — MODERN UI
+========================================== */
+
+.saved-mob-names {
+    margin-top: 28px;
+    padding: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.045),
+            rgba(255, 255, 255, 0.015)
+        );
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.18);
+
+    backdrop-filter: blur(10px);
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.saved-mob-names-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.saved-mob-names-header > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.saved-mob-names-header strong {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+.saved-mob-names-header span {
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.5;
+}
+
+
+/* ==========================================
+   ADD BUTTON
+========================================== */
+
+.saved-mob-names-header .minecraft-button {
+    min-height: 38px;
+    padding: 0 16px;
+
+    border-radius: 9px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.saved-mob-names-header .minecraft-button:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.saved-mob-names-search {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.saved-mob-names-search input {
+    width: 100%;
+    height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9px;
+
+    background: rgba(0, 0, 0, 0.22);
+
+    color: inherit;
+
+    outline: none;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.saved-mob-names-search input::placeholder {
+    opacity: 0.38;
+}
+
+.saved-mob-names-search input:focus {
+    border-color: rgba(255, 255, 255, 0.22);
+
+    background: rgba(0, 0, 0, 0.3);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.035);
+}
+
+
+/* ==========================================
+   TABLE CONTAINER
+========================================== */
+
+.saved-mob-names-table-wrapper {
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 11px;
+
+    background: rgba(0, 0, 0, 0.14);
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.saved-mob-names-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 600px;
+}
+
+.saved-mob-names-table th {
+    height: 42px;
+
+    padding: 0 15px;
+
+    text-align: left;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+
+    opacity: 0.5;
+}
+
+.saved-mob-names-table td {
+    height: 52px;
+
+    padding: 0 15px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+
+    font-size: 12px;
+}
+
+.saved-mob-names-table tbody tr {
+    transition:
+        background 0.16s ease;
+}
+
+.saved-mob-names-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.saved-mob-names-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ==========================================
+   ID
+========================================== */
+
+.saved-mob-names-table td:first-child {
+    width: 60px;
+
+    font-family: monospace;
+    font-size: 11px;
+
+    opacity: 0.45;
+}
+
+
+/* ==========================================
+   TEAM
+========================================== */
+
+.saved-mob-names-table td:nth-child(3) {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.65;
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.saved-mob-names-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+.minecraft-button.small {
+    min-height: 30px;
+
+    padding: 0 11px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    transition:
+        transform 0.16s ease,
+        background 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.minecraft-button.small:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   DELETE / DANGER
+========================================== */
+
+.minecraft-button.danger {
+    border-color: rgba(255, 80, 80, 0.22);
+
+    color: #ff8b8b;
+
+    background: rgba(255, 60, 60, 0.045);
+}
+
+.minecraft-button.danger:hover {
+    border-color: rgba(255, 80, 80, 0.4);
+
+    background: rgba(255, 60, 60, 0.1);
+}
+
+
+/* ==========================================
+   EMPTY STATE
+========================================== */
+
+.saved-mob-names-empty {
+    height: 100px;
+
+    text-align: center !important;
+
+    opacity: 0.4;
+}
+
+
+/* ==========================================
+   MODAL OVERLAY
+========================================== */
+
+.mob-name-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.68);
+
+    backdrop-filter: blur(8px);
+
+    animation: mobNameModalFade 0.18s ease;
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+.mob-name-modal {
+    width: min(480px, 100%);
+
+    box-sizing: border-box;
+
+    padding: 26px;
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(35, 35, 35, 0.98),
+            rgba(20, 20, 20, 0.98)
+        );
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.55);
+
+    animation: mobNameModalSlide 0.2s ease;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+.mob-name-form-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-top: 18px;
+}
+
+.mob-name-form-field label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+
+    opacity: 0.5;
+}
+
+.mob-name-form-field input,
+.mob-name-form-field select {
+    width: 100%;
+    height: 42px;
+
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.28);
+
+    color: inherit;
+
+    outline: none;
+
+    font-size: 13px;
+
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+.mob-name-form-field input:focus,
+.mob-name-form-field select:focus {
+    border-color: rgba(255, 255, 255, 0.22);
+
+    background: rgba(0, 0, 0, 0.35);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.035);
+}
+
+
+/* ==========================================
+   MODAL BUTTONS
+========================================== */
+
+.mob-name-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 9px;
+
+    margin-top: 26px;
+}
+
+.mob-name-modal-actions .minecraft-button {
+    min-height: 36px;
+
+    padding: 0 15px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* ==========================================
+   DELETE PREVIEW
+========================================== */
+
+.delete-name-preview {
+    display: block;
+
+    margin: 14px 0;
+
+    padding: 13px 15px;
+
+    border: 1px solid rgba(255, 80, 80, 0.12);
+    border-radius: 8px;
+
+    background: rgba(255, 60, 60, 0.045);
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   ANIMATIONS
+========================================== */
+
+@keyframes mobNameModalFade {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+
+}
+
+@keyframes mobNameModalSlide {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 700px) {
+
+    .saved-mob-names {
+        padding: 16px;
+    }
+
+    .saved-mob-names-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .saved-mob-names-header .minecraft-button {
+        width: 100%;
+    }
+
+    .saved-mob-names-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .saved-mob-names-actions .minecraft-button {
+        width: 100%;
+    }
+
+    .mob-name-modal {
+        padding: 20px;
+    }
+
+    .mob-name-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .mob-name-modal-actions .minecraft-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   MOB LOADOUTS — ENCHANTMENT CONTROLS
+   ========================================================= */
+
+.enchantment-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+
+/* TARGET + ENCHANTMENT */
+.enchantment-control-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 14px;
+    align-items: end;
+}
+
+.enchantment-control-grid .field-group {
+    min-width: 0;
+}
+
+.enchantment-target-field,
+.enchantment-select-field,
+.enchantment-level-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+/* Match the existing dark textbox/dropdown style */
+.enchantment-target-field select,
+.enchantment-level-field select {
+    width: 100%;
+    min-height: 42px;
+    box-sizing: border-box;
+
+    background: #101216;
+    color: #f2f4f7;
+
+    border: 1px solid #30343b;
+    border-radius: 8px;
+
+    padding: 0 12px;
+    outline: none;
+}
+
+.enchantment-target-field select:focus,
+.enchantment-level-field select:focus {
+    border-color: #4b535f;
+}
+
+/* =========================================================
+   ENCHANTMENT OPTIONS
+   Contains:
+   - Apply to All Armor
+   - Allow Incompatible Enchantments
+   - Extend Level
+   ========================================================= */
+
+.enchantment-options-section {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.018);
+}
+
+.enchantment-options-title {
+    margin-bottom: 10px;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    opacity: 0.65;
+}
+
+.enchantment-options-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+/* Individual option */
+.enchantment-option-card {
+    min-width: 0;
+    min-height: 54px;
+
+    padding: 10px 12px;
+    box-sizing: border-box;
+
+    border: 1px solid #30343b;
+    border-radius: 7px;
+
+    background: #17191e;
+
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.enchantment-option-card.is-active {
+    border-color: #4b535f;
+    background: #1b1e24;
+}
+
+/* Checkbox layout */
+.enchantment-option-label {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    width: 100%;
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.enchantment-option-label input[type="checkbox"] {
+    flex: 0 0 auto;
+
+    width: 16px;
+    height: 16px;
+
+    margin: 2px 0 0;
+
+    cursor: pointer;
+}
+
+.enchantment-option-label input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+.enchantment-option-label > span {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.enchantment-option-label strong {
+    display: block;
+
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.enchantment-option-label small {
+    display: block;
+
+    margin: 0;
+
+    font-size: 10px;
+    line-height: 1.35;
+
+    opacity: 0.62;
+}
+
+/* =========================================================
+   LEVEL
+   ========================================================= */
+
+.enchantment-level-row {
+    width: 100%;
+
+    display: flex;
+}
+
+.enchantment-level-field {
+    width: 50%;
+    min-width: 260px;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.enchantment-error {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255, 80, 80, 0.38);
+    border-radius: 7px;
+
+    background: rgba(255, 60, 60, 0.08);
+
+    color: #ff8f8f;
+
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   ADD BUTTON
+   ========================================================= */
+
+.enchantment-add-button {
+    display: flex;
+
+    justify-content: flex-end;
+    align-items: center;
+
+    width: 100%;
+}
+
+.enchantment-add-button .secondary-button {
+    min-width: 150px;
+    min-height: 40px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .enchantment-control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .enchantment-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .enchantment-level-field {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .enchantment-add-button {
+        justify-content: stretch;
+    }
+
+    .enchantment-add-button .secondary-button {
+        width: 100%;
+    }
+}
+

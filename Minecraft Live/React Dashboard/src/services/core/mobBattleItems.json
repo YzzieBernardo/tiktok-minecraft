@@ -1,0 +1,110 @@
+[
+  {
+    "id": "minecraft:arrow",
+    "name": "Arrow"
+  },
+  {
+    "id": "minecraft:spectral_arrow",
+    "name": "Spectral Arrow"
+  },
+  {
+    "id": "minecraft:firework_rocket",
+    "name": "Firework Rocket"
+  },
+  {
+    "id": "minecraft:golden_apple",
+    "name": "Golden Apple"
+  },
+  {
+    "id": "minecraft:enchanted_golden_apple",
+    "name": "Enchanted Golden Apple"
+  },
+  {
+    "id": "minecraft:bread",
+    "name": "Bread"
+  },
+  {
+    "id": "minecraft:cooked_beef",
+    "name": "Cooked Beef"
+  },
+  {
+    "id": "minecraft:cooked_porkchop",
+    "name": "Cooked Porkchop"
+  },
+  {
+    "id": "minecraft:cooked_chicken",
+    "name": "Cooked Chicken"
+  },
+  {
+    "id": "minecraft:cooked_mutton",
+    "name": "Cooked Mutton"
+  },
+  {
+    "id": "minecraft:cooked_rabbit",
+    "name": "Cooked Rabbit"
+  },
+  {
+    "id": "minecraft:apple",
+    "name": "Apple"
+  },
+  {
+    "id": "minecraft:carrot",
+    "name": "Carrot"
+  },
+  {
+    "id": "minecraft:golden_carrot",
+    "name": "Golden Carrot"
+  },
+  {
+    "id": "minecraft:ender_pearl",
+    "name": "Ender Pearl"
+  },
+  {
+    "id": "minecraft:ender_eye",
+    "name": "Eye of Ender"
+  },
+  {
+    "id": "minecraft:blaze_rod",
+    "name": "Blaze Rod"
+  },
+  {
+    "id": "minecraft:totem_of_undying",
+    "name": "Totem of Undying"
+  },
+  {
+    "id": "minecraft:water_bucket",
+    "name": "Water Bucket"
+  },
+  {
+    "id": "minecraft:lava_bucket",
+    "name": "Lava Bucket"
+  },
+  {
+    "id": "minecraft:milk_bucket",
+    "name": "Milk Bucket"
+  },
+  {
+    "id": "minecraft:snowball",
+    "name": "Snowball"
+  },
+  {
+    "id": "minecraft:egg",
+    "name": "Egg"
+  },
+  {
+    "id": "minecraft:tnt",
+    "name": "TNT"
+  },
+  {
+    "id": "minecraft:flint_and_steel",
+    "name": "Flint and Steel"
+  },
+  {
+    "id": "minecraft:lead",
+    "name": "Lead"
+  },
+  {
+    "id": "minecraft:name_tag",
+    "name": "Name Tag"
+  }
+]

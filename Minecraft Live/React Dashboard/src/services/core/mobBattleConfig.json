@@ -1,26 +1,16 @@
 {
-    "nameMode": "specific",
-    "specificNameId": 1,
+    "nameMode": "custom",
+    "specificNameId": null,
     "names": [
         {
             "id": 1,
             "team": "A",
-            "name": "TEAM A"
+            "name": "Kanjo"
         },
         {
             "id": 2,
             "team": "B",
-            "name": "TEAM B"
-        },
-        {
-            "id": 3,
-            "team": "B",
-            "name": "BlueTest"
-        },
-        {
-            "id": 4,
-            "team": "A",
-            "name": "Red Test"
+            "name": "YzzieBoi"
         }
     ]
 }

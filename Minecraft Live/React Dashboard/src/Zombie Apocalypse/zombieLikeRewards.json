@@ -4,10 +4,10 @@
         "likesRequired": 400,
         "rewardType": "mob",
         "rewardName": "minecraft:zombie",
-        "amount": 100,
+        "amount": 10,
         "enabled": true,
         "createdAt": "2026-09-01T13:42:33.603Z",
-        "updatedAt": "2026-09-01T14:26:43.926Z"
+        "updatedAt": "2026-09-03T16:42:04.710Z"
     },
     {
         "id": 1,
@@ -18,5 +18,35 @@
         "enabled": true,
         "createdAt": "2026-09-01T14:26:24.202Z",
         "updatedAt": "2026-09-01T14:26:24.202Z"
+    },
+    {
+        "id": 1,
+        "likesRequired": 100,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 1,
+        "enabled": true,
+        "createdAt": "2026-09-03T16:44:37.753Z",
+        "updatedAt": "2026-09-03T16:44:37.753Z"
+    },
+    {
+        "id": 2,
+        "likesRequired": 200,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 1,
+        "enabled": true,
+        "createdAt": "2026-09-03T16:44:41.644Z",
+        "updatedAt": "2026-09-03T16:44:41.644Z"
+    },
+    {
+        "id": 3,
+        "likesRequired": 300,
+        "rewardType": "mob",
+        "rewardName": "minecraft:zombie",
+        "amount": 500,
+        "enabled": true,
+        "createdAt": "2026-09-03T16:45:14.861Z",
+        "updatedAt": "2026-09-03T16:45:14.861Z"
     }
 ]

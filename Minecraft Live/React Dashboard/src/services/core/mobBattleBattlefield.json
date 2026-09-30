@@ -1,0 +1,27 @@
+{
+  "teamAPosition": {
+    "x": 301.9315147609429,
+    "y": 24,
+    "z": 254.720297457131
+  },
+  "teamBPosition": {
+    "x": 302.3919731200633,
+    "y": 24,
+    "z": 294.506659232035
+  },
+  "width": 100,
+  "length": 100,
+  "direction": "+Z",
+  "teamA": [
+    {
+      "loadoutId": 2,
+      "amount": 100
+    }
+  ],
+  "teamB": [
+    {
+      "loadoutId": 3,
+      "amount": 1
+    }
+  ]
+}

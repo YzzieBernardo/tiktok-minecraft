@@ -1,151 +1,295 @@
-//E:\tiktok-minecraft\Minecraft Live\React Dashboard\src\pages\MobBattle.jsx
 import { useEffect, useState } from "react";
 import "../styles/mobBattle.css";
 
-const API_URL = 'http://localhost:3001'
+import MobBattleControl from "./mobBattle/MobBattleControl";
+import MobNameSource from "./mobBattle/MobNameSource";
+import CatalogManagement from "./mobBattle/CatalogManagement";
+import CatalogItemModal from "./mobBattle/CatalogItemModal";
+import MobLoadouts from "./mobBattle/MobLoadouts";
+import MobLoadoutSpawner from "./mobBattle/MobLoadoutSpawner";
+import MobLoadoutEffects from "./mobBattle/MobLoadoutEffects";
+import MobBattlefield from "./mobBattle/MobBattlefield";
+const API_URL = "http://localhost:3001";
+
+// ==========================================
+// CATALOG DEFINITIONS
+// ==========================================
+
+const catalogDefinitions = [
+    {
+        key: "mobs",
+        label: "Mobs",
+    },
+    {
+        key: "armor",
+        label: "Armor",
+    },
+    {
+        key: "weapons",
+        label: "Weapons",
+    },
+    {
+        key: "tools",
+        label: "Tools",
+    },
+    {
+        key: "items",
+        label: "Items",
+    },
+    {
+        key: "enchantments",
+        label: "Enchantments",
+    },
+
+    {
+    key: "effects",
+    label: "Effects",
+},
+];
+
+// ==========================================
+// EMPTY LOADOUT
+// ==========================================
+
+const emptyLoadout = {
+    name: "",
+    mobId: "",
+    amount: 1,
+
+    armor: {
+        helmet: "",
+        chestplate: "",
+        leggings: "",
+        boots: "",
+    },
+
+    weapon: {
+        mainHand: "",
+        offHand: "",
+    },
+
+    enchantments: [],
+
+    effects: [],
+
+    enabled: true,
+};
+
+// ==========================================
+// EMPTY CATALOG FORM
+// ==========================================
+
+function createEmptyCatalogForm(catalog = "mobs") {
+    return {
+        catalog,
+        id: "",
+        name: "",
+        slot: "",
+        type: "",
+        maxLevel: 1,
+    };
+}
+
+// ==========================================
+// MOB BATTLE PAGE
+// ==========================================
 
 export default function MobBattle() {
 
-    const [running, setRunning] = useState(false)
-const [loading, setLoading] = useState(false)
+    // ==========================================
+    // MOB BATTLE CONTROL
+    // ==========================================
 
-const [teamANames, setTeamANames] =
-    useState([])
+    const [running, setRunning] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-const [teamBNames, setTeamBNames] =
-    useState([])
+    const [error, setError] = useState("");
 
-const [newTeamAName, setNewTeamAName] =
-    useState('')
+    // ==========================================
+    // EXISTING MOB NAME SYSTEM
+    // ==========================================
 
-const [newTeamBName, setNewTeamBName] =
-    useState('')
+    const [teamANames, setTeamANames] = useState([]);
+    const [teamBNames, setTeamBNames] = useState([]);
 
-const [error, setError] = useState('')
+    const [newTeamAName, setNewTeamAName] = useState("");
+    const [newTeamBName, setNewTeamBName] = useState("");
 
-// ==========================================
-// MOB NAME MODE
-// ==========================================
+    // ==========================================
+    // MOB NAME MODE
+    // ==========================================
 
-const [nameMode, setNameMode] =
-    useState('tiktok')
+    const [nameMode, setNameMode] = useState("tiktok");
+    const [specificNameId, setSpecificNameId] = useState("");
+    const [nameModeLoading, setNameModeLoading] = useState(false);
 
-const [specificNameId, setSpecificNameId] =
-    useState('')
+    // ==========================================
+    // MOB LOADOUTS
+    // ==========================================
 
-const [nameModeLoading, setNameModeLoading] =
-    useState(false)
+    const [loadouts, setLoadouts] = useState([]);
+    const [loadoutsLoading, setLoadoutsLoading] = useState(false);
+    const [loadoutSaving, setLoadoutSaving] = useState(false);
 
+    const [editingLoadoutId, setEditingLoadoutId] = useState(null);
+    const [showLoadoutForm, setShowLoadoutForm] = useState(false);
 
-        useEffect(() => {
+const [loadoutForm, setLoadoutForm] = useState({
+    ...emptyLoadout,
 
-            async function loadMobNames() {
+    armor: {
+        ...emptyLoadout.armor,
+    },
 
-                try {
+    weapon: {
+        ...emptyLoadout.weapon,
+    },
 
-                    const response =
-                        await fetch(
-                            `${API_URL}/api/mob-battle/names`
-                        )
+    enchantments: [],
 
-                    const data =
-                        await response.json()
+    effects: [],
+});
 
-                    if (!response.ok) {
+    // ==========================================
+    // CATALOGS
+    // ==========================================
 
-                        throw new Error(
-                            data.error ||
-                            'Failed to load mob names'
-                        )
+    const [catalogs, setCatalogs] = useState({
+        mobs: [],
+        armor: [],
+        weapons: [],
+        tools: [],
+        items: [],
+        enchantments: [],
+        effects: [],
+    });
 
-                    }
+    const [openCatalog, setOpenCatalog] = useState(null);
+    const [catalogSearch, setCatalogSearch] = useState({});
+    const [catalogsLoading, setCatalogsLoading] = useState(false);
 
-                    const names =
-                        Array.isArray(data.names)
-                            ? data.names
-                            : []
+    // ==========================================
+    // CATALOG MODAL
+    // ==========================================
 
-                    setTeamANames(
-                        names.filter(
-                            item => item.team === 'A'
-                        )
-                    )
+    const [catalogModalOpen, setCatalogModalOpen] = useState(false);
 
-                    setTeamBNames(
-                        names.filter(
-                            item => item.team === 'B'
-                        )
-                    )
+    const [editingCatalogItem, setEditingCatalogItem] =
+        useState(null);
 
-                } catch (error) {
+    const [catalogForm, setCatalogForm] = useState(
+        createEmptyCatalogForm()
+    );
 
-                    console.error(
-                        'Mob Battle names error:',
-                        error
-                    )
+    const [catalogSaving, setCatalogSaving] = useState(false);
 
-                    setError(
-                        error.message
-                    )
+    // ==========================================
+    // LOAD MOB NAMES
+    // ==========================================
 
+    useEffect(() => {
+
+        async function loadMobNames() {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/api/mob-battle/names`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.error ||
+                        "Failed to load mob names"
+                    );
                 }
 
-            }
+                const names = Array.isArray(data.names)
+                    ? data.names
+                    : [];
 
-            loadMobNames()
+                setTeamANames(
+                    names.filter(
+                        item => item.team === "A"
+                    )
+                );
 
-        }, [])
+                setTeamBNames(
+                    names.filter(
+                        item => item.team === "B"
+                    )
+                );
 
+            } catch (error) {
 
-        useEffect(() => {
+                console.error(
+                    "Mob Battle names error:",
+                    error
+                );
 
-    async function loadNameMode() {
-
-        try {
-
-            const response =
-                await fetch(
-                    `${API_URL}/api/mob-battle/name-mode`
-                )
-
-            const data =
-                await response.json()
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.error ||
-                    'Failed to load mob name mode'
-                )
+                setError(error.message);
 
             }
-
-            setNameMode(
-                data.nameMode || 'tiktok'
-            )
-
-            setSpecificNameId(
-                data.specificNameId ?? ''
-            )
-
-        } catch (error) {
-
-            console.error(
-                'Mob Battle name mode error:',
-                error
-            )
-
-            setError(
-                error.message
-            )
 
         }
 
-    }
+        loadMobNames();
 
-    loadNameMode()
+    }, []);
 
-}, [])
+    // ==========================================
+    // LOAD MOB NAME MODE
+    // ==========================================
+
+    useEffect(() => {
+
+        async function loadNameMode() {
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/api/mob-battle/name-mode`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.error ||
+                        "Failed to load mob name mode"
+                    );
+                }
+
+                setNameMode(
+                    data.nameMode || "tiktok"
+                );
+
+                setSpecificNameId(
+                    data.specificNameId ?? ""
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Mob Battle name mode error:",
+                    error
+                );
+
+                setError(error.message);
+
+            }
+
+        }
+
+        loadNameMode();
+
+    }, []);
+
+    // ==========================================
+    // LOAD MOB BATTLE STATUS
+    // ==========================================
 
     useEffect(() => {
 
@@ -153,289 +297,1082 @@ const [nameModeLoading, setNameModeLoading] =
 
             try {
 
-                const response =
-                    await fetch(
-                        `${API_URL}/api/mob-battle/status`
-                    )
+                const response = await fetch(
+                    `${API_URL}/api/mob-battle/status`
+                );
 
-                const data =
-                    await response.json()
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.error ||
+                        "Failed to load Mob Battle status"
+                    );
+                }
 
                 setRunning(
-                    data.running
-                )
+                    Boolean(data.running)
+                );
 
             } catch (error) {
 
                 console.error(
-                    'Mob Battle status error:',
+                    "Mob Battle status error:",
                     error
-                )
+                );
+
+                setError(error.message);
 
             }
 
         }
 
-        loadStatus()
+        loadStatus();
 
-    }, [])
+    }, []);
 
+  useEffect(() => {
+
+    async function loadMobBattleData() {
+
+        setLoadoutsLoading(true);
+        setCatalogsLoading(true);
+        setError("");
+
+        try {
+
+            const loadoutsPromise = fetch(
+                `${API_URL}/api/mob-battle/loadouts`
+            ).then(async response => {
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.error ||
+                        "Failed to load mob loadouts"
+                    );
+                }
+
+                return data;
+
+            });
+
+            const catalogsPromise =
+                fetchAllCatalogs();
+
+            const [
+                loadoutsData,
+                nextCatalogs
+            ] = await Promise.all([
+                loadoutsPromise,
+                catalogsPromise
+            ]);
+
+            // ------------------------------------------
+            // CATALOGS FIRST
+            // ------------------------------------------
+
+            setCatalogs(nextCatalogs);
+
+            // ------------------------------------------
+            // ONLY ACCEPT VALID LOADOUT OBJECTS
+            // ------------------------------------------
+
+const nextLoadouts = Array.isArray(loadoutsData.loadouts)
+    ? loadoutsData.loadouts
+    : [];
+
+console.log(
+    "Mob Battle UI: Loadouts received from API:",
+    JSON.stringify(nextLoadouts, null, 2)
+);
+
+setLoadouts(nextLoadouts);
+        } catch (error) {
+
+            console.error(
+                "Mob Battle data error:",
+                error
+            );
+
+            setError(
+                error.message ||
+                "Failed to load Mob Battle data"
+            );
+
+        } finally {
+
+            setLoadoutsLoading(false);
+            setCatalogsLoading(false);
+
+        }
+
+    }
+
+    loadMobBattleData();
+
+}, []);
+    // ==========================================
+    // FETCH ALL CATALOGS
+    // ==========================================
+
+    async function fetchAllCatalogs() {
+
+        const results = await Promise.all(
+            catalogDefinitions.map(
+                async catalog => {
+
+                    const response = await fetch(
+                        `${API_URL}/api/mob-battle/catalog/${catalog.key}`
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(
+                            data.error ||
+                            `Failed to load ${catalog.label} catalog`
+                        );
+                    }
+
+                    return [
+                        catalog.key,
+                        Array.isArray(data.items)
+                            ? data.items
+                            : [],
+                    ];
+
+                }
+            )
+        );
+
+        return Object.fromEntries(results);
+    }
+
+    // ==========================================
+    // LOAD / REFRESH CATALOGS
+    // ==========================================
+
+    async function refreshCatalogs() {
+
+        setCatalogsLoading(true);
+        setError("");
+
+        try {
+
+            const nextCatalogs =
+                await fetchAllCatalogs();
+
+            setCatalogs(nextCatalogs);
+
+        } catch (error) {
+
+            console.error(
+                "Refresh catalogs error:",
+                error
+            );
+
+            setError(error.message);
+
+        } finally {
+
+            setCatalogsLoading(false);
+
+        }
+    }
+
+
+    // ==========================================
+    // TOGGLE CATALOG
+    // ==========================================
+
+    function toggleCatalog(catalogName) {
+
+        setOpenCatalog(previous =>
+            previous === catalogName
+                ? null
+                : catalogName
+        );
+
+    }
+
+    // ==========================================
+    // FILTER CATALOG ITEMS
+    // ==========================================
+
+    function getFilteredCatalogItems(catalogName) {
+
+        const items =
+            catalogs[catalogName] || [];
+
+        const search =
+            (
+                catalogSearch[catalogName] ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+        if (!search) {
+            return items;
+        }
+
+        return items.filter(item =>
+            String(item.name || "")
+                .toLowerCase()
+                .includes(search) ||
+            String(item.id || "")
+                .toLowerCase()
+                .includes(search)
+        );
+    }
+
+    // ==========================================
+    // OPEN ADD CATALOG ITEM
+    // ==========================================
+
+    function openCatalogAdd(catalogName = null) {
+
+        const targetCatalog =
+            catalogName ||
+            openCatalog ||
+            "mobs";
+
+        setEditingCatalogItem(null);
+
+        setCatalogForm(
+            createEmptyCatalogForm(
+                targetCatalog
+            )
+        );
+
+        setCatalogModalOpen(true);
+
+    }
+
+    // ==========================================
+    // OPEN EDIT CATALOG ITEM
+    // ==========================================
+
+    function openCatalogEdit(
+        catalogName,
+        item
+    ) {
+
+        setEditingCatalogItem({
+            catalog: catalogName,
+            originalId: item.id,
+        });
+
+        setCatalogForm({
+
+            catalog: catalogName,
+
+            id:
+                item.id ||
+                "",
+
+            name:
+                item.name ||
+                "",
+
+            slot:
+                item.slot ||
+                "",
+
+            type:
+                item.type ||
+                "",
+
+            maxLevel:
+                item.maxLevel ??
+                1,
+
+        });
+
+        setCatalogModalOpen(true);
+
+    }
+
+    // ==========================================
+    // CLOSE CATALOG MODAL
+    // ==========================================
+
+    function closeCatalogModal() {
+
+        if (catalogSaving) {
+            return;
+        }
+
+        setCatalogModalOpen(false);
+
+        setEditingCatalogItem(null);
+
+        setCatalogForm(
+            createEmptyCatalogForm()
+        );
+
+    }
+
+    // ==========================================
+    // SAVE CATALOG ITEM
+    // ==========================================
+
+    async function saveCatalogItem() {
+
+        const catalog =
+            catalogForm.catalog;
+
+        const id =
+            catalogForm.id.trim();
+
+        const name =
+            catalogForm.name.trim();
+
+        if (!id) {
+            setError(
+                "Catalog ID is required."
+            );
+            return;
+        }
+
+        if (!name) {
+            setError(
+                "Display name is required."
+            );
+            return;
+        }
+
+        setCatalogSaving(true);
+        setError("");
+
+        try {
+
+            const isEditing =
+                editingCatalogItem !== null;
+
+            const originalId =
+                editingCatalogItem?.originalId;
+
+            const url = isEditing
+                ? `${API_URL}/api/mob-battle/catalog/${catalog}/${encodeURIComponent(originalId)}`
+                : `${API_URL}/api/mob-battle/catalog/${catalog}`;
+
+            const payload = {
+                id,
+                name,
+            };
+
+            if (
+                catalog === "armor" &&
+                catalogForm.slot.trim()
+            ) {
+                payload.slot =
+                    catalogForm.slot.trim();
+            }
+
+            if (
+                (
+                    catalog === "weapons" ||
+                    catalog === "tools"
+                ) &&
+                catalogForm.type.trim()
+            ) {
+                payload.type =
+                    catalogForm.type.trim();
+            }
+
+            if (
+                catalog === "enchantments"
+            ) {
+
+                payload.maxLevel =
+                    Math.max(
+                        1,
+                        Math.floor(
+                            Number(
+                                catalogForm.maxLevel
+                            ) || 1
+                        )
+                    );
+
+            }
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method:
+                            isEditing
+                                ? "PUT"
+                                : "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            ),
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to save catalog item"
+                );
+            }
+
+            await refreshCatalogs();
+
+            setCatalogModalOpen(false);
+            setEditingCatalogItem(null);
+            setCatalogForm(
+                createEmptyCatalogForm()
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Save catalog item error:",
+                error
+            );
+
+            setError(error.message);
+
+        } finally {
+
+            setCatalogSaving(false);
+
+        }
+    }
+
+    // ==========================================
+    // DELETE CATALOG ITEM
+    // ==========================================
+
+    async function deleteCatalogItem(
+        catalogName,
+        id
+    ) {
+
+        const confirmed =
+            window.confirm(
+                `Delete "${id}" from the ${catalogName} catalog?`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setError("");
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/catalog/${catalogName}/${encodeURIComponent(id)}`,
+                    {
+                        method: "DELETE",
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to delete catalog item"
+                );
+            }
+
+            await refreshCatalogs();
+
+        } catch (error) {
+
+            console.error(
+                "Delete catalog item error:",
+                error
+            );
+
+            setError(error.message);
+
+        }
+    }
+
+    // ==========================================
+    // ADD TEAM B NAME
+    // ==========================================
 
     async function addTeamBName() {
 
-    const name =
-        newTeamBName.trim()
+        const name =
+            newTeamBName.trim();
 
-    if (!name) {
-
-        setError(
-            'Team B name is required.'
-        )
-
-        return
-    }
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/api/mob-battle/names`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/json',
-                    },
-                    body: JSON.stringify({
-                        team: 'B',
-                        name,
-                    }),
-                }
-            )
-
-        const data =
-            await response.json()
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                'Failed to save Team B name'
-            )
-
+        if (!name) {
+            setError(
+                "Team B name is required."
+            );
+            return;
         }
 
-        setTeamBNames(
-            previous => [
-                ...previous,
-                data.name
-            ]
-        )
+        try {
 
-        setNewTeamBName('')
-        setError('')
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/names`,
+                    {
+                        method: "POST",
 
-    } catch (error) {
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
 
-        console.error(
-            'Team B name error:',
-            error
-        )
+                        body:
+                            JSON.stringify({
+                                team: "B",
+                                name,
+                            }),
+                    }
+                );
 
-        setError(
-            error.message
-        )
+            const data =
+                await response.json();
 
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to save Team B name"
+                );
+            }
+
+            setTeamBNames(
+                previous => [
+                    ...previous,
+                    data.name,
+                ]
+            );
+
+            setNewTeamBName("");
+            setError("");
+
+        } catch (error) {
+
+            console.error(
+                "Team B name error:",
+                error
+            );
+
+            setError(error.message);
+
+        }
     }
 
-}
+    // ==========================================
+    // ADD TEAM A NAME
+    // ==========================================
 
     async function addTeamAName() {
 
-    const name =
-        newTeamAName.trim()
+        const name =
+            newTeamAName.trim();
 
-    if (!name) {
+        if (!name) {
+            setError(
+                "Team A name is required."
+            );
+            return;
+        }
 
-        setError(
-            'Team A name is required.'
-        )
+        try {
 
-        return
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/names`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify({
+                                team: "A",
+                                name,
+                            }),
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to save Team A name"
+                );
+            }
+
+            setTeamANames(
+                previous => [
+                    ...previous,
+                    data.name,
+                ]
+            );
+
+            setNewTeamAName("");
+            setError("");
+
+        } catch (error) {
+
+            console.error(
+                "Team A name error:",
+                error
+            );
+
+            setError(error.message);
+
+        }
     }
 
-    try {
+    // ==========================================
+    // SAVED MOB NAME CRUD
+    // ==========================================
 
-        const response =
-            await fetch(
-                `${API_URL}/api/mob-battle/names`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type':
-                            'application/json',
-                    },
-                    body: JSON.stringify({
-                        team: 'A',
-                        name,
-                    }),
-                }
-            )
+    async function addMobName(data) {
 
-        const data =
-            await response.json()
+        setError("");
 
-        if (!response.ok) {
+        try {
 
-            throw new Error(
-                data.error ||
-                'Failed to save Team A name'
-            )
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/names`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify(data),
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.error ||
+                    "Failed to create mob name"
+                );
+
+            }
+
+
+            const saved =
+                result.name;
+
+
+            if (saved.team === "A") {
+
+                setTeamANames(
+                    previous => [
+                        ...previous,
+                        saved,
+                    ]
+                );
+
+            } else {
+
+                setTeamBNames(
+                    previous => [
+                        ...previous,
+                        saved,
+                    ]
+                );
+
+            }
+
+
+            return saved;
+
+        } catch (error) {
+
+            console.error(
+                "Create mob name error:",
+                error
+            );
+
+            setError(
+                error.message ||
+                "Failed to create mob name"
+            );
+
+            throw error;
 
         }
 
-        setTeamANames(
-            previous => [
-                ...previous,
-                data.name
-            ]
-        )
-
-        setNewTeamAName('')
-        setError('')
-
-    } catch (error) {
-
-        console.error(
-            'Team A name error:',
-            error
-        )
-
-        setError(
-            error.message
-        )
-
     }
 
-}
 
-// ==========================================
-// SELECT SPECIFIC NAME
-// ==========================================
+    // ==========================================
+    // UPDATE SAVED MOB NAME
+    // ==========================================
 
-async function selectSpecificName(event) {
+    async function updateMobName(
+        id,
+        data
+    ) {
 
-    const id =
-        Number(
-            event.target.value
-        )
+        setError("");
 
-    if (!id) {
-        return
-    }
+        try {
 
-    await changeNameMode(
-        'specific',
-        id
-    )
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/names/${id}`,
+                    {
+                        method: "PUT",
 
-}
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify(data),
+                    }
+                );
 
 
-// ==========================================
-// ALL CUSTOM NAMES
-// ==========================================
+            const result =
+                await response.json();
 
-const allCustomNames = [
-    ...teamANames,
-    ...teamBNames
-]
 
-// ==========================================
-// CHANGE MOB NAME MODE
-// ==========================================
+            if (!response.ok) {
 
-async function changeNameMode(
-    newMode,
-    newSpecificId = null
-) {
+                throw new Error(
+                    result.error ||
+                    "Failed to update mob name"
+                );
 
-    setNameModeLoading(true)
-    setError('')
+            }
 
-    try {
 
-        const response =
-            await fetch(
-                `${API_URL}/api/mob-battle/name-mode`,
-                {
-                    method: 'POST',
+            const updated =
+                result.name;
 
-                    headers: {
-                        'Content-Type':
-                            'application/json',
-                    },
 
-                    body:
-                        JSON.stringify({
-                            nameMode: newMode,
+            // ==========================================
+            // UPDATE BOTH TEAM LISTS
+            // ==========================================
 
-                            specificNameId:
-                                newMode === 'specific'
-                                    ? Number(
-                                        newSpecificId
-                                    )
-                                    : null
-                        })
+            setTeamANames(
+                previous =>
+                    previous
+                        .filter(
+                            item =>
+                                Number(item.id) !==
+                                Number(id)
+                        )
+                        .concat(
+                            updated.team === "A"
+                                ? [updated]
+                                : []
+                        )
+            );
+
+
+            setTeamBNames(
+                previous =>
+                    previous
+                        .filter(
+                            item =>
+                                Number(item.id) !==
+                                Number(id)
+                        )
+                        .concat(
+                            updated.team === "B"
+                                ? [updated]
+                                : []
+                        )
+            );
+
+
+            // ==========================================
+            // FIX SPECIFIC NAME IF NEEDED
+            // ==========================================
+
+            if (
+                Number(specificNameId) ===
+                Number(id)
+            ) {
+
+                if (updated.team !== "A" &&
+                    updated.team !== "B") {
+
+                    setSpecificNameId("");
+
                 }
-            )
 
-        const data =
-            await response.json()
+            }
 
-        if (!response.ok) {
 
-            throw new Error(
-                data.error ||
-                'Failed to change mob name mode'
-            )
+            return updated;
+
+        } catch (error) {
+
+            console.error(
+                "Update mob name error:",
+                error
+            );
+
+            setError(
+                error.message ||
+                "Failed to update mob name"
+            );
+
+            throw error;
 
         }
 
-        setNameMode(
-            data.nameMode
-        )
+    }
 
-        setSpecificNameId(
-            data.specificNameId ?? ''
-        )
 
-    } catch (error) {
+    // ==========================================
+    // DELETE SAVED MOB NAME
+    // ==========================================
 
-        console.error(
-            'Mob Battle name mode error:',
-            error
-        )
+    async function deleteMobName(id) {
 
-        setError(
-            error.message
-        )
+        setError("");
 
-    } finally {
+        try {
 
-        setNameModeLoading(false)
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/names/${id}`,
+                    {
+                        method: "DELETE",
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    result.error ||
+                    "Failed to delete mob name"
+                );
+
+            }
+
+
+            // ==========================================
+            // REMOVE FROM TEAM A
+            // ==========================================
+
+            setTeamANames(
+                previous =>
+                    previous.filter(
+                        item =>
+                            Number(item.id) !==
+                            Number(id)
+                    )
+            );
+
+
+            // ==========================================
+            // REMOVE FROM TEAM B
+            // ==========================================
+
+            setTeamBNames(
+                previous =>
+                    previous.filter(
+                        item =>
+                            Number(item.id) !==
+                            Number(id)
+                    )
+            );
+
+
+            // ==========================================
+            // CLEAR SPECIFIC NAME IF DELETED
+            // ==========================================
+
+            if (
+                Number(specificNameId) ===
+                Number(id)
+            ) {
+
+                setSpecificNameId("");
+
+                if (nameMode === "specific") {
+
+                    await changeNameMode(
+                        "tiktok"
+                    );
+
+                }
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Delete mob name error:",
+                error
+            );
+
+            setError(
+                error.message ||
+                "Failed to delete mob name"
+            );
+
+            throw error;
+
+        }
 
     }
 
-}
 
+    // ==========================================
+    // ALL CUSTOM NAMES
+    // ==========================================
+
+    const allCustomNames = [
+        ...teamANames,
+        ...teamBNames,
+    ];
+
+    // ==========================================
+    // CHANGE MOB NAME MODE
+    // ==========================================
+
+    async function changeNameMode(
+        newMode,
+        newSpecificId = null
+    ) {
+
+        setNameModeLoading(true);
+        setError("");
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/name-mode`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify({
+                                nameMode:
+                                    newMode,
+
+                                specificNameId:
+                                    newMode === "specific"
+                                        ? Number(
+                                            newSpecificId
+                                        )
+                                        : null,
+                            }),
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to change mob name mode"
+                );
+            }
+
+            setNameMode(
+                data.nameMode
+            );
+
+            setSpecificNameId(
+                data.specificNameId ?? ""
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Mob Battle name mode error:",
+                error
+            );
+
+            setError(error.message);
+
+        } finally {
+
+            setNameModeLoading(false);
+
+        }
+    }
+
+    // ==========================================
+    // SELECT SPECIFIC NAME
+    // ==========================================
+
+    async function selectSpecificName(event) {
+
+        const id =
+            Number(
+                event.target.value
+            );
+
+        if (!id) {
+            return;
+        }
+
+        await changeNameMode(
+            "specific",
+            id
+        );
+    }
+
+    // ==========================================
+    // TOGGLE MOB BATTLE
+    // ==========================================
 
     async function toggleMobBattle() {
 
-        const enabled = !running
+        const enabled =
+            !running;
 
-        setLoading(true)
-        setError('')
+        setLoading(true);
+        setError("");
 
         try {
 
@@ -443,573 +1380,622 @@ async function changeNameMode(
                 await fetch(
                     `${API_URL}/api/mob-battle/toggle`,
                     {
-                        method: 'POST',
+                        method: "POST",
+
                         headers: {
-                            'Content-Type':
-                                'application/json',
+                            "Content-Type":
+                                "application/json",
                         },
-                        body: JSON.stringify({
-                            enabled,
-                        }),
+
+                        body:
+                            JSON.stringify({
+                                enabled,
+                            }),
                     }
-                )
+                );
 
             const data =
-                await response.json()
+                await response.json();
 
             if (!response.ok) {
-
                 throw new Error(
                     data.error ||
-                    'Mob Battle toggle failed'
-                )
-
+                    "Mob Battle toggle failed"
+                );
             }
 
             setRunning(
-                data.running
-            )
+                Boolean(data.running)
+            );
 
         } catch (error) {
 
             console.error(
-                'Mob Battle toggle error:',
+                "Mob Battle toggle error:",
                 error
-            )
+            );
 
-            setError(
-                error.message
-            )
+            setError(error.message);
 
         } finally {
 
-            setLoading(false)
+            setLoading(false);
 
         }
+    }
+
+    // ==========================================
+    // OPEN NEW LOADOUT FORM
+    // ==========================================
+
+    function openNewLoadoutForm() {
+
+        setEditingLoadoutId(null);
+
+        setLoadoutForm({
+            ...emptyLoadout,
+
+            armor: {
+                ...emptyLoadout.armor,
+            },
+
+            weapon: {
+                ...emptyLoadout.weapon,
+            },
+
+            enchantments: [],
+            effects: [],
+        });
+
+        setShowLoadoutForm(true);
+    }
+
+    // ==========================================
+    // OPEN EDIT LOADOUT FORM
+    // ==========================================
+
+    function openEditLoadoutForm(loadout) {
+
+        setEditingLoadoutId(
+            loadout.id
+        );
+
+        setLoadoutForm({
+
+            ...emptyLoadout,
+
+            ...loadout,
+
+            armor: {
+                ...emptyLoadout.armor,
+                ...(loadout.armor || {}),
+            },
+
+            weapon: {
+                ...emptyLoadout.weapon,
+                ...(loadout.weapon || {}),
+            },
+
+            enchantments:
+                Array.isArray(
+                    loadout.enchantments
+                )
+                    ? loadout.enchantments
+                    : [],
+                    effects:
+    Array.isArray(
+        loadout.effects
+    )
+        ? loadout.effects
+        : [],
+        });
+
+        setShowLoadoutForm(true);
+    }
+
+    // ==========================================
+    // CLOSE LOADOUT FORM
+    // ==========================================
+
+  function closeLoadoutForm() {
+
+    setShowLoadoutForm(false);
+    setEditingLoadoutId(null);
+
+}
+
+    // ==========================================
+    // UPDATE LOADOUT FIELD
+    // ==========================================
+
+    function updateLoadoutField(
+        field,
+        value
+    ) {
+
+        setLoadoutForm(previous => ({
+            ...previous,
+            [field]: value,
+        }));
 
     }
 
-return (
-    <div className="page">
+    // ==========================================
+    // UPDATE ARMOR
+    // ==========================================
 
-        {/* ==========================================
-            PAGE HEADER
-        ========================================== */}
+    function updateLoadoutArmor(
+        slot,
+        value
+    ) {
 
-        <div className="page-header">
+        setLoadoutForm(previous => ({
+            ...previous,
 
-            <h1>
-                Mob Battle
-            </h1>
+            armor: {
+                ...previous.armor,
+                [slot]: value,
+            },
+        }));
 
-            <p>
-                Mob Battle control and team combat
-            </p>
+    }
 
-        </div>
-
-
-        {/* ==========================================
-            MOB BATTLE CONTROL
-        ========================================== */}
-
-        <section className="minecraft-card mob-battle-control-card">
-
-            <div className="mob-battle-control">
-
-                {/* STATUS */}
-
-                <div className="mob-battle-status">
-
-                    <div className="minecraft-card-title">
-                        MOB BATTLE STATUS
-                    </div>
-
-                    <div
-                        className={`minecraft-status ${
-                            running
-                                ? 'is-online'
-                                : ''
-                        }`}
-                    >
-
-                        <span className="status-dot" />
-
-                        {running
-                            ? 'ONLINE'
-                            : 'OFFLINE'}
-
-                    </div>
-
-                </div>
-
-
-                {/* DESCRIPTION */}
-
-                <div className="mob-battle-description">
-
-                    <div className="mob-battle-description-title">
-                        Mob Battle
-                    </div>
-
-                    <p className="minecraft-helper">
-
-                        Mob Battle controls
-                        gift-based mob spawning
-                        and team combat.
-
-                    </p>
-
-                    <p className="minecraft-helper">
-
-                        When enabled, eligible
-                        TikTok gifts can spawn
-                        mobs for their assigned team.
-
-                    </p>
-
-                </div>
-
-
-                {/* CONTROL BUTTON */}
-
-                <div className="mob-battle-control-actions">
-
-                    <button
-                        className={`btn ${
-                            running
-                                ? 'btn-danger-outline'
-                                : 'btn-primary'
-                        }`}
-                        onClick={toggleMobBattle}
-                        disabled={loading}
-                    >
-
-                        {loading
-                            ? 'Working...'
-                            : running
-                                ? '⚔ Turn OFF'
-                                : '⚔ Turn ON'}
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {/* ==========================================
-            MOB NAME SOURCE
-        ========================================== */}
-
-        <section className="minecraft-card mob-name-mode-card">
-
-            <div className="minecraft-card-title">
-                MOB NAME SOURCE
-            </div>
-
-            <p className="minecraft-helper">
-
-                Choose which name source Mob Battle
-                uses for each spawned mob.
-
-            </p>
-
-
-            {/* ==========================================
-                NAME MODE OPTIONS
-            ========================================== */}
-
-            <div className="mob-name-mode-options">
-
-
-                {/* ==========================================
-                    01 — TIKTOK NAMES
-                ========================================== */}
-
-                <button
-                    type="button"
-                    className={`mob-name-mode-option ${
-                        nameMode === 'tiktok'
-                            ? 'active'
-                            : ''
-                    }`}
-                    onClick={() =>
-                        changeNameMode('tiktok')
-                    }
-                    disabled={nameModeLoading}
-                >
-
-                    <div className="mob-name-mode-number">
-                        01
-                    </div>
-
-                    <div className="mob-name-mode-content">
-
-                        <strong>
-                            TikTok Names
-                        </strong>
-
-                        <span>
-                            Use the detected TikTok username.
-                        </span>
-
-                    </div>
-
-                    <div className="mob-name-mode-radio">
-
-                        {nameMode === 'tiktok'
-                            ? '●'
-                            : '○'}
-
-                    </div>
-
-                </button>
-
-
-                {/* ==========================================
-                    02 — ALL CUSTOM NAMES
-                ========================================== */}
-
-                <button
-                    type="button"
-                    className={`mob-name-mode-option ${
-                        nameMode === 'custom'
-                            ? 'active'
-                            : ''
-                    }`}
-                    onClick={() =>
-                        changeNameMode('custom')
-                    }
-                    disabled={nameModeLoading}
-                >
-
-                    <div className="mob-name-mode-number">
-                        02
-                    </div>
-
-                    <div className="mob-name-mode-content">
-
-                        <strong>
-                            All Custom Names
-                        </strong>
-
-                        <span>
-                            Randomly use a saved name
-                            from the mob's team.
-                        </span>
-
-                    </div>
-
-                    <div className="mob-name-mode-radio">
-
-                        {nameMode === 'custom'
-                            ? '●'
-                            : '○'}
-
-                    </div>
-
-                </button>
-
-
-                {/* ==========================================
-                    03 — SPECIFIC NAME
-                ========================================== */}
-
-                <button
-                    type="button"
-                    className={`mob-name-mode-option ${
-                        nameMode === 'specific'
-                            ? 'active'
-                            : ''
-                    }`}
-                    onClick={() => {
-
-                        if (
-                            allCustomNames.length === 0
-                        ) {
-                            return
-                        }
-
-                        const first =
-                            allCustomNames[0]
-
-                        changeNameMode(
-                            'specific',
-                            first.id
+    // ==========================================
+    // UPDATE WEAPON
+    // ==========================================
+
+    function updateLoadoutWeapon(
+        slot,
+        value
+    ) {
+
+        setLoadoutForm(previous => ({
+            ...previous,
+
+            weapon: {
+                ...previous.weapon,
+                [slot]: value,
+            },
+        }));
+
+    }
+
+    
+
+// ==========================================
+// UPDATE ENCHANTMENTS
+// ==========================================
+
+function updateLoadoutEnchantments(
+    enchantments
+) {
+
+    setLoadoutForm(previous => ({
+        ...previous,
+        enchantments: Array.isArray(enchantments)
+            ? enchantments
+            : [],
+    }));
+
+}
+
+// ==========================================
+// UPDATE EFFECTS
+// ==========================================
+
+function updateLoadoutEffects(effects) {
+
+    setLoadoutForm(previous => ({
+        ...previous,
+
+        effects:
+            Array.isArray(effects)
+                ? effects
+                : [],
+    }));
+
+}
+    // ==========================================
+    // SAVE LOADOUT
+    // ==========================================
+
+    async function saveLoadout() {
+
+        if (!loadoutForm.name.trim()) {
+            setError(
+                "Loadout name is required."
+            );
+            return;
+        }
+
+        if (!loadoutForm.mobId) {
+            setError(
+                "Mob type is required."
+            );
+            return;
+        }
+
+        setLoadoutSaving(true);
+        setError("");
+
+        try {
+
+            const isEditing =
+                editingLoadoutId !== null;
+
+            const url = isEditing
+                ? `${API_URL}/api/mob-battle/loadouts/${editingLoadoutId}`
+                : `${API_URL}/api/mob-battle/loadouts`;
+
+            const payload = {
+                ...loadoutForm,
+
+                name:
+                    loadoutForm.name.trim(),
+
+                mobId:
+                    loadoutForm.mobId,
+
+                amount:
+                    Math.max(
+                        1,
+                        Math.floor(
+                            Number(
+                                loadoutForm.amount
+                            ) || 1
                         )
+                    ),
 
-                    }}
-                    disabled={
-                        nameModeLoading ||
-                        allCustomNames.length === 0
+                armor: {
+                    ...emptyLoadout.armor,
+                    ...(loadoutForm.armor || {}),
+                },
+
+                weapon: {
+                    ...emptyLoadout.weapon,
+                    ...(loadoutForm.weapon || {}),
+                },
+
+                enchantments:
+                    Array.isArray(
+                        loadoutForm.enchantments
+                    )
+                        ? loadoutForm.enchantments
+                        : [],
+
+                        effects:
+    Array.isArray(
+        loadoutForm.effects
+    )
+        ? loadoutForm.effects
+        : [],
+
+                enabled:
+                    Boolean(
+                        loadoutForm.enabled
+                    ),
+            };
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method:
+                            isEditing
+                                ? "PUT"
+                                : "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            ),
                     }
-                >
+                );
 
-                    <div className="mob-name-mode-number">
-                        03
-                    </div>
+            const data =
+                await response.json();
 
-                    <div className="mob-name-mode-content">
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to save loadout"
+                );
+            }
 
-                        <strong>
-                            Specific Name
-                        </strong>
+           const savedLoadout = data.loadout;
 
-                        <span>
-                            Use one exact saved name by ID.
-                        </span>
+if (!savedLoadout) {
+    throw new Error(
+        "Loadout saved, but server returned no loadout."
+    );
+}
 
-                    </div>
+if (isEditing) {
+    setLoadouts(previous =>
+        previous.map(item =>
+            Number(item.id) === Number(editingLoadoutId)
+                ? savedLoadout
+                : item
+        )
+    );
+} else {
+    setLoadouts(previous => [
+        ...previous,
+        savedLoadout
+    ]);
+}
 
-                    <div className="mob-name-mode-radio">
+closeLoadoutForm();
 
-                        {nameMode === 'specific'
-                            ? '●'
-                            : '○'}
+        } catch (error) {
 
-                    </div>
+            console.error(
+                "Save loadout error:",
+                error
+            );
 
-                </button>
+            setError(
+                error.message ||
+                "Failed to save loadout"
+            );
 
-            </div>
+        } finally {
 
+            setLoadoutSaving(false);
+
+        }
+    }
+
+    // ==========================================
+    // DELETE LOADOUT
+    // ==========================================
+
+    async function deleteLoadout(id) {
+
+        const confirmed =
+            window.confirm(
+                "Delete this mob loadout?"
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        setError("");
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/loadouts/${id}`,
+                    {
+                        method: "DELETE",
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to delete loadout"
+                );
+            }
+
+            setLoadouts(previous =>
+                previous.filter(
+                    item =>
+                        Number(item.id) !==
+                        Number(id)
+                )
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Delete loadout error:",
+                error
+            );
+
+            setError(error.message);
+
+        }
+    }
+
+    // ==========================================
+    // TOGGLE LOADOUT ENABLED
+    // ==========================================
+
+    async function toggleLoadoutEnabled(
+        loadout
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/mob-battle/loadouts/${loadout.id}`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+                        },
+
+                        body:
+                            JSON.stringify({
+                                enabled:
+                                    !loadout.enabled,
+                            }),
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error ||
+                    "Failed to update loadout status"
+                );
+            }
+
+            setLoadouts(previous =>
+                previous.map(item =>
+                    Number(item.id) ===
+                    Number(loadout.id)
+                        ? data.loadout
+                        : item
+                )
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Toggle loadout error:",
+                error
+            );
+
+            setError(error.message);
+
+        }
+    }
+
+    // ==========================================
+    // RENDER
+    // ==========================================
+
+    return (
+        <div className="page">
 
             {/* ==========================================
-                SPECIFIC NAME DROPDOWN
+                PAGE HEADER
             ========================================== */}
 
-            {nameMode === 'specific' && (
+            <div className="page-header">
 
-                <div className="mob-specific-name">
+                <h1>
+                    Mob Battle
+                </h1>
 
-                    <label>
-                        SELECT SAVED NAME
-                    </label>
-
-                    <select
-                        value={
-                            specificNameId ?? ''
-                        }
-                        onChange={
-                            selectSpecificName
-                        }
-                        disabled={
-                            nameModeLoading
-                        }
-                    >
-
-                        <option value="">
-                            Select a saved name...
-                        </option>
-
-                        {allCustomNames.map(
-                            item => (
-
-                                <option
-                                    key={item.id}
-                                    value={item.id}
-                                >
-
-                                    #{item.id}
-                                    {' — '}
-                                    {item.name}
-                                    {' — Team '}
-                                    {item.team}
-
-                                </option>
-
-                            )
-                        )}
-
-                    </select>
-
-                </div>
-
-            )}
-
-        </section>
-
-
-        {/* ==========================================
-            CUSTOM MOB NAMES
-        ========================================== */}
-
-        <section className="minecraft-card">
-
-            <div className="minecraft-card-title">
-                CUSTOM MOB NAMES
-            </div>
-
-            <p className="minecraft-helper">
-
-                Add custom names that can be randomly
-                assigned to mobs when no TikTok
-                username is available.
-
-            </p>
-
-
-            {/* ==========================================
-                TEAM A
-            ========================================== */}
-
-            <div className="custom-team-panel">
-
-                <div className="custom-team-title team-a">
-                    TEAM A / RED
-                </div>
-
-                <div className="custom-name-input-row">
-
-                    <input
-                        type="text"
-                        value={newTeamAName}
-                        onChange={(event) =>
-                            setNewTeamAName(
-                                event.target.value
-                            )
-                        }
-                        placeholder="Enter Team A name"
-                        className="minecraft-input custom-name-input"
-                    />
-
-                    <button
-                        className="btn btn-primary custom-name-add"
-                        onClick={addTeamAName}
-                    >
-                        Add Name
-                    </button>
-
-                </div>
-
-
-                <div className="custom-name-list">
-
-                    {teamANames.length === 0 ? (
-
-                        <div className="custom-name-empty">
-                            No Team A names yet.
-                        </div>
-
-                    ) : (
-
-                        teamANames.map(item => (
-
-                            <div
-                                key={item.id}
-                                className="custom-name-item"
-                            >
-
-                                <span className="custom-name-text">
-                                    {item.name}
-                                </span>
-
-                                <span className="custom-name-id">
-                                    #{item.id}
-                                </span>
-
-                            </div>
-
-                        ))
-
-                    )}
-
-                </div>
-
-            </div>
-
-
-            {/* ==========================================
-                TEAM B
-            ========================================== */}
-
-            <div className="custom-team-panel">
-
-                <div className="custom-team-title team-b">
-                    TEAM B / BLUE
-                </div>
-
-                <div className="custom-name-input-row">
-
-                    <input
-                        type="text"
-                        value={newTeamBName}
-                        onChange={(event) =>
-                            setNewTeamBName(
-                                event.target.value
-                            )
-                        }
-                        placeholder="Enter Team B name"
-                        className="minecraft-input custom-name-input"
-                    />
-
-                    <button
-                        className="btn btn-primary custom-name-add"
-                        onClick={addTeamBName}
-                    >
-                        Add Name
-                    </button>
-
-                </div>
-
-
-                <div className="custom-name-list">
-
-                    {teamBNames.length === 0 ? (
-
-                        <div className="custom-name-empty">
-                            No Team B names yet.
-                        </div>
-
-                    ) : (
-
-                        teamBNames.map(item => (
-
-                            <div
-                                key={item.id}
-                                className="custom-name-item"
-                            >
-
-                                <span className="custom-name-text">
-                                    {item.name}
-                                </span>
-
-                                <span className="custom-name-id">
-                                    #{item.id}
-                                </span>
-
-                            </div>
-
-                        ))
-
-                    )}
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {/* ==========================================
-            ERROR
-        ========================================== */}
-
-        {error && (
-
-            <section className="minecraft-card">
-
-                <p className="minecraft-error">
-                    Error: {error}
+                <p>
+                    Mob Battle control and team combat
                 </p>
 
-            </section>
+            </div>
 
-        )}
+            {/* ==========================================
+                ERROR
+            ========================================== */}
 
-    </div>
-)
+            {error && (
+                <div className="minecraft-error">
+                    {error}
+                </div>
+            )}
+
+            {/* ==========================================
+                MOB BATTLE CONTROL
+            ========================================== */}
+
+            <MobBattleControl
+                running={running}
+                loading={loading}
+                toggleMobBattle={toggleMobBattle}
+            />
+
+            {/* ==========================================
+                MOB NAME SOURCE
+            ========================================== */}
+
+      <MobNameSource
+    nameMode={nameMode}
+    specificNameId={specificNameId}
+    allCustomNames={allCustomNames}
+    nameModeLoading={nameModeLoading}
+    changeNameMode={changeNameMode}
+    selectSpecificName={selectSpecificName}
+    addMobName={addMobName}
+    updateMobName={updateMobName}
+    deleteMobName={deleteMobName}
+/>
+
+            {/* ==========================================
+                MOB LOADOUTS
+            ========================================== */}
+
+           <MobLoadouts
+    loadouts={loadouts}
+    catalogs={catalogs}
+    loadoutsLoading={loadoutsLoading}
+    loadoutSaving={loadoutSaving}
+    editingLoadoutId={editingLoadoutId}
+    showLoadoutForm={showLoadoutForm}
+    loadoutForm={loadoutForm}
+    openNewLoadoutForm={openNewLoadoutForm}
+    openEditLoadoutForm={openEditLoadoutForm}
+    closeLoadoutForm={closeLoadoutForm}
+    updateLoadoutField={updateLoadoutField}
+    updateLoadoutArmor={updateLoadoutArmor}
+    updateLoadoutWeapon={updateLoadoutWeapon}
+    updateLoadoutEnchantments={
+        updateLoadoutEnchantments
+    }
+    updateLoadoutEffects={
+    updateLoadoutEffects
 }
+    saveLoadout={saveLoadout}
+    deleteLoadout={deleteLoadout}
+    toggleLoadoutEnabled={toggleLoadoutEnabled}
+/>
+<MobBattlefield
+    loadouts={loadouts}
+/>
+
+            {/* ==========================================
+                CATALOG MANAGEMENT
+            ========================================== */}
+
+            <CatalogManagement
+                catalogs={catalogs}
+                catalogDefinitions={catalogDefinitions}
+                openCatalog={openCatalog}
+                catalogSearch={catalogSearch}
+                catalogsLoading={catalogsLoading}
+                toggleCatalog={toggleCatalog}
+                setCatalogSearch={setCatalogSearch}
+                getFilteredCatalogItems={
+                    getFilteredCatalogItems
+                }
+                refreshCatalogs={refreshCatalogs}
+                openCatalogAdd={openCatalogAdd}
+                openCatalogEdit={openCatalogEdit}
+                deleteCatalogItem={deleteCatalogItem}
+            />
+
+            {/* ==========================================
+                CATALOG ITEM MODAL
+            ========================================== */}
+
+            <CatalogItemModal
+                open={catalogModalOpen}
+                editingItem={editingCatalogItem}
+                form={catalogForm}
+                catalogDefinitions={catalogDefinitions}
+                setForm={setCatalogForm}
+                onClose={closeCatalogModal}
+                onSave={saveCatalogItem}
+                saving={catalogSaving}
+            />
+
+        </div>
+    );
+}
+

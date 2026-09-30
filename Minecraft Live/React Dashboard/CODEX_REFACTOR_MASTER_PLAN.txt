@@ -1,0 +1,485 @@
+CODEX MASTER REFACTOR PLAN
+Minecraft Live React Dashboard
+Project: E:\tiktok-minecraft\Minecraft Live\React Dashboard
+
+PURPOSE
+Refactor and reorganize the entire project so the codebase is readable, maintainable, modular, and easier to edit. The current Mob Battle page is approximately 4,000 lines and must be split into small focused files. This is a REFACTOR first, not a feature rewrite.
+
+CORE RULES
+1. Preserve existing behavior and functionality unless a change is explicitly required to fix a confirmed bug.
+2. Do not redesign the business logic while merely reorganizing files.
+3. Do not silently remove features because they look old or unused. Audit imports/usages first.
+4. Preserve existing API endpoint behavior and request/response contracts unless a confirmed compatibility issue requires a change.
+5. Preserve existing WebSocket behavior, TikTok event handling, Minecraft/LCon communication, gift handling, and Mob Battle event routing.
+6. Zombie Apocalypse is a separate system. Do NOT merge it into Mob Battle and do NOT refactor its internals as part of this job unless a tiny dependency/import change is strictly required for compatibility.
+7. Before deleting any file, search the entire repository for imports, references, dynamic imports, and route/navigation references.
+8. Prefer many small files with one clear responsibility over giant files.
+9. Avoid creating unnecessary abstraction layers. A module should exist because it has a clear responsibility.
+10. Keep names descriptive and consistent with the existing project terminology.
+11. After each major phase, run the project's build/lint checks and fix regressions before continuing.
+12. Never overwrite working behavior just to make code look cleaner.
+
+CURRENT PROJECT ARCHITECTURE ALREADY IDENTIFIED
+
+Root:
+E:\tiktok-minecraft\Minecraft Live\React Dashboard
+
+Important source structure:
+src/
+  App.jsx
+  App.css
+  index.css
+  main.jsx
+  components/
+    Sidebar.jsx
+    gifts/
+      giftActions.js
+      GiftManager.js
+    minecraft/
+      minecraftCommands.jsx
+      MinecraftManager.jsx
+    tiktok/
+      social.js
+      TikTokManager.jsx
+  data/
+    gifts/
+    mobs/
+    teams/
+  pages/
+    GiftListPage.jsx
+    MinecraftPage.jsx
+    MobBattle.jsx
+    OverviewPage.jsx
+    SocialPage.jsx
+    TikTokPage.jsx
+    mobBattle/
+    ZombieApocalypse/
+  services/
+    core/
+    minecraft/
+    tiktok/
+    websocket/
+  styles/
+    mobBattle.css
+    zombieApocalypse.css
+
+There is also a separate root-level folder:
+Zombie Apocalypse/
+This must remain separate from the Mob Battle redesign.
+
+KNOWN EMPTY FILES
+src/components/minecraft/MinecraftManager.jsx
+src/components/tiktok/TikTokManager.jsx
+
+These are currently empty. Do NOT automatically delete them. First audit all imports/references. If truly unused, mark them as removable and only delete after verification. If a clean architecture benefits from repurposing one, do so only if it is justified and does not duplicate an existing responsibility.
+
+GLOBAL ARCHITECTURE
+
+App.jsx:
+- Main React application/router/global state layer.
+- Owns active page, bot state, Minecraft connection state, gift filter state, WebSocket status/logs.
+- Renders Sidebar and the major pages.
+- Do not turn App.jsx into another giant controller.
+
+Sidebar.jsx:
+- Navigation and global controls.
+- Keep global controls here only when they truly belong globally.
+
+OverviewPage.jsx:
+- Read-only overview/status UI.
+- No need to move backend logic into this page.
+
+TikTokPage.jsx:
+- TikTok connection/status display.
+- Actual connection/event logic lives elsewhere.
+
+MinecraftPage.jsx:
+- Minecraft status and command UI.
+- It currently calls POST /api/command directly.
+- Audit whether command API calls should be centralized, but preserve endpoint behavior.
+
+GiftListPage.jsx:
+- Gift CRUD UI.
+- Uses /api/gifts.
+- Handles mob reward and Ballistix bomb configuration.
+- Keep gift data/event processing separate from this UI.
+
+SocialPage.jsx:
+- Read-only display of likes/follows reward rules.
+- Actual social event processing is in components/tiktok/social.js.
+
+MobBattle.jsx:
+- CURRENTLY THE MAIN REFACTOR TARGET.
+- Approximately 4,000 lines.
+- It currently owns:
+  * Mob Battle running state
+  * Mob Battle status/toggle
+  * Mob name loading and CRUD
+  * Mob name mode
+  * Mob loadouts loading and CRUD
+  * Loadout form state
+  * Armor/weapon/enchantment/effect state
+  * Catalog loading
+  * Catalog search/filtering
+  * Catalog CRUD
+  * Catalog modal state
+  * Battlefield rendering
+  * Error/loading state
+  * API calls
+  * Child-component orchestration
+
+MOB BATTLE TARGET STRUCTURE
+
+Do NOT simply move chunks randomly. Split by responsibility.
+
+A reasonable target architecture is:
+
+src/pages/mobBattle/
+  MobBattlePage.jsx
+  components/
+    MobBattleHeader.jsx
+    MobBattleControl.jsx
+    MobBattleStatus.jsx
+    MobNameSource.jsx
+    MobLoadouts.jsx
+    MobLoadoutForm.jsx
+    MobLoadoutList.jsx
+    MobLoadoutSpawner.jsx
+    MobLoadoutEffects.jsx
+    CatalogManagement.jsx
+    CatalogItemModal.jsx
+    SearchableSelect.jsx
+    MobBattlefield.jsx
+  hooks/
+    useMobBattleStatus.js
+    useMobBattleNames.js
+    useMobBattleLoadouts.js
+    useMobBattleCatalogs.js
+  api/
+    mobBattleApi.js
+  utils/
+    mobBattleLoadoutUtils.js
+    mobBattleCatalogUtils.js
+    mobBattleNameUtils.js
+
+IMPORTANT:
+This is a suggested organization, not a command to create every file regardless of need. Inspect the current components first and avoid duplicate files. Reuse existing components where they already have a clean responsibility.
+
+The existing imports in MobBattle.jsx already show these responsibilities:
+- MobBattleControl
+- MobNameSource
+- CatalogManagement
+- CatalogItemModal
+- MobLoadouts
+- MobLoadoutSpawner
+- MobLoadoutEffects
+- MobBattlefield
+
+Preserve these components if they are already useful. Move logic out of the 4,000-line page into hooks/API modules instead of duplicating it.
+
+MOB LOADOUT MODEL TO PRESERVE
+
+The existing loadout structure includes:
+- name
+- mobId
+- amount
+- armor:
+  - helmet
+  - chestplate
+  - leggings
+  - boots
+- weapon:
+  - mainHand
+  - offHand
+- enchantments[]
+- effects[]
+- enabled
+
+Do not change this data contract casually.
+
+CATALOGS TO PRESERVE
+
+Current catalog categories:
+- mobs
+- armor
+- weapons
+- tools
+- items
+- enchantments
+- effects
+
+Current Mob Battle API families include:
+GET /api/mob-battle/status
+POST /api/mob-battle/toggle
+GET /api/mob-battle/loadouts
+POST /api/mob-battle/loadouts
+PUT /api/mob-battle/loadouts/:id
+DELETE /api/mob-battle/loadouts/:id
+GET /api/mob-battle/catalog/:catalog
+POST /api/mob-battle/catalog/:catalog
+PUT /api/mob-battle/catalog/:catalog/:id
+DELETE /api/mob-battle/catalog/:catalog/:id
+GET /api/mob-battle/names
+POST /api/mob-battle/names
+PUT /api/mob-battle/names/:id
+DELETE /api/mob-battle/names/:id
+GET /api/mob-battle/name-mode
+POST /api/mob-battle/name-mode
+
+Preserve these contracts unless repository inspection proves an endpoint is obsolete.
+
+MOB BATTLE EVENT BOUNDARY
+
+Existing gift and social processing already uses a Mob Battle event gate.
+
+giftActions.js:
+- TikTok gifts can result in mob spawning.
+- It calls the Mob Battle event gate.
+- It interacts with Minecraft/LCon and teams.
+
+components/tiktok/social.js:
+- Like/follow events are routed to Mob Battle when Mob Battle is enabled.
+- Zombie Apocalypse has its own separate social listener.
+
+Do not merge these systems.
+Do not replace Mob Battle event processing with UI-only logic.
+
+GIFT SYSTEM
+
+GiftListPage.jsx is the UI CRUD layer.
+components/gifts/GiftManager.js is gift data/storage management.
+components/gifts/giftActions.js is event processing.
+
+Keep those responsibilities distinct.
+
+GiftListPage currently manages:
+- TikTok gift ID
+- name
+- coins
+- reward type
+- team
+- normal mob counts
+- mutant mob counts
+- Ballistix bomb fields
+- CRUD through /api/gifts
+
+Do not break gift event processing while reorganizing the UI.
+
+MINECRAFT SYSTEM
+
+MinecraftPage.jsx currently:
+- shows LCon status
+- sends POST /api/command
+- has quick commands
+- supports custom Minecraft commands
+
+components/minecraft/minecraftCommands.jsx:
+- small command wrapper functions
+
+services/minecraft/lcon.js:
+- actual Minecraft/LCon communication should remain the authoritative lower-level service.
+
+If centralizing command calls, do so without changing externally observable behavior.
+
+TIKTOK SYSTEM
+
+TikTokPage.jsx is display-only.
+components/tiktok/social.js handles likes/follows.
+services/tiktok/connection.js handles the TikTok connection layer.
+
+Do not duplicate TikTok event listeners in page components.
+
+CSS / UI REFACTOR
+
+The project currently has global styling in:
+- src/index.css
+- src/App.css
+and Mob Battle-specific styling in:
+- src/styles/mobBattle.css
+
+Audit CSS usage before deleting or moving styles.
+
+There are known duplicated/override sections in index.css. Clean these carefully:
+- consolidate duplicate selectors only when behavior remains identical
+- remove genuinely unused Vite starter styles after verifying selectors are unused
+- keep Mob Battle and Zombie Apocalypse styling separate where practical
+- avoid changing functionality while doing CSS cleanup
+
+DO NOT do a full visual redesign during the structural refactor unless needed to preserve existing layout after moving components.
+
+DEAD CODE / UNUSED FILE AUDIT
+
+Search for:
+- imports
+- require()
+- dynamic imports
+- navigation IDs
+- API references
+- WebSocket message types
+- CSS class usage
+- component references
+- scripts
+- package.json references
+
+Potentially suspicious files must be verified before removal.
+
+Examples already known:
+- MinecraftManager.jsx = empty
+- TikTokManager.jsx = empty
+- App.css contains likely Vite starter CSS
+But these are NOT permission to delete blindly.
+
+FILE SIZE GUIDELINES
+
+Aim for:
+- small focused components
+- roughly 100–300 lines where practical
+- utility/API modules smaller when possible
+- no artificial splitting just to hit a line count
+
+A file can be larger if it represents one coherent responsibility. Do not split code into dozens of meaningless one-function files.
+
+REFACTORING RULE
+
+Prefer this:
+Page
+  -> hook/state
+  -> API module
+  -> focused UI components
+
+Instead of:
+Page
+  -> hundreds of state variables
+  -> dozens of fetch calls
+  -> CRUD logic
+  -> form logic
+  -> rendering
+
+The page should primarily orchestrate the feature.
+
+ERROR HANDLING
+
+Preserve current user-visible errors and loading states.
+Do not swallow exceptions.
+Do not replace useful errors with generic errors unless the original error is unsafe or unusable.
+
+STATE MANAGEMENT
+
+Do not introduce Redux/Zustand/etc. unless the existing architecture genuinely requires it.
+Prefer React hooks and focused feature hooks for this refactor.
+
+API MODULES
+
+When extracting API calls:
+- preserve endpoint paths
+- preserve HTTP methods
+- preserve request payload shapes
+- preserve response expectations
+- centralize repeated API base URL usage where appropriate
+- do not introduce a second competing API layer
+
+CHECKPOINT / SAFETY PROCEDURE
+
+Before making structural changes:
+1. Verify the project builds in its current state.
+2. Create a Git checkpoint/commit or equivalent backup.
+3. Record the current branch/commit.
+4. Do not begin mass deletion before the checkpoint exists.
+
+Then refactor in phases.
+
+PHASE 1 — REPOSITORY AUDIT
+- Read package.json.
+- Identify build/lint scripts.
+- Search all imports/references.
+- Identify entry points.
+- Identify API/server boundaries.
+- Identify all Mob Battle files.
+- Identify all Zombie Apocalypse files.
+- Produce an internal dependency map before deleting anything.
+
+PHASE 2 — MOB BATTLE EXTRACTION
+- Preserve existing child components.
+- Extract Mob Battle API functions into a focused API module.
+- Extract status/name/loadout/catalog state into focused hooks where appropriate.
+- Keep MobBattlePage/MobBattle.jsx as a thin orchestrator.
+- Preserve all existing API calls and behavior.
+- Verify after each extraction.
+
+PHASE 3 — UI COMPONENT CLEANUP
+- Split oversized forms/tables/sections only where responsibility is clear.
+- Keep loadout editing separate from catalog editing.
+- Keep name management separate from loadout management.
+- Keep battlefield separate from configuration.
+- Keep control/status separate from CRUD.
+
+PHASE 4 — SHARED CLEANUP
+- Audit Minecraft command duplication.
+- Audit TikTok page/component duplication.
+- Audit gift UI/backend separation.
+- Remove only verified dead code.
+- Consolidate duplicated CSS carefully.
+
+PHASE 5 — FINAL AUDIT
+- Search for broken imports.
+- Search for references to deleted files.
+- Search for duplicate components.
+- Search for duplicate API implementations.
+- Run lint.
+- Run production build.
+- Run any available tests.
+- Verify app startup.
+- Verify navigation.
+- Verify Mob Battle toggle.
+- Verify loadout CRUD.
+- Verify catalog CRUD.
+- Verify mob-name CRUD.
+- Verify gift CRUD.
+- Verify TikTok/Minecraft status display.
+- Verify Zombie Apocalypse remains functional and separate.
+
+KNOWN CURRENT BUG / CODE QUALITY NOTE
+
+MinecraftPage.jsx has quick command objects using `commands`, while some code references `q.command`. Audit this inconsistency. Do not "fix" it by guessing intended behavior; determine the intended behavior from the surrounding code and preserve the working behavior.
+
+ACCEPTANCE CRITERIA
+
+The refactor is successful only if:
+
+1. Mob Battle is no longer a ~4,000-line monolithic page.
+2. Mob Battle responsibilities are separated into focused files.
+3. The main Mob Battle page is primarily an orchestrator.
+4. API calls are understandable and centralized where appropriate.
+5. Loadout CRUD still works.
+6. Catalog CRUD still works.
+7. Mob name CRUD still works.
+8. Mob Battle toggle still works.
+9. Battlefield still receives the correct loadout data.
+10. TikTok gifts still reach the same gift-processing system.
+11. TikTok likes/follows still route through the same Mob Battle event gate.
+12. Minecraft/LCon commands still work.
+13. Gift CRUD still works.
+14. Existing navigation still works.
+15. No Zombie Apocalypse feature is intentionally merged, removed, or rewritten.
+16. Empty files are only removed after a repository-wide usage audit.
+17. No API endpoint is changed without a verified reason.
+18. No functionality is removed merely because it is not part of the new UI.
+19. `npm` build/lint checks pass according to package.json.
+20. The resulting code is easier for a human to understand and modify.
+
+FINAL OUTPUT REQUIRED FROM CODEX
+
+After completing the refactor, provide:
+1. A concise list of files created.
+2. A concise list of files moved/renamed.
+3. A concise list of files deleted, with the reason for each.
+4. A summary of the new Mob Battle architecture.
+5. A list of API contracts preserved.
+6. Build/lint/test results.
+7. Any remaining warnings or technical debt.
+8. Confirmation that Zombie Apocalypse was kept separate.
+9. A short "how to find things now" map for future editing.
+
+IMPORTANT FINAL RULE
+
+Do not stop after making the code "look cleaner." The objective is a working, readable, modular codebase. If a refactor causes a regression, fix the regression before proceeding. Prefer safe incremental refactoring over a single destructive rewrite.

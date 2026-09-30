@@ -1,0 +1,162 @@
+[
+  {
+    "id": "minecraft:speed",
+    "name": "Speed",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:slowness",
+    "name": "Slowness",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:haste",
+    "name": "Haste",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:mining_fatigue",
+    "name": "Mining Fatigue",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:strength",
+    "name": "Strength",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:instant_health",
+    "name": "Instant Health",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:instant_damage",
+    "name": "Instant Damage",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:jump_boost",
+    "name": "Jump Boost",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:nausea",
+    "name": "Nausea",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:regeneration",
+    "name": "Regeneration",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:resistance",
+    "name": "Resistance",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:fire_resistance",
+    "name": "Fire Resistance",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:water_breathing",
+    "name": "Water Breathing",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:invisibility",
+    "name": "Invisibility",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:blindness",
+    "name": "Blindness",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:night_vision",
+    "name": "Night Vision",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:hunger",
+    "name": "Hunger",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:weakness",
+    "name": "Weakness",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:poison",
+    "name": "Poison",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:wither",
+    "name": "Wither",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:health_boost",
+    "name": "Health Boost",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:absorption",
+    "name": "Absorption",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:saturation",
+    "name": "Saturation",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:glowing",
+    "name": "Glowing",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:levitation",
+    "name": "Levitation",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:luck",
+    "name": "Luck",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:unluck",
+    "name": "Bad Luck",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:slow_falling",
+    "name": "Slow Falling",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:conduit_power",
+    "name": "Conduit Power",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:dolphins_grace",
+    "name": "Dolphin's Grace",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:hero_of_the_village",
+    "name": "Hero of the Village",
+    "maxLevel": 10
+  },
+  {
+    "id": "minecraft:darkness",
+    "name": "Darkness",
+    "maxLevel": 10
+  }
+]

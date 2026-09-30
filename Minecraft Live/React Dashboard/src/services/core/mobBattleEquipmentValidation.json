@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "minecraftVersion": "1.21.1",
+
+  "rules": {
+    "helmet": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:protection",
+        "minecraft:fire_protection",
+        "minecraft:blast_protection",
+        "minecraft:projectile_protection",
+        "minecraft:respiration",
+        "minecraft:aqua_affinity",
+        "minecraft:thorns",
+        "minecraft:binding_curse",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "chestplate": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:protection",
+        "minecraft:fire_protection",
+        "minecraft:blast_protection",
+        "minecraft:projectile_protection",
+        "minecraft:thorns",
+        "minecraft:binding_curse",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "leggings": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:protection",
+        "minecraft:fire_protection",
+        "minecraft:blast_protection",
+        "minecraft:projectile_protection",
+        "minecraft:thorns",
+        "minecraft:binding_curse",
+        "minecraft:swift_sneak",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "boots": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:protection",
+        "minecraft:fire_protection",
+        "minecraft:blast_protection",
+        "minecraft:projectile_protection",
+        "minecraft:feather_falling",
+        "minecraft:depth_strider",
+        "minecraft:frost_walker",
+        "minecraft:soul_speed",
+        "minecraft:thorns",
+        "minecraft:binding_curse",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "sword": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:sharpness",
+        "minecraft:smite",
+        "minecraft:bane_of_arthropods",
+        "minecraft:knockback",
+        "minecraft:fire_aspect",
+        "minecraft:looting",
+        "minecraft:sweeping_edge",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "axe": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:sharpness",
+        "minecraft:smite",
+        "minecraft:bane_of_arthropods",
+        "minecraft:efficiency",
+        "minecraft:silk_touch",
+        "minecraft:fortune",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "pickaxe": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:efficiency",
+        "minecraft:silk_touch",
+        "minecraft:fortune",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "shovel": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:efficiency",
+        "minecraft:silk_touch",
+        "minecraft:fortune",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "hoe": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:efficiency",
+        "minecraft:silk_touch",
+        "minecraft:fortune",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "bow": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:power",
+        "minecraft:punch",
+        "minecraft:flame",
+        "minecraft:infinity",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "crossbow": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:multishot",
+        "minecraft:quick_charge",
+        "minecraft:piercing",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "trident": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:impaling",
+        "minecraft:riptide",
+        "minecraft:loyalty",
+        "minecraft:channeling",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "fishing_rod": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:luck_of_the_sea",
+        "minecraft:lure",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "shield": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "shears": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:efficiency",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "flint_and_steel": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "carrot_on_a_stick": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "warped_fungus_on_a_stick": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "brush": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "mace": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:density",
+        "minecraft:breach",
+        "minecraft:wind_burst",
+        "minecraft:smite",
+        "minecraft:bane_of_arthropods",
+        "minecraft:fire_aspect",
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "elytra": {
+      "enchantable": true,
+      "allowedEnchantments": [
+        "minecraft:unbreaking",
+        "minecraft:mending",
+        "minecraft:vanishing_curse"
+      ]
+    },
+
+    "totem": {
+      "enchantable": false,
+      "allowedEnchantments": []
+    },
+
+    "unknown": {
+      "enchantable": false,
+      "allowedEnchantments": []
+    }
+  }
+}

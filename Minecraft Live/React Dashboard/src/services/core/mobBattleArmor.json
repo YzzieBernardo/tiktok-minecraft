@@ -1,0 +1,127 @@
+[
+  {
+    "id": "minecraft:leather_helmet",
+    "name": "Leather Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:leather_chestplate",
+    "name": "Leather Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:leather_leggings",
+    "name": "Leather Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:leather_boots",
+    "name": "Leather Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:chainmail_helmet",
+    "name": "Chainmail Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:chainmail_chestplate",
+    "name": "Chainmail Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:chainmail_leggings",
+    "name": "Chainmail Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:chainmail_boots",
+    "name": "Chainmail Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:iron_helmet",
+    "name": "Iron Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:iron_chestplate",
+    "name": "Iron Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:iron_leggings",
+    "name": "Iron Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:iron_boots",
+    "name": "Iron Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:golden_helmet",
+    "name": "Golden Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:golden_chestplate",
+    "name": "Golden Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:golden_leggings",
+    "name": "Golden Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:golden_boots",
+    "name": "Golden Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:diamond_helmet",
+    "name": "Diamond Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:diamond_chestplate",
+    "name": "Diamond Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:diamond_leggings",
+    "name": "Diamond Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:diamond_boots",
+    "name": "Diamond Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:netherite_helmet",
+    "name": "Netherite Helmet",
+    "slot": "helmet"
+  },
+  {
+    "id": "minecraft:netherite_chestplate",
+    "name": "Netherite Chestplate",
+    "slot": "chestplate"
+  },
+  {
+    "id": "minecraft:netherite_leggings",
+    "name": "Netherite Leggings",
+    "slot": "leggings"
+  },
+  {
+    "id": "minecraft:netherite_boots",
+    "name": "Netherite Boots",
+    "slot": "boots"
+  },
+  {
+    "id": "minecraft:turtle_helmet",
+    "name": "Turtle Shell",
+    "slot": "helmet"
+  }
+]

@@ -35,6 +35,8 @@ import {
     setupMobBattleServer,
     isMobBattleRunning
 } from './mobBattleServer.js';
+import { setupMobBattleLoadoutServer } from './mobBattleLoadoutServer.js';
+import { ensureMobBattleCatalogs } from './mobBattleCatalog.js';
 // ==========================================
 // APP SETUP
 // ==========================================
@@ -43,8 +45,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 setupZombieApocalypseServer(app);
 setupMobBattleServer(app);
+setupMobBattleLoadoutServer(app);
+ensureMobBattleCatalogs();
 
 
 // ==========================================

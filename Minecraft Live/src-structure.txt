@@ -1,0 +1,6 @@
+Folder PATH listing for volume Apps/Games
+Volume serial number is 00000229 2C59:8339
+E:\TIKTOK-MINECRAFT\MINECRAFT LIVE\SRC
+Invalid path - \TIKTOK-MINECRAFT\MINECRAFT LIVE\SRC
+No subfolders exist 
+
